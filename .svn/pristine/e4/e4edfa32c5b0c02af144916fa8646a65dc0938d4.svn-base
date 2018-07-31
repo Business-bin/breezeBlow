@@ -1,0 +1,310 @@
+
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(document).ready(function(){
+	
+	console.log("appUserStatus");
+	 
+	$(".tabmenu>li").eq(2).addClass("active");
+	 
+	var now = new Date();
+	$("#monthfrom").val($.datepicker.formatDate($.datepicker.ATOM, new Date(now.getFullYear(), now.getMonth(),1)));
+	$("#monthto").val($.datepicker.formatDate($.datepicker.ATOM, new Date()));
+	$("#monthfrom").datepicker({
+		 changeMonth: true,
+		 onSelect: function(dateText , inst){
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+	$("#monthto").datepicker({
+		changeMonth: true,
+		onSelect: function(dateText , inst){
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+	
+    $("#userStatusBtn").click(function(){
+    	getGrapData();
+    });
+	 
+	getGrapData();
+});
+
+/********************************************************************
+Name   : 그래프 데이터 조회                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function getGrapData(){
+	
+	$.ajax(
+		{async : true
+		, url: '/app/getAppGrape'
+		, dataType: 'JSON'
+		, type: 'POST'
+		, data: { 
+			R_MONTHFROM : $('#monthfrom').val().replace(/-/g,''),
+			R_MONTHTO : 	$('#monthto').val().replace(/-/g,'')
+		}
+		, success: function(data) {
+			console.log(data);
+	        
+			setHiChart(data);
+			setHiChart2(data);
+			setHiChart3(data);
+		}
+		,complete : function(data) {
+		}
+		, error: function(xhr, ajaxOptions, thrownError) {
+	
+		}
+	});
+}
+
+
+/********************************************************************
+Name   : OS 별 그래프                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function setHiChart(data){
+	var categoriesdata = [];
+	var seriesdata = [];
+	
+	$('#containers').highcharts({
+		  chart: {
+		    plotBackgroundColor: null,
+		    plotBorderWidth: null,
+		    plotShadow: false,
+		    type: 'pie'
+		  },
+		  title: {
+		    text: 'OS별 App Download 통계'
+		  },
+		  tooltip: {
+		    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+		  },
+		  plotOptions: {
+		    pie: {
+		      allowPointSelect: true,
+		      cursor: 'pointer',
+		      dataLabels: {
+		        enabled: true
+		      },
+		      showInLegend: true
+		    }
+		  },
+		  series: [{
+		    name: '기기비율:',
+		    colorByPoint: true,
+		    data: [{
+		      name: 'IOS [' + data.osList[0].IOSCNT + ']건',
+		      y: data.osList[0].IOSCNT,
+		      sliced: true,
+		      selected: true
+		    }, {
+		      name: 'ANDROID [' + data.osList[0].ANDROIDCNT + ']건',
+		      y: data.osList[0].ANDROIDCNT,
+		      sliced: true,
+		      selected: true
+		    }]
+		  }]
+		});
+}
+
+/********************************************************************
+Name   : 기기별가입통계 그래프                                               
+Desc   : 
+Param  :            
+********************************************************************/
+function setHiChart2(data){
+	var categoriesdata = [];
+	var seriesdata = [];
+	for(var i=0;i <data.deviceList.length ; i++){
+		console.log(data.deviceList[i].MODEL);
+		console.log(data.deviceList[i].CNT);
+		categoriesdata.push(data.deviceList[i].MODEL);
+		seriesdata.push(data.deviceList[i].CNT);
+	}
+	
+	$('#containers2').highcharts({
+	    chart: {
+	        type: 'bar'
+	    },
+	    title: {
+	        text: '기기별 가입통계'
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    xAxis: {
+	        categories:categoriesdata,
+	        title: {
+	            text: null
+	        }
+	    },
+	    yAxis: {
+	        min: 0,
+	        title: {
+	            text: 'Population (명)',
+	            align: 'high'
+	        },
+	        labels: {
+	            overflow: 'justify'
+	        }
+	    },
+	    tooltip: {
+	        valueSuffix: ' 명'
+	    },
+	    plotOptions: {
+	        bar: {
+	            dataLabels: {
+	                enabled: true
+	            }
+	        }
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'top',
+	        x: -40,
+	        y: 80,
+	        floating: true,
+	        borderWidth: 1,
+	        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+	        shadow: true
+	    },
+	    credits: {
+	        enabled: false
+	    },
+	    series: [{
+	        name: '기기별',
+	        data: seriesdata
+	    }]
+	});
+}
+
+
+/********************************************************************
+Name   : 연령대별 기기 사용  통계                                         
+Desc   : 
+Param  :            
+********************************************************************/
+function setHiChart3(data){
+	
+	var age10 = [];
+	var age20 = [];
+	var age30 = [];
+	var age40 = [];
+	var age50 = [];
+	var age60 = [];
+	var age70 = [];
+	var age80 = [];
+	var age90 = [];
+	
+	age10.push(data.ageList[0].AGE_10);
+	age20.push(data.ageList[0].AGE_20);
+	age30.push(data.ageList[0].AGE_30);
+	age40.push(data.ageList[0].AGE_40);
+	age50.push(data.ageList[0].AGE_50);
+	age60.push(data.ageList[0].AGE_60);
+	age70.push(data.ageList[0].AGE_70);
+	age80.push(data.ageList[0].AGE_80);
+	age90.push(data.ageList[0].AGE_90);
+	
+	$('#containers3').highcharts({
+		chart: {
+	        type: 'column'
+	    },
+		 title: {
+	            text: '연령대별 기기사용 통계'
+	        },
+	        xAxis: {
+	            categories:[]
+	        },
+	        yAxis:{
+	        	title:{
+	        		text : ""
+	        	}
+	        },
+	        labels: {
+	            items: [{
+	                html: '',
+	                style: {
+	                    left: '50px',
+	                    top: '18px',
+	                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+	                }
+	            }]
+	        },
+	        series: [
+	        {
+	            type: 'column',
+	            name: '10대',
+	            data: age10,
+	            color: Highcharts.getOptions().colors[0] 
+	        }, {
+	            type: 'column',
+	            name: '20대',
+	            data:  age20,
+	            color: Highcharts.getOptions().colors[1] 
+	        },
+	        {
+	            type: 'column',
+	            name: '30대',
+	            data:  age30,
+	            color: Highcharts.getOptions().colors[2] 
+	        },
+	        {
+	            type: 'column',
+	            name: '40대',
+	            data:  age40,
+	            color: Highcharts.getOptions().colors[3] 
+	        },
+	        {
+	            type: 'column',
+	            name: '50대',
+	            data:  age50,
+	            color: Highcharts.getOptions().colors[4] 
+	        },
+	        {
+	            type: 'column',
+	            name: '60대',
+	            data:  age60,
+	            color: Highcharts.getOptions().colors[5] 
+	        }, 
+	        {
+	            type: 'column',
+	            name: '70대',
+	            data:  age70,
+	            color: Highcharts.getOptions().colors[6] 
+	        },
+	        {
+	            type: 'column',
+	            name: '80대',
+	            data:  age80,
+	            color: Highcharts.getOptions().colors[7] 
+	        },
+	        {
+	            type: 'column',
+	            name: '90대',
+	            data:  age90,
+	            color: Highcharts.getOptions().colors[8] 
+	        }
+	        ]
+	    });
+
+}
+
+
+
+

@@ -1,0 +1,115 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> Manager</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Manager</li>
+					</ul>
+				</div>
+				<table class="basictables">
+				<input type="hidden" name="check_yn" id="check_yn"/>
+				<input type="hidden" name="check_id" id="check_id"/>
+					<tr>
+						<th>* 아이디</th>
+						<td>
+							<input type="text" name="adm_email" id="adm_email" value="" style="width:300px"/>
+							<button class="button" id="btn_check">중복체크</button>
+						</td>
+					</tr>				
+					<tr>
+						<th>* 이름</th>
+						<td>
+							<input type="text" name="adm_nm" id="adm_nm" value="" style="width:150px" maxlength="12"/>
+						</td>
+					</tr>
+					<tr>
+						<th>* 비밀번호</th>
+						<td>
+							<input type="text" name="adm_pwd" id="adm_pwd" value="" style="width:150px"/> 소문자+숫자+특수문자 8자 이상
+						</td>
+						
+					</tr>		
+					<tr>
+						<th>* 비밀번호 확인</th>
+						<td>
+							<input type="text" name="adm_pwd1" id="adm_pwd1" value="" style="width:150px" maxlength="50"/>
+						</td>
+					</tr>
+					<tr>
+						<th>* 성별</th>
+						<td>
+							<select name="adm_sex" id="adm_sex" style="width:50px">
+								<option value="M">남</option>
+								<option value="F">여</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>사원번호</th>
+						<td><input type="text" name="adm_empn" id="adm_empn" value="" class="numberonly" style="width:150px" maxlength="20"/></td>
+					</tr>
+					<tr>
+						<th>소속</th>
+						<td><input type="text" name="adm_part" id="adm_part" value="" style="width:150px" maxlength="100"/></td>
+					</tr>
+					<tr>
+						<th>직급</th>
+						<td><input type="text" name="adm_rank" id="adm_rank" value="" style="width:150px" maxlength="10"/></td>
+					</tr>
+					<tr>
+						<th>* 연락처</th>
+						<td>
+							<select name="hp_1" id="hp_1" style="width:50px">
+							<c:forEach items="${hMap.hpList}" var="hp">
+								<option value="${hp.CODE}">${hp.CODENAME}</option>
+							</c:forEach>
+							</select>
+							<input type="text" name="hp_2" id="hp_2" value="" style="width:50px"/>
+							<input type="text" name="hp_3" id="hp_3" value="" style="width:50px"/>
+						</td>
+					</tr>
+					<tr>
+						<th>전화번호</th>
+						<td>
+							<select name="tel_1" id="tel_1" style="width:50px">
+							<c:forEach items="${tMap.telList}" var="tel">
+								<option value="${tel.CODE}">${tel.CODENAME}</option>
+							</c:forEach>
+							</select>
+							<input type="text" name="tel_2" id="tel_2" value="" style="width:50px"/>
+							<input type="text" name="tel_3" id="tel_3" value="" style="width:50px"/>
+						</td>
+					</tr>
+				</table>
+				<div class="button_area tcenter">
+					<button class="button" id="btn_add"><i class="axi axi-person-add"></i> 신규생성</button>
+					<a href="/admin/adminList" class="button" ><i class="axi axi-cancel"></i> 목록으로</a>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/admin/adminAdd.js"></script>

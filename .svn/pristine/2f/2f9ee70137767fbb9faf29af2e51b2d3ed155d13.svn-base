@@ -1,0 +1,78 @@
+/* ·¹ÀÌ¾îÆË¾÷ */
+#dim-layer{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	opacity: 0.3;
+}
+#layerPopup{
+	position: absolute;
+	left: 35%;
+	top: 30%;
+	width: 440px;
+	height: 250px;
+	background-color: white;
+	border:1px solid #757a88;
+	padding: 5px;
+}
+#dim-layer1{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	opacity: 0.3;
+}
+#layerPopup1{
+	position: absolute;
+	left: 35%;
+	top: 30%;
+	width: 440px;
+	height: 250px;
+	background-color: white;
+	border:1px solid #757a88;
+	padding: 5px;
+}
+#dim-layer2{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	opacity: 0.3;
+}
+#layerPopup2{
+	position: absolute;
+	left: 35%;
+	top: 30%;
+	width: 440px;
+	height: 250px;
+	background-color: white;
+	border:1px solid #757a88;
+	padding: 5px;
+}
+#dim-layer3{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	opacity: 0.3;
+}
+#layerPopup3{
+	position: absolute;
+	left: 35%;
+	top: 5%;
+	width: 440px;
+	height: 440px;
+	background-color: white;
+	border:1px solid #757a88;
+	padding: 5px;
+}
+

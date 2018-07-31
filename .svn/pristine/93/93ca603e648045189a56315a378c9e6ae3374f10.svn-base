@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="etc">	
+	<select id="getPopList"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			POP_SQ
+			,POP_NM
+			,POP_CONT
+			,BEGIN_DTTM
+			,END_DTTM
+			,ACTIVE_YN
+			,LNK_YN
+			,LNK_URL
+			,POP_IMG_FILE_NM
+			,POP_IMG_PATH
+			,POP_TP
+			,STAT
+			,CASE STAT 
+				WHEN '001' THEN '노출중'
+				WHEN '002' THEN '노출중지'
+				WHEN '003' THEN '대기중'
+				WHEN '004' THEN '삭제'
+			 END STAT_NM  
+			,DEL_ADM_EMAIL
+			,DEL_RSN
+			,DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%I') AS REG_DTTM
+			,DATE_FORMAT(UPT_DTTM, '%Y-%m-%d %H:%I') AS UPT_DTTM
+			,DEL_DTTM
+			,REG_ADM_SQ
+			,UPT_ADM_SQ
+			,DEL_ADM_SQ
+			,BTBS_SQ
+		FROM TB_POP
+		WHERE 1=1
+		AND STAT != '004'
+		<if test=" R_KEYWORD != null and R_KEYWORD != '' ">
+			<if test=" R_SEARCH_TYPE == '001' ">
+				AND  POP_NM LIKE CONCAT('%',#{R_KEYWORD},'%')
+			</if>
+			<if test=" R_SEARCH_TYPE == '002' ">
+				AND STAT_NM LIKE CONCAT('%',#{R_KEYWORD},'%')
+			</if>
+		</if>
+		AND REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}
+	</select>
+	
+	
+	<select id="getPopListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			 count(*) as total
+		FROM TB_POP
+		WHERE 1=1
+		AND STAT != '004'
+		<if test=" R_KEYWORD != null and R_KEYWORD != '' ">
+			<if test=" R_SEARCH_TYPE == '001' ">
+				AND  POP_NM LIKE CONCAT('%',#{R_KEYWORD},'%')
+			</if>
+			<if test=" R_SEARCH_TYPE == '002' ">
+				AND STAT = #{R_KEYWORD}
+			</if>
+		</if>
+		AND REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+	</select>
+	
+	
+
+	<update id="modPop" parameterType="brbMap">
+	    UPDATE TB_POP SET 
+			POP_NM = #{R_POP_NM} 
+			,POP_CONT  = #{R_POP_CONT} 
+			,BEGIN_DTTM  = #{R_BEGIN_DTTM} 
+			,END_DTTM  = #{R_END_DTTM} 
+			,LNK_URL  = #{R_LNK_URL} 
+			,POP_IMG_FILE_NM = #{R_POP_IMG_FILE_NM} 
+			,POP_IMG_PATH = #{R_POP_IMG_PATH} 
+			,POP_TP = #{R_POP_TP} 
+			,POP_WIDTH = #{R_POP_WIDTH} 
+			,POP_HEIGHT = #{R_POP_HEIGHT} 
+			,STAT = #{R_STAT} 
+			,UPT_DTTM = now()
+			,UPT_ADM_SQ = #{R_UPT_ADM_SQ}
+	    WHERE 1=1 
+	    AND POP_SQ = #{R_POP_SQ}
+	</update>
+	
+	
+	<update id="delPop" parameterType="brbMap">
+	    UPDATE TB_POP SET 
+			STAT = '004'
+			,DEL_DTTM = now()
+			,DEL_ADM_EMAIL = #{R_DEL_ADM_EMAIL}
+			,DEL_RSN = #{R_DEL_RSN}
+	    WHERE 1=1 
+	    AND POP_SQ = #{R_POP_SQ}
+	</update>
+
+	<insert id="addPop" parameterType="brbMap">
+		INSERT INTO TB_POP( 
+			POP_SQ
+			,POP_NM
+			,POP_CONT
+			,BEGIN_DTTM
+			,END_DTTM
+			,LNK_URL
+			,POP_IMG_FILE_NM
+			,POP_IMG_PATH
+			,POP_TP
+			,POP_WIDTH
+			,POP_HEIGHT
+			,STAT
+			,REG_DTTM
+			,REG_ADM_SQ
+			,BTBS_SQ
+		) VALUES (
+			NEXTVAL('POP_SQ')
+			,#{R_POP_NM}
+			,#{R_POP_CONT}
+			,#{R_BEGIN_DTTM}
+			,#{R_END_DTTM}
+			,#{R_LNK_URL}
+			,#{R_POP_IMG_FILE_NM}
+			,#{R_POP_IMG_PATH}
+			,#{R_POP_TP}
+			,#{R_POP_WIDTH}
+			,#{R_POP_HEIGHT}
+			,#{R_STAT}
+			,NOW()
+			,#{R_REG_ADM_SQ}
+			,#{R_BTBS_SQ}
+		)
+	</insert>
+	
+	
+	<select id="getPopDet"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			POP_SQ
+			,POP_NM
+			,POP_CONT
+			,BEGIN_DTTM
+			,END_DTTM
+			,ACTIVE_YN
+			,LNK_YN
+			,LNK_URL
+			,POP_IMG_FILE_NM
+			,POP_IMG_PATH
+			,POP_TP
+			,STAT
+			,POP_WIDTH
+			,POP_HEIGHT
+			,CASE STAT 
+				WHEN '001' THEN '노출중'
+				WHEN '002' THEN '노출중지'
+				WHEN '003' THEN '대기중'
+				WHEN '004' THEN '삭제'
+			 END STAT_NM 
+			,DEL_ADM_EMAIL
+			,DEL_RSN
+			,DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%I') AS REG_DTTM
+			,DATE_FORMAT(UPT_DTTM, '%Y-%m-%d %H:%I') AS UPT_DTTM
+			,DEL_DTTM
+			,REG_ADM_SQ
+			,UPT_ADM_SQ
+			,DEL_ADM_SQ
+			,BTBS_SQ
+			,(SELECT ADM_NM FROM TB_BTB_ADM  WHERE ADM_SQ = A.BTBS_SQ) AS BTBS_NM
+		FROM TB_POP A
+		WHERE POP_SQ = #{R_POP_SQ}
+	</select>
+	
+	
+	<select id="getEtcInit"  parameterType="brbMap" resultType="brbMap">
+		SELECT 
+			ID
+			,PWD
+			,HOST
+			,PORT
+			,SSL_YN
+			,SSL_PORT
+			,ATO_MIN
+			,ATO_MAX
+			,REG_DTTM
+			,UPT_DTTM
+			,DEL_DTTM
+			,REG_ADM_SQ
+			,UPT_ADM_SQ
+			,DEL_ADM_SQ
+		FROM TB_ENV_INFO
+		LIMIT 1
+	</select>
+	
+	<update id="modEtcInit" parameterType="brbMap">
+	    UPDATE TB_ENV_INFO SET 
+	    	UPT_DTTM = now()
+	    	,UPT_ADM_SQ = #{R_UPT_ADM_SQ}
+	    	<if test="R_MOD_TYPE == '01' ">
+				,ID = #{R_ID}
+				,PWD = #{R_PWD}
+				,HOST = #{R_HOST}
+				,PORT = #{R_PORT}
+				,SSL_YN = #{R_SSL_YN}
+				,SSL_PORT = #{R_SSL_PORT}
+			</if>
+			<if test="R_MOD_TYPE == '02' ">
+				,ATO_MIN = #{R_ATO_MIN}
+				,ATO_MAX = #{R_ATO_MAX}
+			</if>
+	    WHERE 1=1 
+	</update>
+	
+	
+
+</mapper>
+

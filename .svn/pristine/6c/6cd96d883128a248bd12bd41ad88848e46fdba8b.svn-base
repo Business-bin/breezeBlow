@@ -1,0 +1,127 @@
+package com.brb.app.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.app.model.PolyVo;
+import com.brb.app.service.AppService;
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.brbcom.common.util.RequestParameterUtil;
+import com.brb.brbcom.common.util.Util;
+/**
+ *
+ * @author back
+ *
+ */
+@Controller
+public class AppController {
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(AppController.class);
+
+
+	@Autowired
+	AppService appService;
+
+	/**
+	 * 회원 리스트
+	 * @param appVo
+	 * @return ModelAndView
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "app/polyList")
+	public ModelAndView appList(){
+		ModelAndView view = new ModelAndView();
+		view.addObject("poly", appService.getPoly());
+		view.setViewName("app/polyList");
+		return view;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "app/polySearch")
+	public ModelAndView appTable(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception{
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap	= RequestParameterUtil.getParameterMap(request);
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "POLY_SQ" : bMap.getString("sidx");
+
+		if("POLY_SQ".equals(sidx)){
+			sidx = "POLY_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *10 );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)appService.getPolyList(bMap).get("polyList");
+		//리스트 카운트 조회
+		totalcnt = (int)appService.getPolyList(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 회원 상세
+	 * @param appVo
+	 * @return ModelAndView
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "app/polyDet")
+	public ModelAndView appDet(@RequestParam String gubun, @RequestParam String polySq){
+		ModelAndView view = new ModelAndView();
+		if(gubun.equals("det")){
+			view.addObject("polyDet", appService.getPolyDet(polySq));
+		}
+		view.addObject("poly", appService.getPoly());
+		view.addObject("gubun", gubun);
+		view.setViewName("app/polyDet");
+		return view;
+	}
+
+	/**
+	 *
+	 * @param PolyVo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "app/updatePoly")
+	public void updatePoly(@ModelAttribute PolyVo pvo){
+		appService.updatePoly(pvo);
+	}
+
+	/**
+	 *
+	 * @param PolyVo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "app/insertPoly")
+	public void insertPoly(@ModelAttribute PolyVo pvo){
+		appService.insertPoly(pvo);
+	}
+}

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: fon_api
+Bundle-SymbolicName: fon_api
+Bundle-Version: 1.0.0.qualifier
+Import-Package: javax.servlet.jsp,
+ javax.servlet.jsp.tagext;version="2.2.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+

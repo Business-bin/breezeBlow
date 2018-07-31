@@ -1,0 +1,68 @@
+package com.brb.app.service;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+
+import com.brb.app.dao.AppDao;
+import com.brb.app.model.PolyVo;
+import com.brb.brbcom.common.collections.BrbMap;
+
+
+@Service("AppService")
+public class AppServiceImpl implements AppService{
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
+
+	@Autowired
+	AppDao appDao;
+
+	/**
+	 *
+	 * param
+	 * return BrdMap
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BrbMap<Object, Object>> getPoly() throws DataAccessException {
+		return appDao.getPoly();
+	}
+
+	/**
+	 *
+	 * param
+	 * return BrdMap
+	 */
+	@Override
+	public BrbMap<Object, Object> getPolyList(BrbMap<Object, Object> bMap) throws DataAccessException {
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("polyList", appDao.getPolyList(bMap));
+		resMap.put("totalPage", appDao.getPolyTotal(bMap));
+		return resMap;
+	}
+
+	/**
+	 *
+	 * param
+	 * return BrdMap
+	 */
+	@Override
+	public BrbMap<Object, Object> getPolyDet(String polySq) throws DataAccessException {
+		return appDao.getPolyDet(polySq);
+	}
+
+	@Override
+	public void updatePoly(PolyVo pvo) throws DataAccessException {
+		appDao.updatePoly(pvo);
+	}
+
+	@Override
+	public void insertPoly(PolyVo pvo) throws DataAccessException {
+		appDao.insertPoly(pvo);
+	}
+}

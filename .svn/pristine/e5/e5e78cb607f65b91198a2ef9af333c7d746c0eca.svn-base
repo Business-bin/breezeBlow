@@ -1,0 +1,23 @@
+/*****************************************************************************
+ * Name : ready
+ * Desc : Param
+ ******************************************************************************/
+$(function(){
+	if($("#gubun").val() == "new"){
+		$("#modApp").hide();
+	}else{
+		$("#addApp").hide();
+	}
+
+	$("#modApp").click(function(){
+		ajaxForm("insertAppForm","/app/updateAppVrs");
+	});
+
+	$("#backAppList").click(function(){
+		location.href="/app/appVrsList";
+	});
+
+	$("#addApp").click(function(){
+		ajaxForm("insertAppForm","/app/insertAppVrs");
+	});
+});

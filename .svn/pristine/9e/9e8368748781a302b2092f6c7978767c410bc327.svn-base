@@ -1,0 +1,138 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	
+	console.log("qnaView");
+	
+	
+	$('#btn_reply').click(function(){
+		console.log("btn_reply");
+		reply();
+	});
+	
+	$('#btn_mod').click(function(){
+		console.log("btn_mod");
+		modQna();
+	});
+	
+	$('#btn_del').click(function(){
+		console.log("btn_del");
+		delQna();
+	});
+	
+});
+
+function reply(){
+	
+//	var val = $("#ntc_yn option:selected").val();
+//	$('#ntc_yn').val(val);
+
+	if($('#bd_reply').val()==''){
+		alert('답변을 입력하세요.');
+		$('#bd_reply').focus();
+	}else if(confirm("저장 하시겠습니까?") == true){
+		
+		$.ajax({
+			url : '/board/qnaViewProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+				bd_sq        : $('#bd_sq').val(),
+				bd_reply	 : $('#bd_reply').val()                
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("저장 되었습니다.");
+				window.location.replace("/board/qnaList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+	
+}
+
+function modQna(){
+	
+	var val = $("#ntc_yn option:selected").val();
+	$('#ntc_yn').val(val);
+
+	if($('#bd_nm').val()==''){
+		alert('제목을 입력하세요.');
+		$('#bd_nm').focus();
+	}else if ($('#bd_cont').val() == '') {
+		alert('내용을 입력하세요.');
+		$('#bd_cont').focus();
+	}else if(confirm("저장 하시겠습니까?") == true){
+		
+		$.ajax({
+			url : '/board/qnaViewProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+				ntc_yn       : $('#ntc_yn').val(),
+				bd_nm	     : $('#bd_nm').val(),	  
+				bd_cont      : $('#bd_cont').val(), 
+				bd_tp_1      : $('#bd_tp_1').val()                  
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("저장 되었습니다.");
+				window.location.replace("/board/qnaList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+	
+}
+
+function delQna(){
+//	var user_id = $('#user_id').val();
+//	var user_name = $('#user_name').val();
+	var bd_sq = $('#bd_sq').val();
+
+//	var url_reTarget = '/board/noticeDel?user_id='+encodeURIComponent(user_id)+'&user_name='+encodeURIComponent(user_name)
+//	+'&adm_sq='+encodeURIComponent(adm_sq);
+	
+	var url_reTarget = '/board/qnaDel?bd_sq='+encodeURIComponent(bd_sq);
+	launchCenter(url_reTarget,'상세', 400, 400,'menubar=no, status=no, toolbar=no');	
+}
+
+//popup
+function launchCenter(url, name, width, height, att) {
+
+	var str = "height=" + height + ",innerHeight=" + height;
+	str += ",width=" + width + ",innerWidth=" + width;
+
+	if (window.screen) {
+		// screen.width : 현재 운영체제의 너비
+		// screen.height : 현재 운영체제의 높이
+		var ah = screen.availHeight - 30;
+		var aw = screen.availWidth - 10;
+
+		// 중앙위치 구해오기
+		var xc = (aw - width) / 2;
+		var yc = (ah - height) / 2;
+
+		str += ",left=" + xc + ",screenX=" + xc;
+		str += ",top=" + yc + ",screenY=" + yc;
+		str += "," + att
+	}
+	
+	return window.open(url, name, str);
+}
+
+
+

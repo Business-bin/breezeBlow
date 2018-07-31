@@ -1,0 +1,80 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+<%
+HttpSession session1 = request.getSession(false);
+String adm_email = session1.getAttribute("ADM_EMAIL").toString();
+String adm_nm = session1.getAttribute("ADM_NM").toString();
+
+
+
+%>
+<section>
+		<div class="container">
+			<div class="container_body">
+			<!-- 
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> Manager</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Manager</li>
+					</ul>
+				</div>
+			 -->
+			    <form name="noticeDelForm" id="noticeDelForm" method="post" action="">
+			    <input type="hidden" name="bd_sq" id="bd_sq" value="${dMap.bd_sq}"/> 
+				<table class="basictables">
+				
+					<tr>
+						<th>관리자ID</th>
+						<td>
+							<input type="text" name="adm_id" id="adm_id" value="<%=adm_email%>" style="width:200px" readonly/>
+						</td>
+					</tr>				
+					<tr>
+						<th>회원명</th>
+						<td>
+							<input type="text" name="user_name" id="user_name" value="<%=adm_nm%>" style="width:150px" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<th>회원 이메일</th>
+						<td>
+							<input type="text" name="user_id" id="user_id" value="<%=adm_email%>" style="width:200px" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<th>삭제사유</th>
+						<td>
+							<textarea rows="6" name="comment" id="comment"  style="width:100%"></textarea>
+						</td>
+					</tr>		
+					
+				</table>
+				</form>
+				<div class="button_area tcenter">
+					<button class="button" id="btn_del"><i class="axi axi-delete2"></i> 삭제</button>
+					<button class="button" id="btn_del" onclick="javascript:self.close();"><i class="axi axi-cancel"></i>닫기</button>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/board/faqDel.js"></script>

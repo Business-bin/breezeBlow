@@ -1,0 +1,165 @@
+/********************************************************************
+Name   : 전역 환경 설정                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(function() {
+	$( "#datepicker" ).datepicker( $.datepicker.regional[ "ko" ] );
+	
+	//로딩바
+	var ima = '<div class="wrap-loading display-none"><div><img src="/resources/images/ajax-loader.gif" /></div></div>';
+	var loading = $(ima).appendTo(document.body).hide();
+
+	 //Ajax 시작시 로딩바 보여 줌.
+	 $(document).ajaxStart(function() {
+		 if(window.location.pathname == "/"){return false;}
+		 loading.show();
+		 wrapWindowByMask();
+	 });
+
+	 //Ajax 완료시 로딩바 감춤.
+	 $(document).ready(function() {
+		 $(this).ajaxStop(function() {
+			 loading.hide();
+			 $('#mask').hide();
+		 });
+	 });
+ 
+}); 
+
+/********************************************************************
+Name   : wrapWindowByMask                                               
+Desc   : 
+Param  :            
+********************************************************************/
+function wrapWindowByMask(){
+	//화면의 높이와 너비를 구한다.
+	var maskHeight = $(document).height();  
+	var maskWidth = $(window).width();  
+	
+	//마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
+	$('#mask').css({'width':maskWidth,'height':maskHeight});  
+	
+	//애니메이션 효과 - 일단 1초동안 까맣게 됐다가 80% 불투명도로 간다.
+	//$('#mask').fadeIn(1000);      
+	$('#mask').fadeTo("slow",0.6);    
+}
+
+
+
+/********************************************************************
+Name   :      idCheck                                            
+Desc   : 
+Param  :            
+********************************************************************/
+function idCheck(email) {
+	//var email = $('#loginId').val();
+	var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+	if(exptext.test(email)==false){
+		//이메일 형식이 알파벳+숫자@알파벳+숫자.알파벳+숫자 형식이 아닐경우			
+		alert("메일형식이 올바르지 않습니다.");
+		return false;
+	}
+
+}
+
+/********************************************************************
+Name   :      isValidFormPassword                                            
+Desc   : 
+Param  :            
+********************************************************************/
+function checkPassword(pw) {
+	var check = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,16}$/;
+	if (!check.test(pw))     {
+	       return false;
+	}
+	if (pw.length < 8 || pw.length > 16) {
+	  return false;
+	}
+	return true;
+}
+
+
+/* showPaging($("#curPage").val(),$("#totalPage").val());
+<form action="" method="post" id="listForm">
+<input type="hidden" value="11" id="totalPage" name="totalPage" />
+<input type="hidden" value="1" id="curPage" name="curPage" />
+<input type="hidden" value="10" id="rowPerPage" name="rowPerPage" />
+</form>
+<div class="paging"  id="paging" onclick="clickPaging(event,'listForm')">*/
+function showPaging(page,totalPage){ // page =  현재페이지, totalPage = 총 페이지 수
+	page = parseInt(page);
+	totalPage = parseInt(totalPage);
+	var paging = $('#paging');
+	paging.html("");
+	var defSpan = $(document.createElement('span'));
+	var limit = 10;
+	var st = Math.floor((page-1)/limit)*(limit)+1;
+	var ed = Math.min(st+limit-1,totalPage);
+	var spans = [];
+	if(totalPage<=0){
+		paging.html("NoPage");
+		return;
+	}
+
+	var span = defSpan.clone();
+	span.prop('page',1);
+	span.text('처음');
+	spans.push(span);
+
+	var span = defSpan.clone();
+	span.prop('page',(st-1)<=0?-1:(st-1));
+	span.text('이전');
+	spans.push(span);
+
+	for(var i=st,m=ed;i<=m;i++){
+		var span = defSpan.clone();
+		span.prop('page',i);
+		if(i == page){
+			span.addClass('current');
+		}
+		span.text(i);
+		spans.push(span);
+	}
+
+	var span = defSpan.clone();
+	span.prop('page',(ed+1)>=totalPage?-1:(ed+1));
+	span.text('다음');
+	spans.push(span);
+
+	var span = defSpan.clone();
+	span.prop('page',totalPage);
+	span.text('마지막');
+	spans.push(span);
+
+	for(var i=0,m=spans.length;i<m;i++){
+		paging.append(spans[i]);
+	}
+}
+
+function clickPaging(event, formId){ // formId = 전송할 form의 id
+	var curPage = parseInt($("#curPage").val()); // 현재페이지
+	var totalPage = parseInt($("#totalPage").val()); // 총 페이지 수
+	event = $(event)[0];
+	if(event.target && event.target.tagName =='SPAN' && event.target.page && event.target.page > 0){
+		curPage = event.target.page;
+	}else if(event.target.textContent == '다음' && curPage < totalPage){
+		curPage = curPage+1;
+	}else if(event.target.textContent == '이전' && curPage > 1){
+		curPage = curPage-1;
+	}else if(event.target.textContent == '처음'){
+		curPage = 1;
+	}else if(event.target.textContent == '마지막'){
+		curPage = totalPage;
+	}
+	submitPaging(curPage, formId)
+	return false;
+}
+
+function submitPaging(curPage, formId){ // formId = 전송할 form의 id
+	$("#curPage").val(curPage);
+	$("#"+formId)[0].submit();
+}
+
+
+

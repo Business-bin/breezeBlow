@@ -1,0 +1,706 @@
+package com.brb.product.controller;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.brbcom.common.util.ApplicationContextHolder;
+import com.brb.brbcom.common.util.RequestParameterUtil;
+import com.brb.brbcom.common.util.Util;
+import com.brb.brbcom.foundation.property.PropertyService;
+import com.brb.product.model.FwrVo;
+import com.brb.product.model.MdVo;
+import com.brb.product.model.PprtVo;
+import com.brb.product.service.ProductService;
+/**
+ *
+ * @author back
+ *
+ */
+@Controller
+public class ProductController {
+
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
+	protected PropertyService propertyService = (PropertyService)ApplicationContextHolder.getContext().getBean("propertiesService");
+
+	@Autowired
+	ProductService productService;
+
+	/**
+	 * 모델 리스트
+	 * @param MdVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/modelList")
+	public ModelAndView modelList(@ModelAttribute MdVo mvo){
+		ModelAndView view = new ModelAndView();
+		view.addObject("model", productService.getModel());
+		view.setViewName("product/modelList");
+		return view;
+	}
+
+	/**
+	 * 모델 검색
+	 * @param HttpServletRequest
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/product/modelSearch")
+	public ModelAndView modelSearch(HttpServletRequest request){
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap = RequestParameterUtil.getParameterMap(request);
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "MD_SQ" : bMap.getString("sidx");
+
+		if("MD_SQ".equals(sidx)){
+			sidx = "MD_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *10 );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)productService.getModelList(bMap).get("modelList");
+		//리스트 카운트 조회
+		totalcnt = (int)productService.getModelList(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 모델 검색2(제품등록)
+	 * @param HttpServletRequest
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/product/modelSearch2")
+	public ModelAndView modelSearch2(HttpServletRequest request){
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap = RequestParameterUtil.getParameterMap(request);
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "MD_SQ" : bMap.getString("sidx");
+
+		if("MD_SQ".equals(sidx)){
+			sidx = "MD_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *10 );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)productService.getModelList2(bMap).get("modelList");
+		//리스트 카운트 조회
+		totalcnt = (int)productService.getModelList2(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 모델 상세
+	 * @param MdVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/modelDet")
+	public ModelAndView modelDet(@ModelAttribute MdVo mvo){
+		ModelAndView view = new ModelAndView();
+		if(mvo.getGubun().equals("det")){
+			view.addObject("modelDet", productService.getModelDet(mvo));
+		}
+		view.addObject("gubun", mvo.getGubun());
+		view.setViewName("product/modelDet");
+		return view;
+	}
+
+	/**
+	 * 모델 등록
+	 * @param MdVo, HttpSession
+	 * @return
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/insertModel")
+	public void insertModel(@ModelAttribute MdVo mvo, HttpSession session){
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try{
+			BufferedOutputStream bos = null;
+	    	String fileName = mvo.getModelFile().getOriginalFilename();
+	    	mvo.setOrgImageNm(fileName);
+	    	byte[] bytes = mvo.getModelFile().getBytes();
+	    	String saveFileName = getExtension(fileName, today);
+	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+	    	mvo.setChImageNm("/upload/product/" + saveFileName);
+	    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
+    		bos.write(bytes);
+    		bos.flush();
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("imgUpload Fail, error : "+e);
+	    } finally{
+	    	logger.debug("File Upload Success!!");
+	    }
+		mvo.setRegAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+		productService.insertModel(mvo);
+	}
+
+	/**
+	 * 제품 수정
+	 * @param MdVo, HttpSession
+	 * @return
+	 * @throws
+	 */
+	@RequestMapping(value="/product/updateModel")
+	public void updateModel(@ModelAttribute MdVo mvo, HttpSession session){
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try{
+			if(mvo.getModelFile() != null){
+				if(mvo.getDelImageNm() != null && mvo.getDelImageNm() != ""){
+					File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + mvo.getDelImageNm());
+					if(file.exists()){
+						if(file.delete()){
+							logger.debug(mvo.getDelImageNm()+"File Delete Success!!");
+							System.out.println(mvo.getDelImageNm()+"File Delete Success!!");
+						}else{
+							logger.debug(mvo.getDelImageNm()+"File Delete Fail!!");
+							System.out.println(mvo.getDelImageNm()+"File Delete Fail!!");
+						}
+					}else{
+						logger.debug(mvo.getDelImageNm()+"No File!!");
+						System.out.println(mvo.getDelImageNm()+"No File!!");
+					}
+				}
+				BufferedOutputStream bos = null;
+		    	String fileName = mvo.getModelFile().getOriginalFilename();
+		    	mvo.setOrgImageNm(fileName);
+		    	byte[] bytes = mvo.getModelFile().getBytes();
+		    	String saveFileName = getExtension(fileName, today);
+		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+		    	mvo.setChImageNm("/upload/product/" + saveFileName);
+		    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
+	    		bos.write(bytes);
+	    		bos.flush();
+		    	bos.close();
+			}
+	    } catch (Exception e){
+	    	logger.debug("ImgUpload Fail, error : "+e);
+	    } finally{
+	    	logger.debug("File Upload Success!!");
+	    }
+		mvo.setUptAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+		productService.updateModel(mvo);
+	}
+
+	/**
+	 * 제품 리스트
+	 * @param
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/productList")
+	public ModelAndView productList(){
+		ModelAndView view = new ModelAndView();
+		view.addObject("sList", productService.getProdSearch());
+		view.setViewName("product/productList");
+		return view;
+	}
+
+	/**
+	 * 제품 등록 화면
+	 * @param
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/productNew")
+	public ModelAndView productNew(){
+		ModelAndView view = new ModelAndView();
+		view.setViewName("product/productNew");
+		return view;
+	}
+
+	/**
+	 * 펌웨어버전(모델번호)
+	 * @param int
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/fwrVrsList")
+	public ModelAndView fwrVrsList(@RequestParam int mdSq){
+		ModelAndView view = new ModelAndView();
+		view.addObject("fwrList", productService.fwrList(mdSq));
+		return view;
+	}
+
+	/**
+	 * MacAddress중복체크
+	 * @param String
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/macDupCheck")
+	public ModelAndView macDupCheck(@RequestParam String pprtMac){
+		ModelAndView view = new ModelAndView();
+		view.addObject("dup", productService.macDupCheck(pprtMac));
+		return view;
+	}
+
+	/**
+	 * 제품 등록
+	 * @param PprtVo, HttpSession
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/insertProduct")
+	public void insertProduct(@ModelAttribute PprtVo pvo, HttpSession session){
+		pvo.setRegAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+		productService.insertProduct(pvo);
+	}
+
+	/**
+	 * 제품 검색
+	 * @param HttpServletRequest
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/product/productSearch")
+	public ModelAndView productSearch(HttpServletRequest request){
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap	= RequestParameterUtil.getParameterMap(request);
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "PPRT_SQ" : bMap.getString("sidx");
+
+		if("PPRT_SQ".equals(sidx)){
+			sidx = "PPRT_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *10 );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)productService.getProdList(bMap).get("prodList");
+		//리스트 카운트 조회
+		totalcnt = (int)productService.getProdList(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 제품 상세
+	 * @param PprtVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/productDet")
+	public ModelAndView productDet(@ModelAttribute PprtVo pvo, HttpSession session){
+		ModelAndView view = new ModelAndView();
+		view.addObject("prodDet", productService.getProdDet(pvo));
+		view.addObject("code", productService.getCode());
+		view.addObject("gubun", pvo.getGubun());
+		view.addObject("adminId", session.getAttribute("ADM_EMAIL"));
+		view.setViewName("product/productDet");
+		return view;
+	}
+
+	/**
+	 * 매칭기기등록
+	 * @param PprtVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/matching")
+	public ModelAndView matching(@ModelAttribute PprtVo pvo){
+		ModelAndView view = new ModelAndView();
+		productService.matching(pvo);
+		return view;
+	}
+
+	/**
+	 * 제품 초기화
+	 * @param PprtVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/initProduct")
+	public ModelAndView initProduct(@ModelAttribute PprtVo pvo){
+		ModelAndView view = new ModelAndView();
+		productService.initProduct(pvo);
+		return view;
+	}
+
+	/**
+	 * 제품 사용중지
+	 * @param PprtVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/stopProduct")
+	public ModelAndView stopProduct(@ModelAttribute PprtVo pvo){
+		ModelAndView view = new ModelAndView();
+		productService.stopProduct(pvo);
+		return view;
+	}
+
+	/**
+	 * 제품 상세2
+	 * @param PprtVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value="/product/productDet2")
+	public ModelAndView productDet2(@ModelAttribute PprtVo pvo){
+		ModelAndView view = new ModelAndView();
+		view.addObject("prodDet", productService.getProdDet(pvo));
+		return view;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value="/product/macSearch")
+	public ModelAndView macSearch(HttpServletRequest request){
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap	= RequestParameterUtil.getParameterMap(request);
+		BrbMap<Object, Object> adminMap = null;
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "MD_SQ" : bMap.getString("sidx");
+
+		if("MD_SQ".equals(sidx)){
+			sidx = "MD_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *rowSize );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)productService.getMacList(bMap).get("macList");
+		//리스트 카운트 조회
+		totalcnt = (int)productService.getMacList(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		if(infoList.size()>0) {
+			for(int i=0; i<infoList.size(); i++) {
+				adminMap = (BrbMap<Object, Object>) infoList.get(i);
+				adminMap.put("ROWNUM", (currentPage -1) *rowSize+i+1);
+			}
+		}
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 펌웨어 리스트
+	 * @param
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/fwrList")
+	public ModelAndView fwrList(){
+		ModelAndView view = new ModelAndView();
+		view.setViewName("product/fwrList");
+		return view;
+	}
+
+	/**
+	 * 펌웨어 검색
+	 * @param HttpServletRequest
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/product/fwrSearch")
+	public ModelAndView fwrSearch(HttpServletRequest request){
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> bMap	= RequestParameterUtil.getParameterMap(request);
+		List infoList = null;
+		int rowSize = Util.attrParseInt(bMap, "rows");
+		int currentPage = Util.attrParseInt(bMap, "page");
+		String sidx = bMap.getString("sidx") == "" ? "FWR_SQ" : bMap.getString("sidx");
+
+		if("FWR_SQ".equals(sidx)){
+			sidx = "FWR_SQ";
+		}
+		String sord = bMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    bMap.put("orderBy", orderbyColum);
+	    bMap.put("R_PAGE", (currentPage -1) *10 );
+	    bMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+
+		//리스트 조회
+		infoList = (List)productService.getFwrList(bMap).get("fwrList");
+		//리스트 카운트 조회
+		totalcnt = (int)productService.getFwrList(bMap).get("totalPage");
+
+		double dSize = Util.attrParseInt(bMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);
+		return view;
+	}
+
+	/**
+	 * 펌웨어 상세
+	 * @param FwrVo
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/product/fwrDet")
+	public ModelAndView fwrDet(@ModelAttribute FwrVo fvo){
+		ModelAndView view = new ModelAndView();
+		view.addObject("fwrDet", productService.getFwrDet(fvo));
+		view.addObject("gubun", fvo.getGubun());
+		view.setViewName("product/fwrDet");
+		return view;
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/product/insertFwr")
+	public ModelAndView insertFwr(@ModelAttribute FwrVo fvo, HttpSession session){
+		ModelAndView view = new ModelAndView();
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try{
+			BufferedOutputStream bos = null;
+	    	String fileName = fvo.getFwrFile().getOriginalFilename();
+	    	byte[] bytes = fvo.getFwrFile().getBytes();
+	    	String saveFileName = getExtension(fileName, today);
+	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+	    	fvo.setFwrFileNm("/upload/product/" + saveFileName);
+	    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
+    		bos.write(bytes);
+    		bos.flush();
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("imgUpload Fail, error : "+e);
+	    } finally{
+	    	logger.debug("File Upload Success!!");
+	    }
+		fvo.setRegAdmSq((Integer.parseInt((String)session.getAttribute("ADM_SQ"))));
+		productService.insertFwr(fvo);
+		return view;
+	}
+
+	@RequestMapping(value="/product/excelUpload")
+	public ModelAndView excelUpload(){
+		ModelAndView view = new ModelAndView();
+		view.setViewName("product/excelUpload");
+		return view;
+	}
+
+	@RequestMapping(value="/product/excelUploadFile", method = RequestMethod.POST)
+	public void excelUploadFile(MultipartHttpServletRequest request){
+		List<MultipartFile> mpf = request.getFiles("imgFile");
+		String [] oriName = new String[mpf.size()];
+		String today = "";
+		for(int i=0; i<mpf.size(); i++){
+			oriName[i] = mpf.get(i).getOriginalFilename();
+		}
+		String excelType = request.getParameter("excelType");
+		if(excelType.equals("xlsx")){
+			today = productService.xlsxExcelReader(request, oriName);
+		}else if(excelType.equals("xls")){
+			today = productService.xlsExcelReader(request, oriName);
+		}
+		try{
+			BufferedOutputStream bos = null;
+	    	for(int i=0; i<mpf.size(); i++){
+		    	String fileName = mpf.get(i).getOriginalFilename();
+		    	byte[] bytes = mpf.get(i).getBytes();
+		    	String saveFileName = getExtension(fileName, today);
+		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+	    		bos = new BufferedOutputStream(new FileOutputStream(savePath));
+	    		bos.write(bytes);
+	    		bos.flush();
+	    	}
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("Excel Upload Fail!!");
+	    }
+	}
+
+	/**
+	 * getExtension
+	 * @param fileName
+	 * @return
+	 */
+	public String getExtension(String fileName, String today){
+	    int dotPosition = fileName.lastIndexOf('.');
+	    if ((-1 != dotPosition) && (fileName.length() - 1 > dotPosition)) {
+	    	return fileName.substring(0, dotPosition)+today+"."+fileName.substring(dotPosition + 1);
+	    }
+	    return "";
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/product/csvLoad")
+	public ModelAndView csvLoad(MultipartHttpServletRequest request, HttpSession session) throws IOException{
+		ModelAndView view = new ModelAndView();
+		MultipartFile file = request.getFile("csvFile");
+		BufferedReader br = new BufferedReader(new InputStreamReader((file.getInputStream()),"UTF8"));
+		String [] temp;
+		String s;
+		PprtVo pvo;
+		ArrayList<PprtVo> ar = new ArrayList<PprtVo>();
+		br.readLine();
+		boolean wrong = true;
+		while((s = br.readLine()) != null){
+			pvo = new PprtVo();
+			temp = s.split(",");
+			if(temp[0].equals("") || temp[1].equals("") || temp[2].equals("") || temp[4].equals("")){
+				wrong = false;
+			}
+			pvo.setPprtMac(temp[0]);
+			pvo.setMdNm(temp[1]);
+			pvo.setMiniYn(temp[2]);
+			if(temp[2].equals("Y")){
+				if(temp[3].equals("")){
+					wrong = false;
+				}
+			}
+			pvo.setPprtMaMac(temp[3]);
+			pvo.setFwrSq(Integer.parseInt(temp[4]));
+			ar.add(pvo);
+		}
+		boolean mac1 = true;
+		for(int i=0; i<ar.size(); i++){
+			for(int k=i; k<ar.size()-1; k++){
+				if(ar.get(i).getPprtMac().equals(ar.get(k+1).getPprtMac())){
+					mac1 = false;
+				}
+			}
+		}
+		boolean mac2 = productService.validation(ar);
+
+		view.addObject("csvList", ar);
+		view.addObject("mac1", mac1);
+		view.addObject("mac2", mac2);
+		view.addObject("wrong", wrong);
+		br.close();
+		return view;
+	}
+
+	@RequestMapping(value="/product/csvUploadFile")
+	public ModelAndView csvUploadFile(MultipartHttpServletRequest request, HttpSession session) throws IOException{
+		ModelAndView view = new ModelAndView();
+		MultipartFile file = request.getFile("csv");
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\"+file.getOriginalFilename())),"UTF8"));
+		String [] temp;
+		String s;
+		MdVo mvo;
+		ArrayList<MdVo> ar = new ArrayList<MdVo>();
+		br.readLine();
+		while((s = br.readLine()) != null){
+			mvo = new MdVo();
+			temp = s.split(",");
+			mvo.setMdSq(Integer.parseInt(temp[0]));
+			mvo.setCpNm(temp[1]);
+			mvo.setDes(temp[2]);
+			mvo.setDetSpec(temp[3]);
+			mvo.setOrgImageNm(temp[4]);
+			mvo.setChImageNm(temp[5]);
+			mvo.setOrgThumNm(temp[6]);
+			mvo.setChThumNm(temp[7]);
+			mvo.setInvNum(Integer.parseInt(temp[8]));
+			mvo.setStat(temp[9]);
+			mvo.setRegAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+			ar.add(mvo);
+		}
+		for(int i=0; i<ar.size(); i++){
+			productService.insertModel(ar.get(i));
+		}
+		br.close();
+		view.setViewName("product/csvUpload");
+		return view;
+	}
+
+}

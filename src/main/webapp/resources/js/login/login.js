@@ -1,0 +1,122 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function(){
+
+	$('#loginBtn').click(function(){
+		login();
+	});
+
+
+	$('#passFind').click(function(){
+		sendPassword();
+	});
+	
+    
+	$("#loginPw").keypress(function(e) {
+	   if(e.keyCode==13) {
+		   login();
+	   }
+	});    
+
+});
+
+
+/********************************************************************
+Name   :      login
+Desc   :
+Param  :
+********************************************************************/
+function login(){
+
+	if($('#loginId').val().length <= 0){
+		alert("메일ID를 입력해주세요");
+		return false;
+	}
+	if($('#loginPw').val().length <= 0){
+		alert("비밀번호를 입력해주세요");
+		return false;
+	}
+	if(idCheck($('#loginId').val()) == false){
+		return false;
+	}
+
+	if(checkPassword($('#loginPw').val()) == false){
+	//	alert("비밀번호 형식에 맞지 않습니다.");
+		return false;
+	}
+	$.ajax(
+			{async : true
+			,type : "POST"
+			,url : "/login/login"
+			,dataType : "json"
+			,data: {R_ADM_EMAIL : $('#loginId').val(),
+				R_ADM_PWD : $('#loginPw').val(),
+				R_IP : $('#ip').val()
+			 }
+			,success : function(jsonData) {
+				if(null !=  jsonData &&  jsonData.USERCHECK =='Y'){
+				  	location.href= "/main";
+				} else {
+					alert("id 또는 비번 확인");
+				}
+			}
+			,error:	function(request,status,error){
+				console.log(request);
+				console.log(error);
+			}
+	});
+
+}
+
+
+/********************************************************************
+Name   :      login
+Desc   :
+Param  :
+********************************************************************/
+function sendPassword(){
+
+	if($('#loginId').val().length <= 0){
+		alert("메일ID를 입력해주세요");
+		return false;
+	}
+	if(idCheck($('#loginId').val()) == false){
+		return false;
+	}
+
+	if (confirm("["+$('#loginId').val() + "] 로 임시 패스워드를 보내시겠습니까?") == true){
+
+
+		$.ajax(
+				{async : true
+				,type : "POST"
+				,url : "/login/passSend"
+				,dataType : "json"
+				,data: {R_ADM_EMAIL : $('#loginId').val()}
+				,success : function(jsonData) {
+					if(null !=  jsonData){
+						console.log(jsonData);
+						if(jsonData.status =='Y'){
+							alert("귀하에 메일로 임시 비밀번호가 정상 발송 되었습니다. 비밀번호를 확인후 입력해주세요.");
+						} else {
+							alert(jsonData.message);
+						}
+					}
+
+				}
+				,error:	function(request,status,error){
+					console.log(status);
+					console.log(error);
+					alert(error)
+				}
+		});
+	}else{
+	    return;
+	}
+
+}
+
+

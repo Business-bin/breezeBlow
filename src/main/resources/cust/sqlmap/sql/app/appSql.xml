@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="app">
+  <select id="getAppStat" resultType="brbMap">
+  	SELECT
+  		CODE,
+  		CODENAME
+  	FROM TB_CODE
+  		WHERE GROUPID = 'APPSTAT'
+  </select>
+
+  <select id="getAppVrsDet" parameterType="java.lang.Integer" resultType="brbMap">
+  	SELECT
+  		A.APP_SQ,
+  		A.APP_VRS,
+  		A.APP_VNM,
+  		A.APP_OS,
+  		A.STAT,
+  		(SELECT CODENAME FROM TB_CODE WHERE GROUPID='APPSTAT' AND CODE = A.STAT) AS CODENAME
+  	FROM TB_APP A
+  		WHERE APP_SQ = #{appSq}
+  </select>
+
+  <select id="getAppVrsList"  parameterType="brbMap" resultType="brbMap">
+    SELECT
+    	A.APP_SQ,
+    	A.APP_VNM,
+    	A.APP_VRS,
+    	A.APP_OS,
+    	(SELECT CODENAME FROM TB_CODE WHERE GROUPID = 'APPSTAT' AND CODE = A.STAT) AS STATCODE,
+    	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d %H:%i:%S') AS REG_DTTM
+	FROM TB_APP A
+		WHERE 1=1
+		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="appOs != null and appOs != '' ">
+			AND A.APP_OS = #{appOs}
+		</if>
+		<if test="keyword != null and keyword != '' ">
+			AND A.APP_VNM LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="stat != null and stat != '' ">
+			AND A.STAT = #{stat}
+		</if>
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}
+  </select>
+
+  <select id="getAppVrsTotal"  parameterType="brbMap" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM TB_APP
+		WHERE 1=1
+		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="appOs != null and appOs != '' ">
+			AND APP_OS = #{appOs}
+		</if>
+		<if test="keyword != null and keyword != '' ">
+			AND APP_VNM LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="stat != null and stat != '' ">
+			AND STAT = #{stat}
+		</if>
+  </select>
+
+  <update id="updateAppVrs" parameterType="com.brb.app.model.AppVo">
+    UPDATE TB_APP SET
+		APP_VNM = #{appVnm},
+		APP_VRS = #{appVrs},
+		STAT = #{stat},
+		APP_OS = #{appOs},
+		UPT_DTTM = now(),
+		UPT_ADM_SQ = #{uptAdmSq}
+	WHERE APP_SQ = #{appSq}
+  </update>
+
+  <insert id="insertAppVrs" parameterType="com.brb.app.model.AppVo">
+      INSERT INTO TB_APP
+      (
+		APP_SQ, APP_VNM, APP_VRS,
+		STAT, REG_DTTM, REG_ADM_SQ,
+		APP_OS
+      )
+      VALUES
+      (
+		NEXTVAL('APP_SQ'), #{appVnm}, #{appVrs},
+		#{stat}, now(), #{regAdmSq},
+		#{appOs}
+      )
+  </insert>
+
+  <select id="getDeviceList" parameterType="java.lang.Integer" resultType="brbMap">
+		SELECT
+			B.HP_MD_NM AS MODEL,
+			COUNT(B.HP_MD_NM) AS CNT
+			FROM TB_MEM A JOIN TB_PUSH_USER_INFO B
+			ON A.MEM_SQ = B.MEM_SQ
+		WHERE 1=1
+			AND DATE(A.REG_DTTM) <![CDATA[>=]]> STR_TO_DATE(#{R_MONTHFROM},'%Y%m%d')
+			AND DATE(A.REG_DTTM) <![CDATA[<=]]> STR_TO_DATE(#{R_MONTHTO}, '%Y%m%d')
+		GROUP BY B.HP_MD_NM
+  </select>
+
+   <select id="getOsList" parameterType="java.lang.Integer" resultType="brbMap">
+  	SELECT
+			SUM(IF(B.HP_OS = 'android',1,0)) AS ANDROIDCNT,
+			SUM(IF(B.HP_OS = 'ios',1,0)) AS IOSCNT
+		FROM
+		TB_MEM A JOIN TB_PUSH_USER_INFO B
+		ON A.MEM_SQ = B.MEM_SQ
+	WHERE 1=1
+	AND DATE(A.REG_DTTM) <![CDATA[>=]]> STR_TO_DATE(#{R_MONTHFROM},'%Y%m%d')
+	AND DATE(A.REG_DTTM) <![CDATA[<=]]> STR_TO_DATE(#{R_MONTHTO}, '%Y%m%d')
+  </select>
+
+  <select id="getAgeList" parameterType="java.lang.Integer" resultType="brbMap">
+  	SELECT
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 10 AND 19 , 1, 0)) AS AGE_10,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 20 AND 29 , 1, 0)) AS AGE_20,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 30 AND 39 , 1, 0)) AS AGE_30,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 40 AND 49 , 1, 0)) AS AGE_40,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 50 AND 59 , 1, 0)) AS AGE_50,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 60 AND 69 , 1, 0)) AS AGE_60,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 70 AND 79 , 1, 0)) AS AGE_70,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 80 AND 89 , 1, 0)) AS AGE_80,
+		SUM(IF(DATE_FORMAT(NOW(),'%Y')-SUBSTRING(MEM_BIR,1,4) BETWEEN 90 AND 99 , 1, 0)) AS AGE_90
+	FROM TB_MEM
+	WHERE 1=1
+	AND DATE(REG_DTTM) <![CDATA[>=]]> STR_TO_DATE(#{R_MONTHFROM},'%Y%m%d')
+	AND DATE(REG_DTTM) <![CDATA[<=]]> STR_TO_DATE(#{R_MONTHTO}, '%Y%m%d')
+  </select>
+
+	<select id="getTutorialList"  parameterType="brbMap" resultType="brbMap">
+	    SELECT
+	    	TUT_SQ,
+	    	TUT_NM,
+	    	TUT_CONT,
+	    	IF(STAT='01','노출','비노출') AS STATCODE,
+	    	DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i:%S') AS REG_DTTM
+		FROM TB_TUT
+			WHERE
+			STAT != '03'
+			<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+				AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+			</if>
+			<if test=" search != null and search != '' ">
+				AND TUT_NM LIKE CONCAT('%',#{search},'%')
+			</if>
+			ORDER BY STAT,${orderBy}
+			LIMIT ${R_PAGE} , ${R_ROW}
+	</select>
+
+	 <select id="getTutorialTotal"  parameterType="brbMap" resultType="java.lang.Integer">
+	     SELECT
+	   		COUNT(*)
+			FROM TB_TUT
+		WHERE 1=1
+		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test=" search != null and search != '' ">
+			AND TUT_NM LIKE CONCAT('%',#{search},'%')
+		</if>
+	 </select>
+
+	 <select id="getTutorialDet" parameterType="java.lang.Integer" resultType="brbMap">
+	 	SELECT
+	 		*
+	 	FROM TB_TUT
+	 		WHERE TUT_SQ = #{tutSq}
+	 </select>
+
+	 <update id="updateTutorial" parameterType="brbMap">
+	    UPDATE TB_TUT SET
+			TUT_NM = #{tutNm},
+			TUT_CONT = #{tutCont},
+			STAT = #{stat},
+			UPT_DTTM = now(),
+			UPT_ADM_SQ = #{uptAdmSq}
+		WHERE TUT_SQ = #{tutSq}
+	  </update>
+
+	  <update id="updateTutorialStat">
+	    UPDATE TB_TUT SET
+			STAT = '02'
+		WHERE STAT = '01'
+	  </update>
+
+	  <update id="deleteTutorial" parameterType="brbMap">
+	     UPDATE TB_TUT SET
+			STAT = '03',
+			DEL_DTTM = now(),
+			DEL_ADM_SQ = #{delAdmSq}
+		WHERE TUT_SQ = #{tutSq}
+	  </update>
+
+	  <insert id="insertTutorial" parameterType="brbMap">
+	      INSERT INTO TB_TUT
+	      (
+			TUT_SQ, TUT_NM, TUT_CONT,
+			STAT, REG_DTTM, REG_ADM_SQ
+	      )
+	      VALUES
+	      (
+	      	NEXTVAL('TUT_SQ'), #{tutNm}, #{tutCont},
+			#{stat}, now(), #{regAdmSq}
+	      )
+  	</insert>
+
+  	<insert id="insertTutorialLog" parameterType="brbMap">
+	      INSERT INTO TB_TUT_LOG
+	      (
+			LOG_TUT_SQ, BTBS_SQ, BTBS_NM,
+			TUT_NM, TUT_CONT, DTTM, TUT_SQ
+	      )
+	      VALUES
+	      (
+	      	NEXTVAL('LOG_TUT_SQ'),
+	      	<if test=" uptAdmSq != null and uptAdmSq != '' ">
+	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
+	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
+			</if>
+			<if test=" regAdmSq != null and regAdmSq != '' ">
+	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
+	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
+			</if>
+			<if test=" delAdmSq != null and delAdmSq != '' ">
+	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{delAdmSq}),
+	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{delAdmSq}),
+			</if>
+			#{tutNm}, #{tutCont}, now(),
+			<if test=" tutSq != null and tutSq != '' ">
+				#{tutSq}
+			</if>
+			<if test=" tutSq == null or tutSq == '' ">
+				(SELECT SEQUENCE_CUR_VALUE FROM SEQUENCE WHERE SEQUENCE_NAME='TUT_SQ')-1
+			</if>
+	      )
+  	</insert>
+
+  	<select id="checkTutorial" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+	    SELECT
+	   		COUNT(*)
+			FROM TB_TUT
+		WHERE STAT='01'
+		AND TUT_SQ != #{tutSq}
+	</select>
+ </mapper>

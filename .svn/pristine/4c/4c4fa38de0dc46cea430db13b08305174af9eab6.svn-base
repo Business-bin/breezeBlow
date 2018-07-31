@@ -1,0 +1,32 @@
+package com.brb.common.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.common.service.CommonService;
+
+/**
+ * 
+ * @author back
+ *
+ */
+@Controller
+public class CommonController {
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
+	
+	@Autowired
+	CommonService commonService;
+	
+	@RequestMapping("common/jusoPopup")
+	public ModelAndView juso() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("common/jusoPopup") ;
+		return mav;
+	}
+}

@@ -1,0 +1,104 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> Manager</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Manager</li>
+					</ul>
+				</div>
+				<form name="admViewForm" id="admViewForm" method="post" action="">
+				<input type="hidden" name="adm_sex" id="adm_sex" value="${rMap.admin.ADM_SEX}"/> 
+				<input type="hidden" name="adm_sq" id="adm_sq" value="${rMap.admin.ADM_SQ}"/> 
+				<table class="basictables">
+					<tr>
+						<th>관리자명</th>
+						<td>
+							<input type="text" name="user_name" id="user_name" value="${rMap.admin.ADM_NM}" style="width:150px" maxlength="12"/>
+						</td>
+					</tr>
+					<tr>
+						<th>관리자ID</th>
+						<td>
+							<input type="text" name="user_id" id="user_id" value="${rMap.admin.ADM_ID}" style="width:300px" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<th>비밀번호</th>
+						<td>
+							<input type="text" name="user_pw" id="user_pw" value="${rMap.admin.ADM_PWD}" style="width:150px"/>
+						</td>
+					</tr>		
+					<tr>
+						<th>Email</th>
+						<td>
+							<input type="text" name="user_email" id="user_email" value="${rMap.admin.ADM_EMAIL}" style="width:150px" maxlength="50"/>
+						</td>
+					</tr>
+					<tr>
+						<th>성별</th>
+						<td>
+							<select name="sex" id="sex" style="width:50px">
+								<option value="M">남</option>
+								<option value="F">여</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>사원번호</th>
+						<td><input type="text" name="emp_no" id="emp_no" value="${rMap.admin.ADM_EMPN}" class="numberonly" style="width:150px" maxlength="20"/></td>
+					</tr>
+					<tr>
+						<th>소속</th>
+						<td><input type="text" name="department" id="department" value="${rMap.admin.ADM_PART}" style="width:150px" maxlength="100"/></td>
+					</tr>
+					<tr>
+						<th>직급</th>
+						<td><input type="text" name="position" id="position" value="${rMap.admin.ADM_POSITION}" style="width:150px" maxlength="10"/></td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td>
+							<input type="text" name="phone_no" id="phone_no" value="${rMap.admin.ADM_TEL}" style="width:150px" maxlength="20"/>
+						</td>
+					</tr>
+					<tr>
+						<th>전화번호</th>
+						<td>
+							<input type="text" name="mobile_no" id="mobile_no" value="${rMap.admin.ADM_HP}" style="width:150px"/>
+						</td>
+					</tr>
+				</table>
+				</form>
+				<div class="button_area tcenter">
+					<button type="button" class="button" id="btn_mod"><i class="axi axi-person-add"></i>수정</button>
+					<button type="button" class="button" id="btn_del"><i class="axi axi-delete2"></i>삭제</button>
+					<a href="/btb/btbAdminList" class="button" ><i class="axi axi-cancel"></i> 목록으로</a>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbAdminView.js"></script>

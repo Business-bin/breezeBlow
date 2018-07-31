@@ -1,0 +1,59 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	
+	console.log("adminDel");
+	
+	$('#btn_del').click(function(){
+		console.log("btn_del");
+		delAdmin();
+	});
+
+});
+
+
+/********************************************************************
+Name   : addAdmin                                            
+Desc   : 관리자 신규 생성
+Param  :            
+********************************************************************/
+function delAdmin(){
+
+	if($('#adm_comment').val()==''){
+		alert('삭제사유를 입력하세요.');
+		$('#adm_comment').focus();
+	}else if(confirm("삭제 하시겠습니까?") == true){
+		
+		$.ajax({
+			url : '/btb/btbAdminDelProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+			    adm_sq      : $('#adm_sq').val(),
+			 	user_id     : $('#user_id').val(),
+			 	adm_comment : $('#adm_comment').val()
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("삭제 되었습니다.");
+				self.close();
+				opener.location.href = "/btb/btbAdminList";
+			//	window.location.replace("/admin/adminList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+	
+}
+
+
+
+

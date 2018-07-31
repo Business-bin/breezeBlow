@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="sms">	
+	<select id="getSmsList"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			 SMS.SMS_SQ
+			,CASE SMS.SMS_TP  
+				WHEN '001' THEN '단문' 
+				WHEN '002' THEN '장문' 
+				ELSE '단문' 
+				END  AS SMS_TP
+			,concat(substring(SMS.SMS_SUBJECT,1,20),'...') as SMS_SUBJECT
+			,concat(substring(SMS.SMS_CONT,1,30),'...') as SMS_CONT
+			,SMS.SMS_RES_DTTM
+			,SMS.STAT
+			,DATE_FORMAT(SMS.REG_DTTM, '%Y-%m-%d %H:%I') AS REG_DTTM
+			,SMS.UPT_DTTM
+			,SMS.DEL_DTTM
+			,SMS.REG_ADM_SQ
+			,SMS.UPT_ADM_SQ
+			,SMS.DEL_ADM_SQ
+			,SMS.BTBS_SQ
+			,SMS.BTBS_NM
+			,CONCAT( SMS.ADDR_1,' ',replace(SMS.ADDR_2,'전체',''),' ',replace(SMS.ADDR_3,'전체','')) AS AREA
+			,SMS.ADDR_1
+			,SMS.ADDR_2
+			,SMS.ADDR_3
+			,SMS.SMS_CNT
+			,CASE SMS.MOBILE_TYPE  
+				WHEN 'IOS' THEN 'IOS' 
+				WHEN 'ANDROID' THEN 'ANDROID' 
+				ELSE '전체' 
+				END  AS MOBILE_TYPE
+			,SMS.PROD
+			,SMS.RESERVE_YN 
+			,SMS.SMS_TO_BTB
+		FROM TB_SMS SMS 
+		WHERE 1=1
+		<if test="R_ADDR_1 != null and R_ADDR_1 != ''">
+		AND SMS.ADDR_1 = #{R_ADDR_1}
+		</if>
+		<if test="R_ADDR_2 != null and R_ADDR_2 != ''">
+		AND SMS.ADDR_2 = #{R_ADDR_2}
+		</if>
+		<if test="R_ADDR_3 != null and R_ADDR_3 != ''">
+		AND SMS.ADDR_3 = #{R_ADDR_3}
+		</if>
+		<if test="R_BTB_SQ != null and R_BTB_SQ != ''">
+		AND SMS.BTBS_SQ  = #{R_BTB_SQ}
+		</if>
+		<if test="R_MOBILE_TYPE != null and R_MOBILE_TYPE != ''">
+		AND SMS.MOBILE_TYPE = #{R_MOBILE_TYPE}
+		</if>
+		<if test="R_PROD != null and R_PROD != ''">
+		AND SMS.PROD = #{R_PROD}
+		</if>
+		<if test=" R_KEYWORD != null and R_KEYWORD != '' ">
+			<if test=" R_SEARCH_TYPE == '001' ">
+				AND  SMS.SMS_SUBJECT LIKE CONCAT('%',#{R_KEYWORD},'%')
+			</if>
+			<if test=" R_SEARCH_TYPE == '002' ">
+				AND SMS.SMS_CONT LIKE CONCAT('%',#{R_KEYWORD},'%')
+			</if>
+		</if>
+		AND SMS.REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}
+	</select>
+	
+	
+	<select id="getSmsListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			 count(*) as total
+		FROM TB_SMS SMS
+		WHERE 1=1
+		<if test="R_ADDR_1 != null and R_ADDR_1 != ''">
+		AND SMS.ADDR_1 = #{R_ADDR_1}
+		</if>
+		<if test="R_ADDR_2 != null and R_ADDR_2 != ''">
+		AND SMS.ADDR_2 = #{R_ADDR_2}
+		</if>
+		<if test="R_ADDR_3 != null and R_ADDR_3 != ''">
+		AND SMS.ADDR_3 = #{R_ADDR_3}
+		</if>
+		<if test="R_BTB_SQ != null and R_BTB_SQ != ''">
+		AND SMS.BTBS_SQ  = #{R_BTB_SQ}
+		</if>
+		<if test="R_MOBILE_TYPE != null and R_MOBILE_TYPE != ''">
+		AND SMS.MOBILE_TYPE = #{R_MOBILE_TYPE}
+		</if>
+		<if test="R_PROD != null and R_PROD != ''">
+		AND SMS.PROD = #{R_PROD}
+		</if>
+		<if test=" R_KEYWORD != null and R_KEYWORD != '' ">
+			<if test=" R_SEARCH_TYPE == '001' ">
+				AND  SMS.SMS_SUBJECT LIKE CONCAT('%',#{R_SMS_SUBJECT},'%')
+			</if>
+			<if test=" R_SEARCH_TYPE == '002' ">
+				AND SMS.SMS_CONT LIKE CONCAT('%',#{R_SMS_CONT},'%')
+			</if>
+		</if>
+		AND REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+		
+	</select>
+	
+	<select id="getSendCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT 
+		COUNT(*) AS SENDCNT
+		FROM TB_MEM A , TB_BTBS B
+		WHERE 1=1
+		and A.BTBS_SQ  = B.BTBS_SQ
+		AND A.AGR_SMS_YN = 'Y'
+		<if test="R_ADDR_1 != null and R_ADDR_1 != ''">
+		AND A.ADDR_1 = #{R_ADDR_1}
+		</if>
+		<if test="R_ADDR_2 != null and R_ADDR_2 != ''">
+		AND A.ADDR_2 = #{R_ADDR_2}
+		</if>
+		<if test="R_ADDR_3 != null and R_ADDR_3 != ''">
+		AND A.ADDR_3 = #{R_ADDR_3}
+		</if>
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND A.BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		
+		<if test="R_MOBILE_TYPE != null and R_MOBILE_TYPE != ''">
+			<if test=" R_MOBILE_TYPE == 'IOS' ">
+				AND A.IOS_INFO IS NOT NULL 
+			</if>
+			<if test=" R_MOBILE_TYPE == 'ANDROID' ">
+				AND A.ADR_INFO IS NOT NULL
+			</if>
+		</if>
+	</select>
+	
+	
+	<select id="getSendListInfo"  parameterType="brbMap" resultType="brbMap">
+		SELECT 
+			A.MEM_NM
+			,A.USER_HP
+			,A.BTBS_NM
+		FROM TB_MEM A , TB_BTBS B
+		WHERE 1=1
+		and A.BTBS_SQ  = B.BTBS_SQ
+		AND A.AGR_SMS_YN = 'Y'
+		<if test="R_ADDR_1 != null and R_ADDR_1 != ''">
+		AND A.ADDR_1 = #{R_ADDR_1}
+		</if>
+		<if test="R_ADDR_2 != null and R_ADDR_2 != ''">
+		AND A.ADDR_2 = #{R_ADDR_2}
+		</if>
+		<if test="R_ADDR_3 != null and R_ADDR_3 != ''">
+		AND A.ADDR_3 = #{R_ADDR_3}
+		</if>
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND A.BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		
+		<if test="R_MOBILE_TYPE != null and R_MOBILE_TYPE != ''">
+			<if test=" R_MOBILE_TYPE == 'IOS' ">
+				AND A.IOS_INFO IS NOT NULL 
+			</if>
+			<if test=" R_MOBILE_TYPE == 'ANDROID' ">
+				AND A.ADR_INFO IS NOT NULL
+			</if>
+		</if>
+	</select>
+
+	<update id="modPassword" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM SET ADM_PWD =  #{R_ADM_PWD} 
+	    WHERE ADM_EMAIL =  #{R_ADM_EMAIL} 
+	</update>
+
+	<insert id="addSms" parameterType="brbMap">
+		INSERT INTO TB_SMS(
+			SMS_SQ
+			,SMS_TP
+			,SMS_SUBJECT
+			,SMS_CONT
+			,SMS_RES_DTTM
+			,STAT
+			,REG_DTTM
+			<!-- ,UPT_DTTM
+			,DEL_DTTM -->
+			,REG_ADM_SQ
+			<!-- ,UPT_ADM_SQ
+			,DEL_ADM_SQ -->
+			,BTBS_SQ
+			,BTBS_NM
+			,ADDR_1
+			,ADDR_2
+			,ADDR_3
+			,SMS_CNT
+			,MOBILE_TYPE
+			,PROD
+			,RESERVE_YN
+			,SMS_TO_BTB
+		) VALUES (
+			NEXTVAL('SMS_SQ')
+			,#{R_SMS_TYPE}
+			,#{R_SUBJECT}
+			,#{R_MSG}
+			,#{R_SMS_RES_DTTM}
+			,#{R_STAT}
+			,NOW()
+			<!-- ,''
+			,'' -->
+			,#{R_REG_ADM_SQ}
+			<!-- ,''
+			,'' -->
+			,#{R_BTBS_SQ}
+			,#{R_BTBS_NM}
+			,#{R_ADDR_1}
+			,#{R_ADDR_2}
+			,#{R_ADDR_3}
+			,#{R_SMS_CNT}
+			,#{R_MOBILE_TYPE}
+			,#{R_PROD}
+			,#{R_RESERVE_YN}
+			,#{R_BTBS_NM}
+		)
+	</insert>
+	
+	
+	<insert id="addSmsType" parameterType="brbMap">
+		INSERT INTO  TB_SMS_LOG(
+			LOG_SMS_SQ
+			,MEM_SQ
+			,USER_EMAIL
+			,USER_NM
+			,USER_PHONE
+			,MSG
+			,DTTM
+			,REGADMINSQ
+		) VALUES (
+			NEXTVAL('LOG_SMS_SQ')
+			,#{R_MEM_SQ}
+			,#{R_USER_EMAIL}
+			,#{R_USER_NM}
+			,#{R_USER_PHONE}
+			,#{R_MSG}
+			,NOW()
+			,#{R_REGADMINSQ}
+		)
+	</insert>
+	
+	<!-- 주소 기본 code -->
+	<select id="getAddrCode"  parameterType="brbMap" resultType="brbMap">
+		SELECT  
+			CODE
+			,CODENAME
+			,GROUPID
+			,USEYN
+		FROM TB_CODE 
+		WHERE 1=1 
+		AND USEYN='Y'
+		AND GROUPID = #{R_GROUPID} 
+	</select>
+	
+	<!-- B2B사이트  -->
+	<select id="getBtbSite"  parameterType="brbMap" resultType="brbMap">
+		SELECT  BTBS_SQ , BTBS_SITE_NM 
+		FROM TB_BTBS
+		GROUP BY BTBS_SQ , BTBS_SITE_NM
+	</select>
+	
+	<select id="smsDetInfo"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			 SMS.SMS_SQ
+			,CASE SMS.SMS_TP  
+				WHEN '001' THEN '단문' 
+				WHEN '002' THEN '장문' 
+				ELSE '단문' 
+				END  AS SMS_TP
+			,SMS.SMS_SUBJECT
+			,SMS.SMS_CONT
+			,SMS.SMS_RES_DTTM
+			,SMS.STAT
+			,DATE_FORMAT(SMS.REG_DTTM, '%Y-%M-%D %H:%I') AS REG_DTTM
+			,SMS.UPT_DTTM
+			,SMS.DEL_DTTM
+			,SMS.REG_ADM_SQ
+			,SMS.UPT_ADM_SQ
+			,SMS.DEL_ADM_SQ
+			,SMS.BTBS_SQ
+			,SMS.BTBS_NM
+			,CONCAT( SMS.ADDR_1,' ',replace(SMS.ADDR_2,'전체',''),' ',replace(SMS.ADDR_3,'전체','')) AS AREA
+			,SMS.ADDR_1
+			,SMS.ADDR_2
+			,SMS.ADDR_3
+			,SMS.SMS_CNT
+			,CASE SMS.MOBILE_TYPE  
+				WHEN 'IOS' THEN 'IOS' 
+				WHEN 'ANDROID' THEN 'ANDROID' 
+				ELSE '전체' 
+				END  AS MOBILE_TYPE
+			,SMS.PROD
+			,SMS.RESERVE_YN 
+			,SMS.SMS_TO_BTB
+		FROM TB_SMS SMS 
+		WHERE 1=1
+		AND SMS.SMS_SQ = #{R_SMS_SQ}
+	</select>
+	
+</mapper>
+

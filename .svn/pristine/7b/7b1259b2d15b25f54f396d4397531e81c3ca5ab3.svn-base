@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="admin">	
+	
+	<select id="getAdminList"  parameterType="brbMap" resultType="brbMap">
+		SELECT  A.*, 
+				(SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='ADMSTAT') AS CODENAME,
+				DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1
+		FROM    TB_BTB_ADM A
+		WHERE   1=1  
+		AND     A.BTBS_SQ = #{btbs_sq}
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'email'">AND A.ADM_EMAIL LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'user_name'">AND A.ADM_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		<!-- 
+		ORDER BY A.REG_DTTM DESC
+		LIMIT #{begin_index}, #{page_cnt}       
+		 -->
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW} 
+	</select>
+	
+	<select id="getAdminListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BTB_ADM A
+		WHERE  1=1  
+		AND    A.BTBS_SQ = #{btbs_sq}
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'email'">AND A.ADM_EMAIL LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'user_name'">AND A.ADM_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getAdmin"  parameterType="brbMap" resultType="brbMap">
+		SELECT   
+		        SUBSTRING_INDEX(A.ADM_HP, '-', 1) AS HP_1,
+		        SUBSTRING_INDEX(SUBSTRING_INDEX(A.ADM_HP, '-', 2), '-', -1) AS HP_2,
+		        SUBSTRING_INDEX(A.ADM_HP, '-', -1) AS HP_3,
+		        SUBSTRING_INDEX(A.ADM_TEL, '-', 1) AS TEL_1,
+		        SUBSTRING_INDEX(SUBSTRING_INDEX(A.ADM_TEL, '-', 2), '-', -1) AS TEL_2,
+		        SUBSTRING_INDEX(A.ADM_TEL, '-', -1) AS TEL_3,
+		        A.*,
+		        (SELECT CODENAME FROM TB_CODE WHERE CODE = A.STAT AND GROUPID='ADMSTAT') AS CODENAME
+		FROM    TB_BTB_ADM A 
+		WHERE   1=1
+		AND     A.ADM_SQ = #{adm_sq} 
+	</select>
+	
+	<insert id="addAdmin" parameterType="brbMap">
+	    INSERT INTO TB_BTB_ADM (
+	    	ADM_SQ,
+	    	ADM_EMAIL,
+	    	ADM_PWD,
+	    	ADM_NM,
+	    	ADM_PART,
+	    	ADM_TEL,
+	    	ADM_EMPN,
+	    	ADM_HP,
+	    	ADM_RANK,
+	    	ADM_GEN,
+	    	STAT,
+	    	REG_ADM_NM,
+	        ADM_CLASS,
+	        REG_DTTM,
+	        REG_ADM_SQ,
+	        BTBS_SQ,
+	        BTBS_NM
+	    ) VALUES ( 
+	        NEXTVAL('ADM_SQ'), 
+	    	#{adm_email}, 
+	    	#{adm_pwd}, 
+	    	#{adm_nm}, 
+	    	#{adm_part}, 
+	    	#{adm_tel},
+	    	#{adm_empn},
+	    	#{adm_hp},  
+	    	#{adm_rank},
+	    	#{adm_gen},  
+	    	'01',
+	    	#{reg_adm_nm},
+	    	IF(#{adm_class}= 1,2,4),
+	    	now(),
+	    	#{reg_adm_sq},
+	    	#{btbs_sq},
+	    	#{btbs_nm}
+	    )
+	</insert>
+	
+	<update id="modAdmin" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM
+	       SET 
+	    	   ADM_NM        =  #{adm_nm},
+	    	   ADM_PART      =  #{adm_part},
+	    	   ADM_TEL       =  #{adm_tel},
+	    	   ADM_EMPN      =  #{adm_empn},
+	    	   ADM_HP        =  #{adm_hp},
+	    	   ADM_RANK      =  #{adm_rank},
+	    	   ADM_GEN       =  #{adm_gen},
+	           UPT_DTTM      =  now(),
+	           UPT_ADM_SQ    =  #{upt_adm_sq}
+	    WHERE ADM_SQ = #{adm_sq} 
+	</update>
+	
+	<update id="delAdmin" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM
+	       SET STAT            = '03',
+	           DEL_RSN         = #{adm_comment},
+	           DEL_ADM_EMAIL   = #{del_adm_email},
+	           DEL_DTTM        = now(),
+	           DEL_ADM_SQ      = #{del_adm_sq}
+	     WHERE ADM_SQ          = #{adm_sq} 
+	</update>
+	
+	<select id="getAdminLogList"  parameterType="brbMap" resultType="brbMap">
+		SELECT   A.*, 
+		        (SELECT ADM_NM FROM TB_BTB_ADM WHERE ADM_EMAIL = A.ADM_EMAIL)AS ADM_NM,
+		        DATE_FORMAT(DTTM, '%Y-%m-%d %H:%i') AS DTTM1 
+		FROM    TB_ADMIN_ACT_LOG A
+		WHERE   1=1
+        AND EXISTS (SELECT 1 FROM TB_BTB_ADM WHERE ADM_EMAIL = A.ADM_EMAIL AND BTBS_SQ = #{btbs_sq})
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+		<choose>
+			<when test="category == 'email'">AND A.ADM_EMAIL LIKE CONCAT('%', #{keyword}, '%')</when>
+			<!-- <when test="category == 'user_name'">AND ADM_NM LIKE CONCAT('%', #{keyword}, '%')</when>   -->
+			<when test="category == 'user_name'">AND EXISTS (SELECT 0 FROM TB_BTB_ADM WHERE ADM_EMAIL = A.ADM_EMAIL AND ADM_NM LIKE CONCAT('%', #{keyword}, '%'))</when>
+			<otherwise></otherwise>
+		</choose>
+		</if>
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}        
+	</select>
+	
+	<select id="getAdminLogListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_ADMIN_ACT_LOG A
+		WHERE  1=1
+		AND EXISTS (SELECT 1 FROM TB_BTB_ADM WHERE ADM_EMAIL = A.ADM_EMAIL AND BTBS_SQ = #{btbs_sq})  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+		<choose>
+			<when test="category == 'email'">AND A.ADM_EMAIL LIKE CONCAT('%', #{keyword}, '%')</when>
+			<when test="category == 'user_name'">AND EXISTS (SELECT 0 FROM TB_BTB_ADM WHERE ADM_EMAIL = A.ADM_EMAIL AND ADM_NM LIKE CONCAT('%', #{keyword}, '%'))</when>
+			<otherwise></otherwise>
+		</choose>
+		</if>
+	</select>	
+	
+	<select id="checkId"  parameterType="brbMap" resultType="brbMap">
+		SELECT IF(COUNT(*)= 0,'Y','N') AS USE_YN FROM TB_BTB_ADM WHERE ADM_EMAIL = #{user_id} 
+	</select>	
+	
+	<update id="changePwd" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM
+	       SET 
+	    	   ADM_PWD       =  #{adm_pwd},
+	           UPT_DTTM      =  now(),
+	           UPT_ADM_SQ    =  #{upt_adm_sq}
+	    WHERE ADM_SQ = #{adm_sq} 
+	</update>	
+	
+	<select id="getChartList1" parameterType="brbMap" resultType="brbMap">
+		SELECT * 
+		FROM   TB_TEST_AIR 
+		WHERE  1=1
+		AND    DATADATE=#{datadate} 
+		AND    SINAME=#{siname} 
+		AND    GUNAME=#{guname}
+	</select>	
+	<select id="getChartList" parameterType="brbMap" resultType="brbMap">
+		SELECT GUNAME, SO2VALUE FROM TB_TEST_AIR WHERE DATADATE='2018-03-29' AND DATATIME='12:00' AND SINAME='서울' AND SO2VALUE !='-'
+	</select>	
+	
+	<select id="getSiList" resultType="brbMap">
+		SELECT * FROM TB_CODE WHERE GROUPID='SI' AND USEYN='Y'
+	</select>
+	
+	<select id="getGuList" parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_CODE WHERE GROUPID=#{si} AND USEYN='Y'
+	</select>
+	
+	
+</mapper>

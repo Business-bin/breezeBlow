@@ -1,0 +1,109 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> Manager</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Manager</li>
+					</ul>
+				</div>
+				<table class="basictables">
+					<tr>
+						<th>관리자명</th>
+						<td>
+							<input type="text" name="user_name" id="user_name" value="" style="width:150px" maxlength="12"/>
+						</td>
+					</tr>
+					<tr>
+						<th>관리자ID</th>
+						<td>
+							<input type="text" name="user_id" id="user_id" value="" style="width:300px"/>
+						</td>
+					</tr>
+					<tr>
+						<th>비밀번호</th>
+						<td>
+							<input type="text" name="user_pw" id="user_pw" value="" style="width:150px"/>
+						</td>
+					</tr>		
+					<tr>
+						<th>Email</th>
+						<td>
+							<input type="text" name="user_email" id="user_email" value="" style="width:150px" maxlength="50"/>
+						</td>
+					</tr>
+					<tr>
+						<th>성별</th>
+						<td>
+							<select name="sex" id="sex" style="width:50px">
+								<option value="M">남</option>
+								<option value="F">여</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>사원번호</th>
+						<td><input type="text" name="emp_no" id="emp_no" value="" class="numberonly" style="width:150px" maxlength="20"/></td>
+					</tr>
+					<tr>
+						<th>소속</th>
+						<td><input type="text" name="department" id="department" value="" style="width:150px" maxlength="100"/></td>
+					</tr>
+					<tr>
+						<th>직급</th>
+						<td><input type="text" name="position" id="position" value="" style="width:150px" maxlength="10"/></td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td>
+							<select name="phone_1" id="phone_1" style="width:50px">
+								<option value="010">010</option>
+								<option value="011">011</option>
+							</select>
+							<input type="text" name="phone_2" id="phone_2" value="" style="width:50px"/>
+							<input type="text" name="phone_3" id="phone_3" value="" style="width:50px"/>
+						</td>
+					</tr>
+					<tr>
+						<th>전화번호</th>
+						<td>
+							<select name="mobile_1" id="mobile_1" style="width:50px">
+								<option value="010">010</option>
+								<option value="011">011</option>
+							</select>
+							<input type="text" name="mobile_2" id="mobile_2" value="" style="width:50px"/>
+							<input type="text" name="mobile_3" id="mobile_3" value="" style="width:50px"/>
+						</td>
+					</tr>
+				</table>
+				<div class="button_area tcenter">
+					<button class="button" id="btn_add"><i class="axi axi-person-add"></i> 신규생성</button>
+					<a href="/admin/adminList" class="button" ><i class="axi axi-cancel"></i> 목록으로</a>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbAdminAdd.js"></script>

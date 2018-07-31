@@ -1,0 +1,167 @@
+
+
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(document).ready(function(){
+
+	console.log("smslist");
+
+	$("#monthfrom").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){ 
+			var dateArr = dateText.split("/"); 
+			year = dateArr[2]; 
+			month = dateArr[0];
+			day = dateArr[1]; 
+		}
+	});
+	
+	$("#monthto").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){ 
+			var dateArr = dateText.split("/"); 
+			year = dateArr[2]; 
+			month = dateArr[0];
+			day = dateArr[1]; 
+		}
+	});
+	
+	//초기화 그리드
+	grid.fn_initLoadGrid();
+	
+	
+    $("#sarchBtn").click(function(){
+    	console.log($("#monthfrom").val());
+    	console.log($("#monthto").val());
+    	grid.fn_SearchGrid();
+    });    
+});
+
+
+var grid = {
+	fn_initLoadGrid:function(){
+		$( "#sms_list" ).jqGrid( 'GridUnload' );
+		$("#sms_list").jqGrid({
+			caption:"sms리스트"
+			,datatype 	    : 'clientside'
+			,height:500
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["SMS_SQ","내용","지역","회원","기기","상품","발송일시"]
+			,colModel:[
+		          {name:"SMS_SQ", 	index:"SMS_SQ" , 		sortable:true,	width:30,		align:'center'},
+		          {name:"EMAIL_CONT", 	index:"EMAIL_CONT", 	sortable:true,	width:30,		align:'center'},
+		          {name:"EMAIL_NM", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+		          {name:"EMAIL_NM2", 	index:"EMAIL_NM", 	sortable:false,	width:30,		align:'center'},
+		          {name:"EMAIL_NM3", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+		          {name:"EMAIL_NM4", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:true,	width:30,		align:'center'}
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false 
+				, id:"SMS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		
+			,gridComplete : function(data,status) {
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		     }
+	    	
+		}).trigger('reloadGrid');
+		  
+        $("#sms_list").jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+              groupHeaders:[
+                {startColumnName: 'EMAIL_NM', numberOfColumns: 4, titleText: "발송대상" }
+              ]
+        });
+	}
+	,fn_SearchGrid:function(){
+		
+		$( "#sms_list" ).jqGrid( 'GridUnload' );
+		$("#sms_list").jqGrid({
+			url:"/sms/smsListSearch"
+			,caption:"sms리스트"
+			,datatype 	    : 'json'
+		    ,mtype         : 'POST' 
+	    	, postData	  : {
+	        	R_NAME : $('#stName').val(),
+	        	R_GRADEGUBUN : $('#s_grade').val()
+	        }
+			,height:500
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["SMS_SQ","내용","지역","회원","기기","상품","발송일시"]
+			,colModel:[
+			          {name:"SMS_SQ", 	index:"SMS_SQ" , 		sortable:true,	width:30,		align:'center' },
+			          {name:"EMAIL_CONT", 	index:"EMAIL_CONT", 	sortable:true,	width:30,		align:'center'},
+			          {name:"EMAIL_NM", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+			          {name:"EMAIL_NM2", 	index:"EMAIL_NM", 	sortable:false,	width:30,		align:'center'},
+			          {name:"EMAIL_NM3", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+			          {name:"EMAIL_NM4", 	index:"EMAIL_NM", 	sortable:true,	width:30,		align:'center'},
+			          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:true,	width:30,		align:'center'}
+			          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false 
+				, id:"SMS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		
+			,gridComplete : function(data,status) {
+				
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	  alert(status + " : " +error);
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#sms_list").jqGrid('getRowData',rowid);
+		     }
+	    	
+		}).trigger('reloadGrid');
+		
+		$("#sms_list").jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+              groupHeaders:[
+            	 {startColumnName: 'EMAIL_NM', numberOfColumns: 4, titleText: "발송대상" }
+              ]
+        });
+		$("#sms_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+}
+

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="board">	
+	
+	<select id="getNoticeList"  parameterType="brbMap" resultType="brbMap">
+		SELECT    A.*,
+		          DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1,
+		          DATE_FORMAT(UPT_DTTM, '%Y-%m-%d %H:%i') AS UPT_DTTM1,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='BDSTAT') AS CODENAME
+		FROM      TB_BD A
+		WHERE     1=1  
+		AND       BD_TP_1 = 'N'
+		AND       STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_cont'">AND A.BD_CONT LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}       
+	</select>
+	
+	<select id="getNoticeListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE  1=1  
+		AND    BD_TP_1 = 'N'
+		AND    STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_cont'">AND A.BD_CONT LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getNotice"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_BD WHERE BD_SQ = #{bd_sq} 
+	</select>
+	
+	<insert id="addNotice" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BTBS_SQ
+			,BTBS_NM
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	#{bd_stat},
+	    	now(),
+	    	#{reg_adm_sq},
+	    	#{btbs_sq},
+	    	#{btbs_nm}
+	    )
+	    <!-- 
+	    <selectKey keyProperty="bd_sq" resultType="int" order="AFTER">
+		  SELECT MAX(BD_SQ) FROM TB_BD WHERE REG_USER_SQ = #{reg_adm_sq}
+		</selectKey>
+	    -->
+	</insert>
+	
+	<update id="modNotice" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET 
+	    	   BD_NM        =  #{bd_nm},
+	    	   BD_CONT      =  #{bd_cont},
+	    	   STAT         =  #{bd_stat},
+	    	   UPT_DTTM     =  now(),
+	    	   UPT_USER_SQ  =  #{upt_adm_sq}
+	    WHERE BD_SQ = #{bd_sq} 
+	</update>
+	
+	<update id="delNotice" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET STAT          = '03',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_SQ         = #{bd_sq} 
+	</update>
+	
+	<select id="getQnaList"  parameterType="brbMap" resultType="brbMap">
+		SELECT    A.*,
+		          DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE = A.BD_TP_2 AND GROUPID='BOARDCATEGORY') AS CATEGORY,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='BDSTAT') AS CODENAME,
+		          (SELECT IF(COUNT(*)>0,'완료','미완료') FROM TB_BD_DET WHERE BD_SQ=A.BD_SQ AND STAT ='01') AS REPLY_YN
+		FROM      TB_BD A
+		WHERE     1=1
+		AND       BD_TP_1 = 'Q'  
+		AND       STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='bd_tp_2 != null and bd_tp_2 != ""'>
+			AND A.BD_TP_2 = ${bd_tp_2}
+		</if>  
+        <if test='reply_yn != null and reply_yn != ""'>
+			<choose>
+				<when test='reply_yn == "Y"'>AND EXISTS (SELECT 1 FROM TB_BD_DET WHERE BD_SQ = A.BD_SQ AND STAT ='01')</when>
+				<when test='reply_yn == "N"'>AND NOT EXISTS (SELECT 1 FROM TB_BD_DET WHERE BD_SQ = A.BD_SQ  AND STAT ='01')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if> 	      
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_user_nm'">AND A.BD_USER_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}        
+	</select>
+	
+	<select id="getQnaListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE  1=1  
+		AND    BD_TP_1 = 'Q'
+		AND    STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='bd_tp_2 != null and bd_tp_2 != ""'>
+			AND A.BD_TP_2 = ${bd_tp_2}
+		</if> 
+        <if test='reply_yn != null and reply_yn != ""'>
+			<choose>
+				<when test='reply_yn == "Y"'>AND EXISTS (SELECT 1 FROM TB_BD_DET WHERE BD_SQ = A.BD_SQ AND STAT ='01')</when>
+				<when test='reply_yn == "N"'>AND NOT EXISTS (SELECT 1 FROM TB_BD_DET WHERE BD_SQ = A.BD_SQ AND STAT ='01')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_user_nm'">AND A.BD_USER_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getQna"  parameterType="brbMap" resultType="brbMap">
+		SELECT A.*,
+		       (SELECT CODENAME FROM TB_CODE WHERE CODE = A.BD_TP_2 AND GROUPID='BOARDCATEGORY') AS CATEGORY
+		FROM   TB_BD A 
+		WHERE  A.BD_SQ = #{bd_sq}      
+	</select>	
+	
+	<insert id="addQna" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_TP_2
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BTBS_SQ
+			,BTBS_NM
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_tp_2}, 
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	#{bd_stat},
+	    	now(),
+	    	#{reg_adm_sq},
+	    	#{btbs_sq},
+	    	#{btbs_nm}
+	    )
+	</insert>
+	
+	<update id="modQna" parameterType="brbMap">
+	<!-- 
+	    UPDATE TB_BD
+	       SET 
+			   BD_ANS_SQ = #{bd_ans_sq}
+	    WHERE  BD_SQ = #{bd_sq} 
+	 -->    
+	    UPDATE TB_BD
+	       SET 
+	    	   BD_NM        =  #{bd_nm},
+	    	   BD_CONT      =  #{bd_cont},
+	    	   STAT         =  #{bd_stat},
+	    	   BD_TP_2      =  #{bd_tp_2},
+	    	   UPT_DTTM     =  now(),
+	    	   UPT_USER_SQ  =  #{upt_adm_sq}
+	    WHERE BD_SQ = #{bd_sq} 	 	    
+	</update>
+	
+	<update id="delQna" parameterType="brbMap">     
+	    UPDATE TB_BD
+	       SET STAT          = '03',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_SQ         = #{bd_sq} 	     
+	</update>
+	
+	<select id="getFaqList"  parameterType="brbMap" resultType="brbMap">
+		SELECT     A.*,
+		           DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1,
+		           DATE_FORMAT(UPT_DTTM, '%Y-%m-%d %H:%i') AS UPT_DTTM1,  
+		           (SELECT CODENAME FROM TB_CODE WHERE CODE = A.BD_TP_2 AND GROUPID='BOARDCATEGORY') AS CATEGORY,
+		           (SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='BDSTAT') AS CODENAME
+		FROM       TB_BD A
+		WHERE      1=1  
+		AND       BD_TP_1 = 'F'
+		AND       STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if>
+        <if test='bd_tp_2 != null and bd_tp_2 != ""'>
+			AND A.BD_TP_2 = ${bd_tp_2}
+		</if>	
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_cont'">AND A.BD_CONT LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>	
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}          
+	</select>
+	
+	<select id="getFaqListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE  1=1  
+		AND    BD_TP_1 = 'F'
+		AND    STAT != '03'
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='bd_tp_2 != null and bd_tp_2 != ""'>
+			AND A.BD_TP_2 = ${bd_tp_2}
+		</if>	        
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_nm'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'bd_cont'">AND A.BD_CONT LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>	
+	</select>
+	
+	<select id="getFaq"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_BD WHERE BD_SQ = #{bd_sq} 
+	</select>
+	
+	<insert id="addFaq" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_TP_2
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BTBS_SQ
+			,BTBS_NM
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_tp_2},
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	#{bd_stat}, 
+	    	now(),
+	    	#{reg_adm_sq},
+	    	#{btbs_sq},
+	    	#{btbs_nm}
+	    )
+	        
+	</insert>
+	
+	<update id="modFaq" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET 
+	    	   BD_NM        =  #{bd_nm},
+	    	   BD_CONT      =  #{bd_cont},
+	    	   STAT         =  #{bd_stat},
+	    	   BD_TP_2      =  #{bd_tp_2},
+	    	   UPT_DTTM     =  now(),
+	    	   UPT_USER_SQ  =  #{upt_adm_sq}
+	    WHERE BD_SQ = #{bd_sq} 	    
+	</update>
+	
+	<update id="delFaq" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET STAT          = '03',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_SQ         = #{bd_sq} 	     
+	</update>
+	
+	<insert id="qnaReply" parameterType="brbMap">
+	    INSERT INTO TB_BD_DET (
+			 BD_DET_SQ
+			,BD_DET_USER_EMAIL
+			,BD_DET_CONT
+			,BD_DET_USER_HP
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BD_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_DET_SQ'), 
+	        #{bd_user_email}, 
+	        #{add_comment},  
+	    	#{bd_user_hp}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'01',
+	    	now(), 
+	    	#{reg_adm_sq},
+	    	#{bd_sq}
+	    )
+		<selectKey keyProperty="bd_ans_sq" resultType="int" order="AFTER">
+		  SELECT MAX(BD_DET_SQ) FROM TB_BD_DET WHERE BD_SQ = #{bd_sq}
+		 <!--	SELECT LAST_INSERT_ID() FROM TB_BD_DET -->
+		</selectKey>
+		
+	</insert>	
+	
+	<select id="getCateList" resultType="brbMap">
+		SELECT  * 
+		FROM    TB_CODE
+		WHERE   GROUPID = 'BOARDCATEGORY'
+		AND     USEYN = 'Y'  
+	</select>
+	
+	<insert id="addFileInfo" parameterType="brbMap">
+	    INSERT INTO TB_BD_FILE (
+			 BD_FILE_SQ
+			,FILE_NM
+			,FILE_NEW_NM
+			,FILE_PATH
+			,FILE_SZ
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BD_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_FILE_SQ'), 
+	    	#{file_nm}, 
+	    	#{file_new_nm}, 
+	    	#{file_path}, 
+	    	#{file_sz},  
+	    	'01', 
+	    	now(), 
+	    	#{reg_user_sq},
+	    	#{bd_sq}
+	    )
+	    
+	</insert>	
+	
+	<select id="getFileList"  parameterType="brbMap" resultType="brbMap">
+		SELECT  * 
+		FROM    TB_BD_FILE  
+		WHERE   BD_SQ = #{bd_sq} 
+		AND     STAT = '01'     
+	</select>	
+	
+	<update id="delFile" parameterType="brbMap">
+	    UPDATE TB_BD_FILE
+	       SET 
+	    	   STAT           =  '02',
+	    	   DEL_DTTM       =  now(),
+	    	   DEL_USER_SQ    =  #{del_user_sq}
+	    WHERE  BD_FILE_SQ     =  #{fileSq} 
+	</update>	
+	
+	<select id="getDList"  parameterType="brbMap" resultType="brbMap">
+		SELECT  * 
+		FROM    TB_BD_DET  
+		WHERE   BD_SQ = #{bd_sq} 
+		AND     STAT = '01'     
+	</select>	
+	
+	<update id="modComment" parameterType="brbMap">
+	    UPDATE TB_BD_DET
+	       SET BD_DET_CONT   = #{mod_comment},
+	           UPT_DTTM      = now(),
+	           UPT_USER_SQ   = #{upt_user_sq}
+	     WHERE BD_DET_SQ     = #{bd_det_sq} 	     
+	</update>
+	
+	<insert id="addComment" parameterType="brbMap">
+	    INSERT INTO TB_BD_DET (
+			 BD_DET_SQ
+			,BD_DET_USER_EMAIL
+			,BD_DET_CONT
+			,BD_DET_USER_HP
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BD_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_DET_SQ'), 
+	        #{bd_user_email}, 
+	        #{add_comment},  
+	    	#{bd_user_hp}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'01',
+	    	now(), 
+	    	#{reg_adm_sq},
+	    	#{bd_sq}
+	    )
+	</insert>	
+	
+	<update id="delComment" parameterType="brbMap">
+	    UPDATE TB_BD_DET
+	       SET STAT          = '002',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_DET_SQ     = #{bd_det_sq} 	     
+	</update>
+	
+	<update id="modReadCnt" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET READ_CNT      = (READ_CNT+1)
+	     WHERE BD_SQ         = #{bd_sq} 	     
+	</update>	
+	
+	<select id="getAsList"  parameterType="brbMap" resultType="brbMap">
+		SELECT    A.*,
+		          DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1,
+		          (SELECT MEM_EMAIL FROM TB_MEM WHERE MEM_SQ = A.AS_REQ_MEM_SQ ) AS AS_REQ_EMAIL,
+		          (SELECT USER_HP FROM TB_MEM WHERE MEM_SQ = A.AS_REQ_MEM_SQ ) AS AS_REQ_HP
+		FROM      TB_AS_REG A
+		WHERE     1=1 
+		<if test='stat != null and stat != ""'>
+     	    AND A.STAT = #{stat}
+        </if> 
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'as_req_nm'">AND A.AS_REQ_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'as_req_email'">AND EXISTS (SELECT 0 FROM TB_MEM WHERE MEM_SQ = A.AS_REQ_MEM_SQ AND MEM_EMAIL = #{keyword})</when>
+				<when test="category == 'as_req_cp'">AND A.AS_REQ_CP_SN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}       
+	</select>
+	
+	<select id="getAsListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_AS_REG A
+		WHERE  1=1  
+		<if test='stat != null and stat != ""'>
+     	    AND A.STAT = #{stat}
+        </if> 		
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'as_req_nm'">AND A.AS_REQ_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'as_req_email'">AND EXISTS (SELECT 0 FROM TB_MEM WHERE MEM_SQ = A.AS_REQ_MEM_SQ AND MEM_EMAIL = #{keyword})</when>
+				<when test="category == 'as_req_cp'">AND A.AS_REQ_CP_SN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+	</select>	
+	
+	<select id="getAs"  parameterType="brbMap" resultType="brbMap">
+		SELECT * 
+		FROM   TB_AS_REG
+		WHERE  AS_REQ_SQ = #{as_req_sq} 
+	</select>	
+	
+	<select id="getStatList" resultType="brbMap">
+		SELECT  * 
+		FROM    TB_CODE
+		WHERE   GROUPID = 'BDSTAT'
+		AND     USEYN = 'Y'  
+		AND     CODE IN ('01','02')
+	</select>
+	
+	<update id="modAs" parameterType="brbMap">
+	    UPDATE TB_AS_REG
+	       SET STAT          = #{stat},
+	           UPT_DTTM      = now()
+	     WHERE AS_REQ_SQ     = #{as_req_sq} 
+	</update>
+</mapper>

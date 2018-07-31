@@ -1,0 +1,17 @@
+#
+IMAGE_SERVER_URL=
+CONTEXT_ROOT=
+MOVIE_SERVER_URL=
+MAIL_STMP_HOST =  smtp.gmail.com
+MAIL_STMP_PORT =  587
+MAIL_USER = senko.developer@gmail.com
+MAIL_PW = S2nk0@018
+ANDROID_API_KEY=
+IOS_CERT_PATH = 
+IOS_CERT_PW = 
+
+SMS_ID = senko
+SMS_PW = hagood74
+SMS_URL = http://www.munja123.com/Remote/RemoteSms.html
+SMS_ADMIN = 01054094926
+key=abcdefghijklmnop!@#$%^&*

@@ -1,0 +1,90 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function(){
+	var gubun = $("#gubun").val();
+	if(gubun == "new"){
+		$("#mod").hide();
+		$("#del1").hide();
+		$("#naviGubun").text("관리자등록");
+	}else{
+		$("#new").hide();
+		$("#cpSq").attr("readOnly", "readOnly");
+	}
+	$("#layerPopup").hide();
+	$("#dim-layer").hide();
+	  $("#del1").click(function(){
+	    $("#contents > a").blur();
+	    $("#dim-layer").show();
+	    $("#layerPopup").show();
+	    $("#layerPopup a").focus();
+	    return false;
+	  });
+	  $("#layerPopup a").keydown(function(e){
+	    if(e.shiftKey && e.keyCode == 9){ // Shift + Tab 키를 의미합니다.
+	      $("#contents > a").focus();
+	      $("#layerPopup").hide();
+	      return false;
+	    }
+	  });
+
+	  $("#close").click(function(){
+	    $("#contents > a").focus();
+	    $("#dim-layer").hide();
+	    $("#layerPopup").hide();
+	  });
+
+	  $("#backProdList").click(function(){
+		  location.href="/product/productList";
+	  });
+
+	  $("#newProd").click(function(){
+		  $("#insertProdForm").submit();
+	  });
+
+	  $("#modProd").click(function(){
+		  $("#insertProdForm").attr("action","/product/updateProduct");
+		  $("#insertProdForm").submit();
+	  });
+
+	  $("#prodFile").change(function(){
+		  readURL(this);
+	  });
+
+	  $("#prodFile").change(function(){
+		  console.log(this.files);
+		  console.log(this.files[0]);
+		  if (this.files && this.files[0]) {
+		        var reader = new FileReader();
+		        reader.onload = function (e) {
+		            $('#prodImg').attr('src', e.target.result);
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    }
+	  });
+
+	  $("#newProd").click(function(){
+			$("#gubun").val("new");
+			$("#detForm").submit();
+		});
+
+		$(".tabmenu>li").eq(1).addClass("on");
+});
+
+function readURL(input){
+	if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+        	$("#prodImg").attr("src", e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function prodDet(sq){
+	$("#cpSq").val(sq);
+	$("#gubun").val("det");
+	$("#detForm").submit();
+}

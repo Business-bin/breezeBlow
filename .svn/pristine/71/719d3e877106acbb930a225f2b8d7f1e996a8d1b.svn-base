@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/admin/adminList.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<!-- jQuery UI CSS파일  --> 
+<link rel="stylesheet" href="/resources/css/jquery-ui.css"/>  
+
+<section>
+<form name="modifyForm" id="modifyForm" method="post" action="">
+<input type="hidden" name="user_name" id="user_name"/>
+</form>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="/admin/adminList">관리자 목록</a></li>
+					<li><a href="#"><b>관리자 활동로그</b></a></li>
+				</ul>
+				<br>
+				<!-- 
+				<div class="pagetitle"><i class="axi axi-sitemap"></i> Menu</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Setting</li>
+						<li>Menu</li>
+					</ul>
+				</div>
+				 -->
+                <form name="selectedShForm" id="selectedShForm" method="post" action=""> 
+                <input type="hidden" name="sch_flag" id="sch_flag" value="${dMap.sch_flag}"/>
+                <input type="hidden" name="page_cnt" id="page_cnt" value="10"/>
+                <input type="hidden" name="page" id="page" value="${dMap.page}"/>
+                <input type="hidden" name="total_page" id="total_page" value="${dMap.total_page}"/>
+                <input type="hidden" name="category1" id="category1" value="${dMap.category}"/>
+                <input type="hidden" name="adm_sq" id="adm_sq" value=""/>
+				<table class="basictables basichover">
+					<tbody>
+						<tr>
+							<th><span class="tcenter">등록일</span></th>
+							<td>
+								<input type="text" name="start_dt" id="start_dt" value="${dMap.start_dt} "> ~
+								<input type="text" name="end_dt" id="end_dt" value="${dMap.end_dt}">
+							</td>
+							<th><span class="tcenter">검색종류</span></th>
+							<td>
+								<select name="category" style="width:100px">
+									<option value="email">ID</option>
+									<option value="user_name">이름</option>
+								</select>
+								<input type="text" name="keyword" id="keyword" value="${dMap.keyword}"/>
+							</td>	
+							<td class="tcenter"><button type="button" class="button" name="btn_sch" id="btn_sch" >검색</button></td>
+						</tr>
+					</tbody>
+				</table>
+			    </form>	
+				<div>관리자 활동로그</div>
+				<table class="basictables basichover">
+						<colgroup>
+							<col style="width:30px;"/>
+							<col style="width:300px;" />
+							<col style="width:300px;" />
+							<col style="width:300px;"/>
+							<col/>
+							<col/>
+						</colgroup>
+					<thead>
+
+						<tr>
+							<th>순번</th>
+							<th>ID</th>
+							<th>이름</th>
+							<th>로그인일시</th>
+							<th>접속IP</th>
+							<th>접속환경</th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:if test="${rMap.adminLogList == null || rMap.adminLogList == '[]'}">
+						<tr>
+							<td colspan=7 style="text-align: center;">데이터가 없습니다.</td>
+						</tr>
+					</c:if>
+				
+					<c:forEach items="${rMap.adminLogList}" var="admin">
+						<tr>
+							<td class="tcenter">${admin.ROWNUM}</td>
+							<td class="tcenter">${admin.ADM_ID}</td>
+							<td class="tcenter">${admin.ADM_NM}</td>
+							<td class="tcenter">${admin.DTTM}</td>
+							<td class="tcenter">${admin.IP}</td>
+							<td class="tcenter">${admin.RSN}</td>
+						</tr>
+					</c:forEach>
+					</tbody>
+				</table>
+				<div class="paging"  id="paging" onclick="clickPaging(event)"></div>
+			</div>
+		</div>
+	</section>
+	 
+	 
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/admin/adminLogList.js"></script>

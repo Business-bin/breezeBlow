@@ -1,0 +1,148 @@
+package com.brb.product.model;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class CpVo extends PageVo{
+	private Integer pprtSq;
+	private Integer cpSq;
+	private String cpNm;
+	private String cpDes;
+	private String cpDetSpec;
+	private String cpOrgImageNm;
+	private String cpChImageNm;
+	private String cpOrgThumNm;
+	private String cpChThumNm;
+	private String stat;
+	private Integer salNum;
+	private String regDttm;
+	private String uptDttm;
+	private String delDttm;
+	private Integer regAdmSq;
+	private Integer uptAdmSq;
+	private Integer delAdmSq;
+	private String delYn;
+	private MultipartFile prodFile;
+
+	private String gubun;
+
+	public Integer getPprtSq() {
+		return pprtSq;
+	}
+	public void setPprtSq(Integer pprtSq) {
+		this.pprtSq = pprtSq;
+	}
+	public Integer getCpSq() {
+		return cpSq;
+	}
+	public void setCpSq(Integer cpSq) {
+		this.cpSq = cpSq;
+	}
+	public String getCpNm() {
+		return cpNm;
+	}
+	public void setCpNm(String cpNm) {
+		this.cpNm = cpNm;
+	}
+	public String getCpDes() {
+		return cpDes;
+	}
+	public void setCpDes(String cpDes) {
+		this.cpDes = cpDes;
+	}
+	public String getCpDetSpec() {
+		return cpDetSpec;
+	}
+	public void setCpDetSpec(String cpDetSpec) {
+		this.cpDetSpec = cpDetSpec;
+	}
+	public String getCpOrgImageNm() {
+		return cpOrgImageNm;
+	}
+	public void setCpOrgImageNm(String cpOrgImageNm) {
+		this.cpOrgImageNm = cpOrgImageNm;
+	}
+	public String getCpChImageNm() {
+		return cpChImageNm;
+	}
+	public void setCpChImageNm(String cpChImageNm) {
+		this.cpChImageNm = cpChImageNm;
+	}
+	public String getCpOrgThumNm() {
+		return cpOrgThumNm;
+	}
+	public void setCpOrgThumNm(String cpOrgThumNm) {
+		this.cpOrgThumNm = cpOrgThumNm;
+	}
+	public String getCpChThumNm() {
+		return cpChThumNm;
+	}
+	public void setCpChThumNm(String cpChThumNm) {
+		this.cpChThumNm = cpChThumNm;
+	}
+	public String getStat() {
+		return stat;
+	}
+	public void setStat(String stat) {
+		this.stat = stat;
+	}
+	public Integer getSalNum() {
+		return salNum;
+	}
+	public void setSalNum(Integer salNum) {
+		this.salNum = salNum;
+	}
+	public String getRegDttm() {
+		return regDttm;
+	}
+	public void setRegDttm(String regDttm) {
+		this.regDttm = regDttm;
+	}
+	public String getUptDttm() {
+		return uptDttm;
+	}
+	public void setUptDttm(String uptDttm) {
+		this.uptDttm = uptDttm;
+	}
+	public String getDelDttm() {
+		return delDttm;
+	}
+	public void setDelDttm(String delDttm) {
+		this.delDttm = delDttm;
+	}
+	public Integer getRegAdmSq() {
+		return regAdmSq;
+	}
+	public void setRegAdmSq(Integer regAdmSq) {
+		this.regAdmSq = regAdmSq;
+	}
+	public Integer getUptAdmSq() {
+		return uptAdmSq;
+	}
+	public void setUptAdmSq(Integer uptAdmSq) {
+		this.uptAdmSq = uptAdmSq;
+	}
+	public Integer getDelAdmSq() {
+		return delAdmSq;
+	}
+	public void setDelAdmSq(Integer delAdmSq) {
+		this.delAdmSq = delAdmSq;
+	}
+	public String getDelYn() {
+		return delYn;
+	}
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
+	}
+	public String getGubun() {
+		return gubun;
+	}
+	public void setGubun(String gubun) {
+		this.gubun = gubun;
+	}
+	public MultipartFile getProdFile() {
+		return prodFile;
+	}
+	public void setProdFile(MultipartFile prodFile) {
+		this.prodFile = prodFile;
+	}
+}

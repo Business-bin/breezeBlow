@@ -1,0 +1,63 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/product/product.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+<form action="/product/productDet" method="post" id="detForm">
+	<input type="hidden" value="" id="gubun" name="gubun" />
+	<input type="hidden" value="" id="pprtSq" name="pprtSq" />
+</form>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="/product/modelList">모델 관리</a></li>
+					<li><a href="/product/productList">전체 제품 관리</a></li>
+					<li><a href="/product/fwrList">펌웨어 관리</a></li>
+				</ul>
+				<table class="basictables mgt14">
+					<colgroup>
+						<col width="10%"/>
+						<col width="40%"/>
+						<col width="10%"/>
+						<col width="40%"/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>등록일</th>
+							<td><input type="text" id="startDate" class="" name="startDate" /> -
+							<input type="text" id="endDate" class="" name="endDate" /></td>
+							<th>검색종류</th>
+							<td>
+								<select id="search" name="search">
+									<option value="cpNm">모델명</option>
+									<option value="pprtMac">SerialNumber</option>
+								</select>
+								<input type="text" id="keyWord" class="" name="keyWord" value=""/>
+								<a href="#" class="button" id="productSearch">조회</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="tbar">
+					<div class="w50 fl"><i class="axi axi-play-arrow"></i>모델 목록</div>
+					<div class="w50 ar fl">총 1,000개</div>
+				</div>
+				<table id="product_list"></table>
+				<div id="pager"></div>
+				<div class="button_area tright">
+					<a href="#" class="button" id="addProd">신규추가</a>
+				</div>
+			</div>
+		</div>
+	</section>
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/product/productList.js"></script>

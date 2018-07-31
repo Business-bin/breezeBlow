@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="sample">	
+	
+	<select id="getList"  parameterType="brbMap" resultType="brbMap">
+		SELECT id,name FROM test where id = ${ID}  
+	</select>
+	
+	<select id="getListAll"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM test;
+	</select>
+
+	<select id="getTestList"  parameterType="brbMap" resultType="brbMap">
+		SELECT *
+			  FROM 
+			       (SELECT EAI.*, 
+			              FLOOR((ROWNUM-1)/#{R_ROW}+1 ) PAGE 
+			         FROM 
+			              (SELECT  ID,name
+			                       COUNT(*) OVER() AS TOT_CNT 
+			                FROM TEST ME 
+			               	<if test='orderBy != ""'>
+			               	    order by #{orderBy} 
+			                </if>
+			              ) EAI 
+			       ) 
+			 WHERE PAGE=${R_PAGE}  
+			 
+			
+	</select>
+	
+	<select id="getTestUser"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TEST
+		WHERE 1=1
+	 	<if test='ID != null and ID != "" '>
+       	    AND ID =  #{ID} 
+        </if> 
+		<if test='NAME != null and NAME != "" '>
+       	    AND NAME =  #{NAME} 
+        </if> 
+	</select>
+	
+	<insert id="addTestUser" parameterType="brbMap">
+	    INSERT INTO test (
+	    	ID,
+	    	NAME,
+	    	JUMIN,
+	    	ADM,
+	    	RETIRE
+	    ) VALUES ( 
+	    	#{ID}, 
+	    	#{NAME}, 
+	    	#{JUMIN}, 
+	    	now(), 
+	    	now()
+	    )
+	</insert>
+	
+	<update id="modTestUser" parameterType="brbMap">
+	    UPDATE test SET NAME =  #{NAME} 
+	    WHERE ID =  #{ID} 
+        
+	  
+	</update>
+	
+</mapper>

@@ -1,0 +1,174 @@
+package com.brb.member.service;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.member.dao.MemDao;
+import com.brb.member.model.DataVo;
+import com.brb.member.model.MemVo;
+
+
+@Service("MemService")
+public class MemServiceImpl implements MemService{
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(MemServiceImpl.class);
+
+	@Autowired
+	MemDao memDao;
+
+	@Override
+	public BrbMap<Object, Object> getMemList(BrbMap<Object, Object> bMap){
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("memList", memDao.getMemList(bMap));
+		resMap.put("totalPage", memDao.getMemTotal(bMap));
+		return resMap;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getMemDet(MemVo bvo){
+		BrbMap<Object, Object> brbMap = memDao.getMem(bvo);
+		String [] hp = ((String)brbMap.get("USER_HP")).split("-");
+		brbMap.put("hp_1", hp[0]);
+		brbMap.put("hp_2", hp[1]);
+		brbMap.put("hp_3", hp[2]);
+		String bir = brbMap.get("MEM_BIR").toString().substring(0, 4)+"."+brbMap.get("MEM_BIR").toString().substring(4, 6)+"."+brbMap.get("MEM_BIR").toString().substring(6, 8);
+		brbMap.put("MEM_BIR", bir);
+		return brbMap;
+	}
+
+	@Override
+	public void updateMem(MemVo bvo){
+		memDao.updateMem(bvo);
+	}
+
+	@Override
+	public void deleteMem(MemVo bvo){
+		memDao.deleteMem(bvo);
+	}
+
+	@Override
+	public String uploadFile(MultipartHttpServletRequest request, MultipartFile uploadFile){
+		String path = "";
+        String fileName = "";
+
+        OutputStream out = null;
+
+        try {
+            fileName = uploadFile.getOriginalFilename();
+            byte[] bytes = uploadFile.getBytes();
+            path = "C:\\work\\";
+            File file = new File(path);
+            if (fileName != null && !fileName.equals("")) {
+                if (file.exists()) {
+                    file = new File(path + fileName);
+                }
+            }
+            out = new FileOutputStream(file);
+            out.write(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return path + fileName;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getLogList(BrbMap<Object, Object> bMap){
+		BrbMap<Object, Object> brbMap = new BrbMap<Object, Object>();
+		brbMap.put("logList", memDao.getLogList(bMap));
+		brbMap.put("totalPage", memDao.getLogTotal(bMap));
+		return brbMap;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getHpList(){
+		BrbMap<Object, Object> brbMap = new BrbMap<Object, Object>();
+		brbMap.put("hpList", memDao.getHpList());
+		return brbMap;
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getBtbsList(){
+		return memDao.getBtbsList();
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getSdList(){
+		return memDao.getSdList();
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getSggList(String code) {
+		return memDao.getSggList(code);
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getUmdList(String code) {
+		return memDao.getUmdList(code);
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getBtbList(BrbMap<Object, Object> dMap) {
+		return memDao.getBtbList(dMap);
+	}
+
+	@Override
+	public Integer getBtbListCnt(BrbMap<Object, Object> dMap) {
+		return memDao.getBtbListCnt(dMap);
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getProdList(int memSq) {
+		return memDao.getProdList(memSq);
+	}
+
+	@Override
+	public Integer getProdTotal(int memSq) {
+		return memDao.getProdTotal(memSq);
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getProdSearch() {
+		return memDao.getProdSearch();
+	}
+
+	@Override
+	public List<DataVo> getTimeData() {
+		return memDao.getTimeData();
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getProdStat() {
+		return memDao.getProdStat();
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getLocStat() {
+		return memDao.getLocStat();
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getAgeStat() {
+		return memDao.getAgeStat();
+	}
+}

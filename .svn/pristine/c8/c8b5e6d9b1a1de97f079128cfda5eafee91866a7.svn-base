@@ -1,0 +1,112 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample2.css">
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<form id="poupform" name="poupform" method="post" action="/sms/smsDetPop" target="smsDetPop">
+  <input type="hidden" id= "R_SMS_SQ" name="R_SMS_SQ" value="" />
+</form>
+<section>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+			<li><a href="/mem/memList">회원 목록</a></li>
+			<li><a href="/mem/memStat">회원 통계</a></li>
+			<li><a href="/mem/memData">수치별 통계</a></li>
+			<li><a href="#">Push발송</a></li>
+			<li><a href="/sms/smsList">SMS 발송</a></li>
+		</ul>
+		<table class="basictables mgt14">
+			<colgroup>
+				<col width="6%" />
+				<col width="10%" />
+				<col width="6%" />
+				<col width="10%" />
+				<col width="6%" />
+				<col width="10%" />
+				<col width="6%" />
+				<col width="12%" />
+				<col width="6%" />
+				<col width="11%" />
+				<col width="6%" />
+				<col width="11%" />
+			</colgroup>
+			<tbody>
+			<tr>
+				<th class="mw70">지역선택</th>
+				<td>
+					<select name="sido" id= "sido" class="w100 mw80" onchange="addrList('gugun',this.value)">
+						<option value='000' selected="selected">전체</option>
+					</select>
+				</td>
+				<th class="mw70">구군 선택</th>
+				<td>
+					<select name="gugun" id= "gugun" class="w100 mw80" onchange="addrList('dong',this.value)">
+						<option value='000' selected="selected">전체</option>
+					</select>
+				</td>
+				<th class="mw70">동선택</th>
+				<td>
+					<select name="dong" id="dong" class="w100 mw80">
+						<option value='000' selected="selected">전체</option>
+					</select>
+				</td>
+				<th class="mw70">회원 선택</th>
+				<td>
+					<select name="btbsnm" id= "btbsnm" class="w100 mw80">
+						<option value='000' selected="selected">전체</option>
+					</select>
+				</td>
+				<th class="mw70">기기 선택</th>
+				<td>
+					<select name="mtype" id= "mtype" class="w100 mw80">
+						<option value='000' >전체</option>
+	                    <option value='IOS'>IOS</option>
+	                    <option value='ANDROID'>ANDROID</option>
+					</select>
+				</td>
+				<th class="mw70">상품 선택</th>
+				<td>
+					<select name="prod" id= "prod" class="w100 mw80">
+						<option value='000' selected="selected">전체</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>등록일</th>
+				<td colspan="5">
+					<input type="text" id="monthfrom"> ~ <input type="text" id="monthto">
+				</td>
+				<th>검색종류</th>
+				<td colspan="5">
+					<select name="searchType" id= "searchType">
+	                    <option value='001'>제목</option>
+	                    <option value='002'>내용</option>
+					</select>
+					<input type="text" id="searStr">
+					<div class="sbtn" id="sarchBtn"><i class="axi axi-search3"></i></div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<div class="tbar">
+			<div class="w50 fl"><i class="axi axi-play-arrow"></i>발송 목록</div>
+			<div class="w50 ar fl" id="tcnt">총 0개</div>
+		</div>
+		<table id="sms_list"></table>
+		<div id="pager"></div>
+		<div class="button_area tright">
+			<button class="button" id="newBtn"><i class="axi axi-person-add"></i>신규발송</button>
+		</div>
+		</div>
+	</div>
+</section>
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/sms/smsList.js"></script>

@@ -1,0 +1,88 @@
+package com.brb.member.controller;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.member.model.MemVo;
+import com.brb.member.service.MemService;
+/**
+ *
+ * @author back
+ *
+ */
+@Controller
+public class MemController {
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(MemController.class);
+
+
+	@Autowired
+	MemService memService;
+
+	/**
+	 * 회원 리스트
+	 * @param MemVo
+	 * @return ModelAndView
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "mem/memList")
+	public ModelAndView memList(@ModelAttribute MemVo bvo){
+		ModelAndView view = new ModelAndView();
+		if(bvo.getCurPage() != null && bvo.getCurPage() != 0){
+			bvo.setStartIndex((bvo.getCurPage()-1) * bvo.getRowPerPage());
+			view.addObject("memList", memService.getMemList(bvo).get("memList"));
+			view.addObject("totalPage", memService.getMemList(bvo).get("totalPage"));
+			view.addObject("curPage", bvo.getCurPage());
+			view.addObject("startIndex", bvo.getStartIndex());
+		}
+		view.setViewName("mem/memList");
+		return view;
+	}
+
+	/**
+	 * 회원 상세
+	 * @param MemVo
+	 * @return ModelAndView
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "mem/memDet")
+	public ModelAndView memDet(@ModelAttribute MemVo bvo, HttpSession session){
+		ModelAndView view = new ModelAndView();
+		if(bvo.getMemSq() != null && bvo.getMemSq() != 0){
+			view.addObject("mem", memService.getMem(bvo).get("mem"));
+		}
+		view.addObject("admEmail", session.getAttribute("ADM_EMAIL"));
+		view.setViewName("mem/memDet");
+		return view;
+	}
+
+	/**
+	 * 회원 수정
+	 * @param MemVo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "mem/updateMem")
+	public void updateMem(@ModelAttribute MemVo bvo){
+		memService.updateMem(bvo);
+	}
+
+	/**
+	 * 회원 삭제(논리)
+	 * @param MemVo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "mem/deleteMem")
+	public void deleteMem(@ModelAttribute MemVo bvo){
+		memService.deleteMem(bvo);
+	}
+}

@@ -1,0 +1,87 @@
+package com.brb.admin.service;
+import org.springframework.dao.DataAccessException;
+
+import com.brb.brbcom.common.collections.BrbMap;
+
+/**
+ * 
+ * @author back
+ *
+ */
+public interface AdminService {
+
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> getAdminList(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> getAdminListCnt(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> getAdmin(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int addAdmin(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int modAdmin(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int delAdmin(BrbMap<Object, Object> fMap) throws DataAccessException;	
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> getAdminLogList(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> getAdminLogListCnt(BrbMap<Object, Object> fMap) throws DataAccessException;	
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public BrbMap<Object, Object> checkId(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+
+} 

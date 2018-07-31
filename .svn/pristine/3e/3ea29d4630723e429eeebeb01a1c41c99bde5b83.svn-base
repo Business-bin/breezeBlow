@@ -1,0 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/app/app.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+<section>
+<form action="/app/appVrsDet" method="post" id="detForm">
+	<input type="hidden" value="" id="gubun" name="gubun" />
+	<input type="hidden" value="" id="appSq" name="appSq" />
+</form>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#">버전 관리</a></li>
+					<li><a href="#">개인정보동의 관리</a></li>
+					<li><a href="#">APP 트래킹</a></li>
+					<li><a href="#">사용통계</a></li>
+					<li><a href="#">Event Alarm</a></li>
+				</ul>
+				<div class="navi">
+					<ul>
+						<li>APP관리</li>
+						<li>버전관리</li>
+					</ul>
+				</div>
+				<table class="basictables">
+					<colgroup>
+						<col width="10%"/>
+						<col/>
+						<col width="10%"/>
+						<col width="10%"/>
+						<col width="10%"/>
+						<col/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>등록일</th>
+							<td><input type="text" id="startDate" class="" name="startDate" readonly="readonly"/> -
+							<input type="text" id="endDate" class="" name="endDate" readonly="readonly"/></td>
+							<th>OS</th>
+							<td>
+								<select id="appOs" name="appOs">
+									<option value="">전체</option>
+									<option value="Android">Android</option>
+									<option value="IOS">IOS</option>
+								</select>
+							</td>
+							<th>검색종류</th>
+							<td colspan="3">
+								<select id="search" name="search">
+									<option value="">선택</option>
+									<%-- <c:forEach items="${poly}" var="p">
+										<option value="${p.CODENAME}">${p.CODENAME}</option>
+									</c:forEach> --%>
+								</select>
+								<input type="text" id="keyWord" name="keyWord" placeholder="검색어를 입력하세요"/>
+								<a href="#" class="button" id="appVrsSearch">조회</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table id="appVrs_list"></table>
+				<div id="pager"></div>
+				<div class="button_area tright">
+					<a href="#" class="button" id="addAppVrs">신규생성</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/app/appVrsList.js"></script>

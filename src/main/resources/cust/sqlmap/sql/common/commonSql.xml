@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="common">
+
+	<insert id="insertAdminLog" parameterType="brbMap">
+		INSERT INTO TB_ADMIN_LOGIN_LOG
+			(
+			LOG_ADM_SQ
+			, SUC_YN
+			, ADM_EMAIL
+			, IP
+			, CON_ENV
+			, ADM_NM
+			, DTTM
+			, STAT
+			)
+		VALUES(
+			NEXTVAL('LOG_ADM_SQ')
+			, 'Y'
+			, #{R_ADM_EMAIL}
+			, #{R_IP}
+			, #{R_CON_ENV}
+			, #{R_ADM_NM}
+			, NOW()
+			, #{R_STAT}
+			)
+	</insert>
+	<insert id="insertAdminActLog" parameterType="brbMap">
+		INSERT INTO TB_ADMIN_ACT_LOG
+		(
+			LOG_ADM_SQ
+			, ADM_EMAIL
+			, IP
+			, CON_ENV
+			, ACT_CONT
+			, REFFER
+			, CUR_URL
+			, MEMO
+			, DTTM
+		) values (
+			NEXTVAL('T_A_SEQ')
+			, #{R_ADM_EMAIL}
+			, #{R_IP}
+			, #{R_CON_ENV}
+			, (SELECT DESCRIPTIONS FROM TB_MENU WHERE MENU_PATH =  #{R_PATH})
+			, #{R_REFFER}
+			, #{R_CUR_URL}
+			, (SELECT MENU_NM FROM TB_MENU WHERE MENU_PATH =  #{R_PATH})
+			, NOW()
+			)
+	</insert>
+
+	<select id="getHpList"  resultType="brbMap">
+		SELECT * FROM TB_CODE WHERE GROUPID = 'HP' AND USEYN='Y'
+	</select>
+
+	<select id="getTelList"  resultType="brbMap">
+		SELECT * FROM TB_CODE WHERE GROUPID = 'TEL' AND USEYN='Y'
+	</select>
+
+	<insert id="insertEmailLog" parameterType="brbMap">
+		INSERT INTO TB_EMAIL_LOG
+		(
+			LOG_EMAIL_SQ, MEM_SQ, DTTM,
+			EMAIL_SQ, USER_EMAIL, USER_NM
+		)
+		VALUES
+		(
+			NEXTVAL('LOG_EMAIL_SQ'), #{as_req_mem_sq}, now(),
+			(SELECT MAX(EMAIL_SQ) FROM TB_EMAIL), #{R_ADM_EMAIL}, #{as_req_nm}
+		)
+	</insert>
+
+	<select id="getEnvInfo" resultType="brbMap">
+		SELECT
+			ID,
+			PWD,
+			HOST
+		FROM TB_ENV_INFO
+	</select>
+</mapper>
+

@@ -1,0 +1,92 @@
+package com.brb.admin.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+
+import com.brb.admin.dao.AdminDao;
+import com.brb.brbcom.common.collections.BrbMap;
+
+
+@Service("AdminService")
+public class AdminServiceImpl implements AdminService{
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+	
+	@Autowired
+	AdminDao adminDao;
+	
+	
+
+	@Override
+	public BrbMap<Object, Object> getAdminList(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminList", adminDao.getAdminList(fMap));
+		return resMap;
+	}
+	
+
+	@Override
+	public BrbMap<Object, Object> getAdminListCnt(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminListCnt", adminDao.getAdminListCnt(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("admin", adminDao.getAdmin(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public int addAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return adminDao.addAdmin(fMap);
+	}
+
+	@Override
+	public int modAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return adminDao.modAdmin(fMap);
+	}
+	
+	@Override
+	public int delAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return adminDao.delAdmin(fMap);
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getAdminLogList(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminLogList", adminDao.getAdminLogList(fMap));
+		return resMap;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getAdminLogListCnt(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminLogListCnt", adminDao.getAdminLogListCnt(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public BrbMap<Object, Object> checkId(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("useYn", adminDao.checkId(fMap));
+		return resMap;
+	}
+	
+	
+}

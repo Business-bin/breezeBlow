@@ -1,0 +1,29 @@
+package com.brb.common.service;
+import org.springframework.dao.DataAccessException;
+
+import com.brb.brbcom.common.collections.BrbMap;
+
+/**
+ * 
+ * @author back
+ *
+ */
+public interface CommonService {
+
+	
+	/**
+	 * 관리자 로그인 로그
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int addAdminLog(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	/**
+	 * 관리자 액션 로그 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int addAdminActLog(BrbMap<Object, Object> fMap) throws DataAccessException;
+} 

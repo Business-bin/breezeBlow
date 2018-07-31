@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%-- <%@ include file="/WEB-INF/views/common/leftMenu.jsp" --%> 
+<!-- 소스 작성 start-->
+<%
+HttpSession session1 = request.getSession(false);
+String adm_email = session1.getAttribute("ADM_EMAIL").toString();
+%>
+<section>
+		<div class="container">
+			<div class="container_body">
+			    <form name="admDelForm" id="admDelForm" method="post" action="">
+			    <input type="hidden" name="btbs_sq" id="btbs_sq" value="${dMap.adm_sq}"/> 
+				<table class="basictables">
+					<tr>
+						<td>관리자 ID</td>
+						<td><input type="text" id="adm_email" name="adm_email" value="<%=adm_email%>"/></td> 
+					</tr>
+					<tr>
+						<td>사유</td>
+						<td><textarea rows="6" name="btbs_comment" id="btbs_comment"  style="width:100%"></textarea></td>
+					</tr>		
+				</table>
+				</form>
+				<div class="button_area tcenter">
+					<button class="button" id="btn_stop"><i class="axi axi-delete2"></i> 사용정지</button>
+					<button class="button" id="btn_use"><i class="axi axi-delete2"></i> 정지해제</button>
+					<button class="button" id="btn_del"><i class="axi axi-delete2"></i> 삭제하기</button>
+					<button class="button" id="btn_can" onclick="javascript:self.close();"><i class="axi axi-cancel"></i>닫기</button>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbDel.js"></script>

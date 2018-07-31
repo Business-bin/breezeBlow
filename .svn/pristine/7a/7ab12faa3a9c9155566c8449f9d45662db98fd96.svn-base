@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="poly">
+  <select id="getPoly" resultType="brbMap">
+  	SELECT
+  		CODENAME
+  	FROM TB_CODE
+  		WHERE GROUPID = 'POLYKIND'
+  </select>
+
+  <select id="getPolyDet" parameterType="java.lang.Integer" resultType="brbMap">
+  	SELECT
+  		POLY_SQ,
+  		POLY_NM,
+  		POLY_CONT,
+  		VRS,
+  		STAT,
+  		REG_DTTM
+  	FROM TB_POLY
+  		WHERE POLY_SQ = #{polySq}
+  </select>
+
+  <select id="getPolyList"  parameterType="brbMap" resultType="brbMap">
+    SELECT
+    	A.POLY_SQ,
+    	A.POLY_NM,
+    	A.POLY_CONT,
+    	A.VRS,
+    	(SELECT CODENAME FROM TB_CODE WHERE GROUPID = 'POLYSTAT' AND CODE = A.STAT) AS STATCODE,
+    	DATE_FORMAT(A.REG_DTTM, '%Y-%m-%d %H:%i:%S') AS REG_DTTM
+	FROM TB_POLY A
+		WHERE 1=1
+		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test=" search != null and search != '' ">
+			AND A.POLY_NM = #{search}
+		</if>
+		ORDER BY A.STAT,${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}
+  </select>
+
+  <select id="getPolyTotal"  parameterType="brbMap" resultType="java.lang.Integer">
+      SELECT
+    	COUNT(*)
+	FROM TB_POLY
+		WHERE 1=1
+		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test=" search != null and search != '' ">
+			AND POLY_NM = #{search}
+		</if>
+  </select>
+
+  <update id="updatePoly" parameterType="com.brb.app.model.PolyVo">
+    UPDATE TB_POLY SET
+		POLY_NM = #{polyNm},
+		POLY_CONT = #{polyCont},
+		VRS = #{vrs},
+		STAT = #{stat},
+		UPT_DTTM = now(),
+		UPT_ADM_SQ = #{uptAdmSq}
+	WHERE POLY_SQ = #{polySq}
+  </update>
+
+  <update id="updatePolyStat" parameterType="com.brb.app.model.PolyVo">
+    UPDATE TB_POLY SET
+		STAT = '02',
+		UPT_DTTM = now(),
+		UPT_ADM_SQ = #{uptAdmSq}
+	WHERE
+		POLY_SQ != #{polySq}
+		AND POLY_NM = #{polyNm}
+  </update>
+
+  <insert id="insertPoly" parameterType="com.brb.app.model.PolyVo">
+      INSERT INTO TB_POLY
+      (
+		POLY_SQ, POLY_NM, POLY_CONT,
+		VRS, STAT, REG_DTTM, REG_ADM_SQ
+      )
+      VALUES
+      (
+      	NEXTVAL('POLY_SQ'), #{polyNm}, #{polyCont},
+		#{vrs}, #{stat}, now(), #{regAdmSq}
+      )
+  </insert>
+
+	<select id="checkPoly" parameterType="com.brb.app.model.PolyVo" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM TB_POLY
+		WHERE POLY_NM = #{polyNm}
+		AND STAT = '01'
+		AND POLY_SQ != #{polySq}
+	</select>
+
+	<insert id="insertPolyLog" parameterType="com.brb.app.model.PolyVo">
+	      INSERT INTO TB_POLY_LOG
+	      (
+			LOG_POLY_SQ, BTBS_SQ, BTBS_NM,
+			POLY_NM, POLY_CONT, VRS, DTTM, POLY_SQ
+	      )
+	      VALUES
+	      (
+	      	NEXTVAL('LOG_POLY_SQ'),
+	      	<if test=" uptAdmSq != null and uptAdmSq != '' ">
+	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
+	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
+			</if>
+			<if test=" regAdmSq != null and regAdmSq != '' ">
+	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
+	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
+			</if>
+			#{polyNm}, #{polyCont}, {vrs}, now(),
+			<if test=" polySq != null and polySq != '' ">
+				#{tutSq}
+			</if>
+			<if test=" polySq == null or polySq == '' ">
+				(SELECT SEQUENCE_CUR_VALUE FROM SEQUENCE WHERE SEQUENCE_NAME='POLY_SQ')-1
+			</if>
+	      )
+  	</insert>
+</mapper>

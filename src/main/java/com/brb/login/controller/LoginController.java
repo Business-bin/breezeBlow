@@ -1,0 +1,310 @@
+package com.brb.login.controller;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.admin.service.AdminService;
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.brbcom.common.util.AES256Util;
+import com.brb.brbcom.common.util.RequestParameterUtil;
+import com.brb.brbcom.common.util.Util;
+import com.brb.brbcom.foundation.property.PropertyService;
+import com.brb.common.service.CommonService;
+import com.brb.etc.service.EtcService;
+import com.brb.login.service.LoginService;
+
+/**
+ *
+ * @author back
+ *
+ */
+@Controller
+public class LoginController {
+
+	protected PropertyService propertyService;
+
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+	@Autowired
+	CommonService commonService;
+
+
+	@Autowired
+	LoginService loginService;
+
+	@Autowired
+	EtcService etcService;
+
+	@Autowired
+	AdminService adminService;
+
+	private static AES256Util aes256 = AES256Util.getInstance();
+
+	@RequestMapping("/")
+	public ModelAndView loginInit() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("login/login") ;
+		return mav;
+	}
+
+	/**
+	 *  로그인
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({"unchecked", "unused" })
+	@RequestMapping(value = "login/login" , method = RequestMethod.POST)
+	public @ResponseBody Map<Object, Object>  login(HttpServletRequest request) throws Exception {
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		String pwd = aes256.aesEncode(dMap.getString("R_ADM_PWD"));
+		dMap.put("R_ADM_PWD", pwd);
+		BrbMap<Object, Object> rMap = null;
+		String ip = "";
+		try{
+			rMap = loginService.getUser(dMap);
+			if(null != rMap && rMap.getString("USERCHECK").equals("Y")){
+				ip = dMap.getString("R_IP"); //Util.ipChk(request);
+
+				HttpSession session = request.getSession();
+				session.setAttribute("ADM_SQ",rMap.getString("ADM_SQ") );
+				session.setAttribute("USERCHECK","Y");
+				session.setAttribute("ADM_NM",rMap.getString("ADM_NM") );
+				session.setAttribute("ADM_SQ",rMap.getString("ADM_SQ") );
+				session.setAttribute("ADM_EMAIL",rMap.getString("ADM_EMAIL") );
+				session.setAttribute("ADM_HP",rMap.getString("ADM_HP") );
+				session.setAttribute("ADM_TEL",rMap.getString("ADM_TEL") );
+				session.setAttribute("ADM_RANK",rMap.getString("ADM_RANK") );
+				session.setAttribute("REG_ADM_NM",rMap.getString("REG_ADM_NM") );
+				session.setAttribute("ADM_CLASS",rMap.getString("ADM_CLASS") );
+				session.setAttribute("BTBS_SQ",rMap.getString("BTBS_SQ") );
+				session.setAttribute("BTBS_NM",rMap.getString("BTBS_NM") );
+				session.setAttribute("LOCALIP", ip);
+ 			    session.setMaxInactiveInterval(60*60);
+
+
+ 			    //action log
+ 			    String url = request.getScheme () + "://" + request.getServerName () + ":" + request.getServerPort ()+request.getRequestURI();
+ 			    BrbMap<Object, Object> logMap = new BrbMap<>();
+ 			    logMap.put("R_ADM_EMAIL", rMap.getString("ADM_EMAIL"));
+ 			    logMap.put("R_ADM_NM", rMap.getString("ADM_NM"));
+ 			    logMap.put("R_CON_ENV", Util.getOs(request)+ " : " + Util.getBrowser(request));
+  			    logMap.put("R_IP", ip);
+  			    logMap.put("R_STAT", "0");
+  				session.setAttribute("R_IP",logMap.getString("R_IP") );
+  			    commonService.addAdminLog(logMap);
+
+			} else {
+				rMap = new BrbMap<>();
+				rMap.put("USERCHECK", "N");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return rMap;
+	}
+
+	/**
+	 * 상세보기 화면
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "login/adminView" , method = RequestMethod.POST)
+	public ModelAndView adminView(HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
+
+		logger.debug("############   adminView  ################");
+		ModelAndView view = new ModelAndView("common/adminView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		BrbMap<Object, Object> rMap = null;
+		List<BrbMap> hpList = null;
+		List<BrbMap> telList = null;
+		dMap.put("adm_sq", dMap.getString("admSq"));
+		try{
+			rMap = adminService.getAdmin(dMap);
+			hpList = commonService.getHpList();
+			telList = commonService.getTelList();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		view.addObject("rMap", rMap);
+		view.addObject("hpList", hpList);
+		view.addObject("telList", telList);
+
+		return view;
+	}
+
+	/**
+	 * 로그아웃
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({ "unused", "unchecked" })
+	@RequestMapping(value = "login/logout" , method = RequestMethod.POST)
+	public @ResponseBody Map<Object, Object>  logout(HttpServletRequest request) throws Exception {
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		 //세션무효화
+		HttpSession session = request.getSession();
+
+	    BrbMap<Object, Object> logMap = new BrbMap<>();
+	    //action log
+	 /*   logMap.put("R_ADM_EMAIL", session.getAttribute("ADM_EMAIL"));
+	    logMap.put("R_CON_ENV", System.getProperty("os.name").toLowerCase(Locale.ROOT) + " : " + Util.getBrowser(request));
+	    logMap.put("R_IP", Util.getLocalServerIp());
+	    logMap.put("R_STAT", "0");
+	    commonService.addAdminLog(logMap);*/
+
+	    session.invalidate();
+		BrbMap<Object, Object> rMap = new BrbMap<>();
+		rMap.put("status", "Y");
+		return rMap;
+	}
+
+
+	/**
+	 *  임시패스워드 메일전송
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({"unchecked", "unused" })
+	@RequestMapping(value = "login/passSend" , method = RequestMethod.POST)
+	public  @ResponseBody Map<Object, Object>  passSend(HttpServletRequest request) throws Exception {
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		BrbMap<Object, Object> rMap = null;
+		BrbMap<Object, Object> infoMap = null;
+		try{
+			//유저 체크
+			rMap = loginService.getCheckUser(dMap);
+
+			if(null == rMap){
+				rMap = new BrbMap<>();
+				rMap.put("status", "N");
+				rMap.put("message", "등록된 메일 ID가 아닙니다.");
+				return rMap;
+			} else {
+
+				infoMap =  etcService.getEtcInit(dMap);
+
+				String host     = infoMap.getString("HOST");
+				final String user   = infoMap.getString("ID");
+				final String password  =  infoMap.getString("PWD");
+				final String port  =  infoMap.getString("PORT");
+				String to     = dMap.getString("R_ADM_EMAIL");
+
+				Properties props = new Properties();
+				props.put("mail.smtp.host", host);
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", port);
+
+				Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+				   protected PasswordAuthentication getPasswordAuthentication() {
+				    return new PasswordAuthentication(user, password);
+				   }
+				});
+
+				String imsiPw = randomPw();
+				dMap.put("R_ADM_PWD",aes256.aesEncode(imsiPw));
+
+				//임시비밀번호 저장
+				int p = loginService.modPassword(dMap);
+
+				if(p >  0){
+					rMap.put("status", "Y");
+				}
+				MimeMessage message = new MimeMessage(session);
+			    message.setFrom(new InternetAddress(user));
+			    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			    message.setSubject("임시 비밀번호 발송 메일");
+			    message.setSentDate(new Date());
+			    message.setHeader("Content-Type", "text/plain; charset=euc-kr");
+			    Multipart multipart = new MimeMultipart();
+
+		        MimeBodyPart htmlPart = new MimeBodyPart();
+		        StringBuffer sb = new StringBuffer();
+				sb.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+				sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+				sb.append("<head>");
+				sb.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
+				sb.append("</head>");
+				sb.append("<body bgcolor='#FFFFFF'>");
+				sb.append("<table style='width:100%; height:50px;'   bgcolor='#999999'><tr><td></td></tr></table>");
+				sb.append("<table><tr><td></td><td  bgcolor='#FFFFFF'><div><table><tr><td><h3>임시 비밀번호 </h3>");
+				sb.append("<h3 style='color:blue;'>");
+				sb.append(imsiPw);
+				sb.append("</h3>");
+				sb.append("<p style='color:red;'> * 임시비밀번호로 로그인후 비밀번호를 변경 해주세요.</p></td></tr></table></div></td><td></td></tr></table>");
+				sb.append("<table style='width:100%; height:50px;'   bgcolor='#999999'><tr><td></td></tr></table>");
+				sb.append("</body>");
+				sb.append("</html>");
+
+		        htmlPart.setContent(sb.toString(), "text/html; charset=EUC-KR");
+		        multipart.addBodyPart(htmlPart);
+		        message.setContent(multipart);
+
+			    Transport.send(message);
+			}
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return rMap;
+	}
+
+	/**
+	 * 랜덤 패스워드 생성
+	 * @return
+	 */
+	public static String randomPw(){
+		//배열에 선언
+		char pwCollection[] = new char[] {
+                        '1','2','3','4','5','6','7','8','9','0',
+                        'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                        'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                        '!','@','#','$','%','^','&','*','(',')','+','-','='
+                        };
+
+		String ranPw = "";
+		for (int i = 0; i < 16; i++) {
+			//Math.rondom()은 0.0이상 1.0미만의 난수를 생성해 준다.
+			int selectRandomPw = (int)(Math.random()*(pwCollection.length));
+			ranPw += pwCollection[selectRandomPw];
+		}
+      return ranPw;
+	}
+}

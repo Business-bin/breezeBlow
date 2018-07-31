@@ -1,0 +1,259 @@
+/*******************************************************************************
+ * Name : ready
+ * Desc : Param
+ ******************************************************************************/
+$(function() {
+	/* 검색 시작일 */
+	$("#startDate").datepicker({
+		changeMonth : true,
+		onSelect : function(dateText, inst) {
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+
+	/* 검색 끝일 */
+	$("#endDate").datepicker({
+		changeMonth : true,
+		onSelect : function(dateText, inst) {
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+
+	/* 당월 1일부터 당일 계산 */
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+	if (month < 10) {
+		month = "0" + month.toString();
+	}
+	$("#startDate").val(year + "-" + month + "-01");
+	$("#endDate").val(year + "-" + month + "-" + day);
+
+	/* 회원 리스트 검색 */
+	$("#memSearch").click(function() {
+		grid.fn_SearchGrid();
+	});
+
+	/* 회원리스트 헤더 그리드 */
+	grid.fn_initLoadGrid();
+});
+
+/* 회원상세로 이동 */
+function memDet(sq) {
+	$("#memSq").val(sq);
+	$("#gubun").val("det");
+	$("#detForm").submit();
+}
+
+/* 회원리스트 그리드 */
+var grid = {
+	fn_initLoadGrid : function() {
+		$("#mem_list").jqGrid('GridUnload');
+		$("#mem_list").jqGrid({
+					caption : "회원리스트",
+					datatype : 'clientside',
+					height : 500,
+					width : 500,
+					rowNum : 10,
+					rowList : [ 10, 20, 30 ],
+					rownumbers : true,
+					viewrecords : true,
+					colNames : [ "번호", "아이디", "이름", "거주지역", "성별", "핸드폰번호",
+							"현재상태", "가입일자" ],
+					colModel : [ {
+						name : "MEM_SQ",
+						index : "MEM_SQ",
+						sortable : true,
+						width : 0,
+						align : 'center',
+						hidden : true
+					}, {
+						name : "MEM_EMAIL",
+						index : "MEM_EMAIL",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "MEM_NM",
+						index : "MEM_NM",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "ADDR",
+						index : "ADDR",
+						sortable : false,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "GENCODE",
+						index : "GENCODE",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "USER_HP",
+						index : "USER_HP",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "STATCODE",
+						index : "STATCODE",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "REG_DTTM",
+						index : "REG_DTTM",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					} ],
+					pager : "#pager",
+					sortname : 'MEM_SQ', // 초기화 될때 sort할 컬럼을 지정
+					sortorder : 'asc', // 초기화정렬방법
+					jsonReader : {
+						repeatitems : false,
+						id : "MEM_SQ",
+						root : "rows",
+						page : "page",
+						total : "total",
+						records : "records"
+					},
+					gridComplete : function(data, status) {
+					},
+					recordpos : 'right',
+					gridview : true,
+					emptyrecords : " 등록된 데이터가 없습니다.",
+					loadError : function(xhr, status, error) {
+					},
+					onSelectRow : function(rowid, status, e) {
+					}
+				}).trigger('reloadGrid');
+	},
+	fn_SearchGrid : function() {
+		$("#mem_list").jqGrid('GridUnload');
+		$("#mem_list").jqGrid({
+					url : "/mem/memSearch",
+					caption : "회원리스트",
+					datatype : 'json',
+					mtype : 'POST',
+					postData : {
+						btbsSq : $('#btbsSq').val(),
+						addr_1 : $('#addr_1').val(),
+						memGen : $('#memGen').val(),
+						startDate : $('#startDate').val(),
+						endDate : $('#endDate').val(),
+						search : $('#search').val(),
+						keyWord : $('#keyWord').val()
+					},
+					height : 500,
+					width : 500,
+					rowNum : 10,
+					rowList : [ 10, 20, 30 ],
+					rownumbers : true,
+					viewrecords : true,
+					colNames : [ "번호", "아이디", "이름", "거주지역", "성별", "핸드폰번호",
+							"현재상태", "가입일자" ],
+					colModel : [ {
+						name : "MEM_SQ",
+						index : "MEM_SQ",
+						sortable : true,
+						width : 0,
+						align : 'center',
+						hidden : true
+					}, {
+						name : "MEM_EMAIL",
+						index : "MEM_EMAIL",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "MEM_NM",
+						index : "MEM_NM",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "ADDR",
+						index : "ADDR",
+						sortable : false,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "GENCODE",
+						index : "GENCODE",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "USER_HP",
+						index : "USER_HP",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "STATCODE",
+						index : "STATCODE",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					}, {
+						name : "REG_DTTM",
+						index : "REG_DTTM",
+						sortable : true,
+						width : 30,
+						align : 'center'
+					} ],
+					pager : "#pager",
+					sortname : 'MEM_SQ', // 초기화 될때 sort할 컬럼을 지정
+					sortorder : 'asc', // 초기화정렬방법
+					jsonReader : {
+						repeatitems : false,
+						id : "MEM_SQ",
+						root : "rows",
+						page : "page",
+						total : "total",
+						records : "records"
+					},
+					gridComplete : function(data, status) {
+					},
+					recordpos : 'right',
+					gridview : true,
+					emptyrecords : " 등록된 데이터가 없습니다.",
+					loadError : function(xhr, status, error) {
+						alert(status + " : " + error);
+						console.log(status);
+						console.log(xhr);
+						console.log(error);
+					},
+					onSelectRow : function(rowid, status, e) {
+						var ret = jQuery("#mem_list").jqGrid('getRowData',
+								rowid);
+						memDet(ret.MEM_SQ);
+					}
+				}).trigger('reloadGrid');
+		$("#mem_list").jqGrid("navGrid", "#pager", {
+			search : false,
+			edit : false,
+			add : false,
+			del : false
+		}, {
+			closeAfterEdit : false,
+			reloadAfterSubmit : false
+		}, {
+			closeAfterAdd : false,
+			reloadAfterSubmit : false
+		}, {
+			reloadAfterSubmit : false
+		});
+	}
+}

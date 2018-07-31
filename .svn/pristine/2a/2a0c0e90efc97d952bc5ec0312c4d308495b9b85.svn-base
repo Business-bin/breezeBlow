@@ -1,0 +1,11 @@
+package com.brb.app.service;
+
+/**
+ *
+ * @author back
+ *
+ */
+public interface AppService {
+
+
+}

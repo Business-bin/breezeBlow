@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="sms">	
+
+	<select id="getSmsList"  parameterType="brbMap" resultType="brbMap">
+			SELECT
+			 SMS_SQ
+			, EMAIL_TP
+			, EMAIL_NM
+			, EMAIL_CONT
+			, EMAIL_RES_DTTM
+			, STAT
+			, DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM
+			, UPT_DTTM
+			, DEL_DTTM
+			, REG_ADM_SQ
+			, UPT_ADM_SQ
+			, DEL_ADM_SQ
+			, BTBS_SQ
+			, BTBS_NM
+		FROM TB_SMS
+		WHERE 1=1
+		ORDER BY ${orderBy}
+		LIMIT ${R_PAGE} , ${R_ROW}
+	</select>
+	
+	
+	<select id="getSmsListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT count(*) as total
+		FROM TB_SMS
+		WHERE 1=1
+	</select>
+	
+	<select id="getCheckUser"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			ADM_SQ
+			, ADM_EMAIL
+			, ADM_PWD
+			, ADM_NM
+			, ADM_PART
+			, ADM_TEL
+			, ADM_EMPN
+			, ADM_HP
+			, ADM_RANK
+			, STAT
+			, REG_ADM_NM
+			, ADM_CLASS
+			, REG_DTTM
+			, UPT_DTTM
+			, DEL_DTTM
+			, REG_ADM_SQ
+			, UPT_ADM_SQ
+			, DEL_ADM_SQ
+			, BTBS_SQ
+			, BTBS_NM
+			,'Y' AS USERCHECK
+		FROM TB_BTB_ADM
+		WHERE 1=1
+		AND ADM_EMAIL = #{R_ADM_EMAIL}
+	</select>
+
+	<update id="modPassword" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM SET ADM_PWD =  #{R_ADM_PWD} 
+	    WHERE ADM_EMAIL =  #{R_ADM_EMAIL} 
+	</update>
+
+	<insert id="adminLog" parameterType="brbMap">
+		INSERT INTO TB_ADMIN_LOGIN_LOG
+			(
+			LOG_ADM_SQ
+			, SUC_YN
+			, ADM_EMAIL
+			, IP
+			, CON_ENV
+			, ADM_NM
+			, DTTM
+			, STAT
+			)
+		VALUES(
+			NEXTVAL('LOG_ADM_SQ')
+			, 'Y'
+			, #{R_ADM_EMAIL}
+			, #{R_IP}
+			, #{R_CON_ENV}
+			, #{R_ADM_NM}
+			, NOW()
+			, #{R_STAT}
+			)
+	</insert>
+
+
+
+</mapper>
+

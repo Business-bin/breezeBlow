@@ -1,0 +1,101 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+		<div class="container">
+			<div class="container_body">
+			<!-- 
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> Manager</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Manager</li>
+					</ul>
+				</div>
+			 -->
+				<form name="viewForm" id="viewForm" method="post" action="">
+				<input type="hidden" name="btbs_sq" id="btbs_sq" value="${rMap.btb.BTBS_SQ}"/> 
+				<table class="basictables">
+					<tr>
+						<th>고유번호</th>
+						<td>
+							<!-- <input type="text" name="btbs_sq" id="btbs_sq" value="${rMap.btb.BTBS_SQ}" style="width:150px" maxlength="12" readonly/> -->
+							${rMap.btb.BTBS_SQ}
+						</td>
+					</tr>
+					<tr>
+						<th>B2B고객명</th>
+						<td>
+							<input type="text" name="btbs_nm" id="btbs_nm" value="${rMap.btb.BTBS_NM}" style="width:150px" maxlength="20"/>
+						</td>
+					</tr>
+					<tr>
+						<th>회사명</th>
+						<td>
+							<input type="text" name="comp_nm" id="comp_nm" value="${rMap.btb.BTBS_COMP_NM}" style="width:300px" maxlength="20"/>
+						</td>
+					</tr>		
+					<tr>
+						<th>도메인정보</th>
+						<td>
+							<input type="text" name="btbs_domain" id="btbs_domain" value="${rMap.btb.BTBS_DOMAIN}" style="width:300px" maxlength="100"/>
+						</td>
+					</tr>
+					<tr>
+						<th>보유 회원수</th>
+						<td>
+							<input type="text" name="btbs_user_num" id="btbs_user_num" value="${rMap.btb.BTBS_USER_NUM}" class="numberonly" style="width:150px" />
+						</td>
+					</tr>
+					<tr>
+						<th>보유 디바이스 개수</th>
+						<td><input type="text" name="btbs_dev_num" id="btbs_dev_num" value="${rMap.btb.BTBS_DEV_NUM}" class="numberonly" style="width:150px" /></td>
+					</tr>
+					<tr>
+						<th>주소</th>
+						<td><input type="text" name="btbs_addr" id="btbs_addr" value="${rMap.btb.BTBS_ADDR}" style="width:500px" maxlength="255"/></td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td>
+							<input type="text" name="phone_no" id="phone_no" value="${rMap.btb.BTBS_COMP_TEL}" style="width:150px"/>
+						</td>
+					</tr>
+					<tr>
+						<th>템플릿 정보</th>
+						<td>
+							<input type="text" name="btbs_cur_templ" id="btbs_cur_templ" value="${rMap.btb.BTBS_CUR_TEMPL}" style="width:150px" maxlength="20"/>
+							<button type="button" class="button" id="btn_templ">템플릿 변경</button>
+						</td>
+					</tr>
+				</table>
+				</form>
+				<div class="button_area tcenter">
+					<button type="button" class="button" id="btn_mod"><i class="axi axi-person-add"></i>수정</button>
+				 	<button type="button" class="button" id="btn_use"><i class="axi axi-person-add"></i>사용중지(사용허가)</button>  
+					<button type="button" class="button" id="btn_del"><i class="axi axi-delete2"></i>삭제</button>
+					<a href="/btb/btbList" class="button" ><i class="axi axi-cancel"></i> 목록으로</a>
+				</div>
+			</div>
+		</div>
+	</section>	 
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbView.js"></script>

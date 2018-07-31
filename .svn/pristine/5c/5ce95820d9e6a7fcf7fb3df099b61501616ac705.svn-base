@@ -1,0 +1,223 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(function() {
+	$("#layerPopup5").draggable();
+	$("#layerPopup6").draggable();
+
+	if($("#gubun").val() != "det"){
+		$("#det").hide();
+	}
+
+	$("#startDate").datepicker({
+		changeMonth : true,
+		onSelect : function(dateText, inst) {
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+
+	$("#modSearch").click(function(){
+		grid.fn_initLoadGrid();
+		grid.fn_SearchGrid();
+		$("#dim-layer").show();
+		$("#layerPopup5").show();
+	});
+
+	$("#delFwr").click(function() {
+		$("#dim-layer").show();
+		$("#layerPopup6").show();
+	});
+
+	$("#close").click(function() {
+		$("#dim-layer").hide();
+		$("#layerPopup5").hide();
+	});
+
+	$("#close2").click(function() {
+		$("#dim-layer").hide();
+		$("#layerPopup6").hide();
+	});
+
+	$("#backFwrList").click(function() {
+		location.href = "/product/fwrList";
+	});
+
+	$("#modelSearch").click(function(){
+		grid.fn_SearchGrid();
+	});
+
+	$("#fwrFile").change(function() {
+		if (this.files && this.files[0]) {
+			$('#fwrFileNm').val(this.files[0].name);
+		}
+	});
+
+	$("#del").click(function(){
+		$.ajax({
+			type : "post",
+			url : "/product/deleteFwr",
+			data : {
+				delRsn : $("#delRsn").val(),
+				fwrSq : $("#fwrSq").val()
+			}, success : function(result){
+				alert("삭제되었습니다.");
+				$("#dim-layer").hide();
+				$("#layerPopup6").hide();
+			}, error : function(result){
+
+			}
+		})
+	});
+
+	$(".tabmenu>li").eq(3).addClass("active");
+});
+
+function fileupload(formId, url, msg) {
+	var form = $('#'+formId)[0];
+    var data = new FormData(form);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: url,
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+        	alert(msg);
+        },
+        error: function (e) {
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+        }
+    });
+}
+
+function ajaxForm(formId, url, msg){
+	var form = $("#"+formId).serialize();
+	$.ajax({
+		type : "POST",
+		url : url,
+		data : form,
+		success : function(result){
+			alert(msg);
+		},
+		error : function(e){
+			alert("error : "+e);
+		}
+	});
+}
+
+var grid = {
+		fn_initLoadGrid:function(){
+			$("#model_list").jqGrid('GridUnload');
+			$("#model_list").jqGrid({
+				caption:"제품 모델 검색"
+				,datatype : 'clientside'
+				,height:300
+				,width:350
+				,rowNum:8
+				,rownumbers : false
+				,viewrecords: true
+				,colNames:["번호","제품명","모델명","제품분류"]
+				,colModel:[
+				      {name:"MD_SQ", index:"MD_SQ" , sortable:false,	width:0, align:'center', hidden: true},
+			          {name:"CP_NM", index:"CP_NM" , sortable:false,	width:20, align:'center'},
+			          {name:"MD_NM", index:"MD_NM", sortable:false,	width:20, align:'center'},
+			          {name:"MORM", index:"MORM", sortable:false, width:10, align:'center'},
+			    ]
+				,pager:"#pager"
+		        ,sortname     : 'MD_SQ'     //초기화 될때 sort할 컬럼을 지정
+		        ,sortorder    : 'asc'       //초기화정렬방법
+				,jsonReader:{ repeatitems:false
+					, id:"ROWNUM"
+					, root: "rows"
+					, page : "page"
+					, total : "total"
+					,records : "records" }
+
+				,gridComplete : function(data,status) {
+				}
+				,recordpos:'right'
+				,gridview: true
+				,emptyrecords :" 등록된 데이터가 없습니다."
+		    	,loadError:function(xhr, status, error) {
+		    	}
+		    	,onSelectRow   : function(rowid, status, e) {
+			     }
+
+			}).trigger('reloadGrid');
+
+		}
+		,fn_SearchGrid:function(){
+			$("#model_list").jqGrid( 'GridUnload' );
+			$("#model_list").jqGrid({
+				url:"/product/modelSearch2"
+				,caption:"제품 모델 검색"
+				,datatype : 'json'
+			    ,mtype : 'POST'
+		    	, postData : {
+		          cpNm : $("#prodNm").val(),
+		          mdNm : $("#prodNm").val()
+		        }
+				,height:300
+				,width:250
+				,rowNum:8
+				,rownumbers : false
+				,viewrecords: true
+				,colNames:["번호","제품명","모델명","제품분류"]
+				,colModel:[
+				      {name:"MD_SQ", index:"MD_SQ" , sortable:false,	width:0, align:'center', hidden: true},
+			          {name:"CP_NM", index:"CP_NM" , sortable:false,	width:20, align:'center'},
+			          {name:"MD_NM", index:"MD_NM", sortable:false,	width:20, align:'center'},
+			          {name:"MORM", index:"MORM", sortable:false, width:10, align:'center'},
+			    ]
+				,pager:"#pager"
+		        ,sortname     : 'MD_SQ'     //초기화 될때 sort할 컬럼을 지정
+		        ,sortorder    : 'asc'       //초기화정렬방법
+				,jsonReader:{ repeatitems:false
+					, id: "ROWNUM"
+					, root: "rows"
+					, page : "page"
+					, total : "total"
+					,records : "records" }
+
+				,gridComplete : function(data,status) {
+					/*var val = jQuery("#mac_list").jqGrid('getGridParam','records');
+					$("#totalCnt").html(val);*/
+				}
+				,recordpos:'right'
+				,gridview: true
+				,emptyrecords :" 등록된 데이터가 없습니다."
+		    	,loadError:function(xhr, status, error) {
+		    	  alert(status + " : " +error);
+		    	  console.log(status);
+		    	  console.log(xhr);
+		    	  console.log(error);
+		    	}
+		    	,ondblClickRow    : function(rowid, status, e) {
+			    	var ret = jQuery("#model_list").jqGrid('getRowData',rowid);
+			    	$("#fwrMd").val(ret.MD_NM);
+			    	$("#fwrMdSq").val(ret.MD_SQ);
+			    	$("#dim-layer").hide();
+					$("#layerPopup5").hide();
+			     }
+			}).trigger('reloadGrid');
+
+			$("#model_list").jqGrid(
+					"navGrid",
+					"#pager",
+					{search:false, edit:false, add:false, del:false},
+					{closeAfterEdit:false, reloadAfterSubmit:false},
+					{closeAfterAdd:false, reloadAfterSubmit:false},
+					{reloadAfterSubmit:false}
+			);
+		}
+	}

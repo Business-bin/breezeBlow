@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="main">	
+	<select id="getMainMemList"  parameterType="brbMap" resultType="brbMap">
+		SELECT 
+		MEM_SQ,
+		 CONCAT(MEM_NM,'(',MEM_EMAIL,')') AS NM 
+		,CONCAT(ADDR_1,' ',REPLACE(ADDR_2,'전체',''),' ',REPLACE(ADDR_3,'전체','')) AS AREA
+		,HP_OS  AS MOBILE_TYPE
+		, DATE_FORMAT(REG_DTTM, '%Y-%m-%d') AS REG_DTTM
+		FROM TB_MEM
+		WHERE 1=1
+		AND STAT = '01'
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		ORDER BY REG_DTTM DESC
+		LIMIT 0 , 5
+	</select>
+	
+	
+	<select id="getMainMemListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT 
+		  count(*) as total
+		FROM TB_MEM
+		WHERE 1=1
+		AND STAT = '01'
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		ORDER BY REG_DTTM DESC
+		LIMIT 0 , 5
+		
+	</select>
+	
+	<select id="getMainAsList"  parameterType="brbMap" resultType="brbMap">
+		SELECT    
+			A.AS_REQ_SQ
+			,A.AS_REQ_NM
+			,CONCAT(B.MEM_NM,'(',B.MEM_EMAIL,')') AS NM 
+			,A.AS_REQ_CP_SN
+			,DATE_FORMAT(a.REG_DTTM, '%Y-%m-%d') AS REG_DTTM
+			,(SELECT CODENAME FROM TB_CODE WHERE CODE = A.STAT AND GROUPID='ASSTAT') AS STAT_NM
+		FROM     TB_AS_REQ A , TB_MEM B
+		WHERE 1=1
+		AND A.AS_REQ_MEM_SQ = B.MEM_SQ
+		ORDER BY A.REG_DTTM DESC
+		LIMIT 0 , 5
+	</select>
+	
+	
+	<select id="getMainAsListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT    
+			count(*) as total
+		FROM     TB_AS_REQ A , TB_MEM B
+		WHERE 1=1
+		AND A.AS_REQ_MEM_SQ = B.MEM_SQ
+		ORDER BY A.REG_DTTM DESC
+		LIMIT 0 , 5
+	</select>
+	
+	<select id="getMainQnaList"  parameterType="brbMap" resultType="brbMap">
+		SELECT    BD_SQ,
+				  CONCAT(a.BD_USER_NM,'(',a.BD_USER_EMAIL,')') AS NM, 
+		          DATE_FORMAT(REG_DTTM, '%Y-%m-%d %H:%i') AS REG_DTTM1,
+		          DATE_FORMAT(BD_ANS_REG_DTTM, '%Y-%m-%d %H:%i') AS BD_ANS_REG_DTTM1,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE = A.BD_TP_2 AND GROUPID='BOARDCATEGORY') AS CATEGORY,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='BDSTAT') AS CODENAME,
+		          (SELECT CODENAME FROM TB_CODE WHERE CODE=IFNULL(A.BD_ANS_YN,'N') AND GROUPID='BDANSYN') AS BDANSYN
+		FROM      TB_BD A
+		WHERE     1=1
+		AND       BD_TP_1 = 'Q'  
+		order by A.REG_DTTM desc
+		LIMIT 0 , 5
+	</select>
+	
+	
+	<select id="getMainQnaListTotal"  parameterType="brbMap" resultType="brbMap">
+		SELECT   
+		count(*) as total
+		FROM      TB_BD A
+		WHERE     1=1
+		AND       BD_TP_1 = 'Q'  
+		order by A.REG_DTTM desc
+		LIMIT 0 , 5
+	</select>
+	
+	
+	<select id="getMainG"  parameterType="brbMap" resultType="brbMap">
+		SELECT SUM( IF( HP_OS = 'Android' , 1, 0)) AS ANDROIDCNT
+		,SUM( IF( HP_OS = 'IOS' , 1, 0)) AS IOSCNT
+		FROM TB_MEM
+		WHERE 1=1
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+	</select>
+	
+	<select id="getMainG2"  parameterType="brbMap" resultType="brbMap">
+		SELECT STR_TO_DATE(REG_DTTM,'%Y-%m-%d') AS DATE
+		  , COUNT(*) AS CNT
+		  FROM tb_mem
+		WHERE DATE(REG_DTTM) <![CDATA[ >= ]]> STR_TO_DATE(DATE_SUB(now(), INTERVAL 30 DAY),'%Y-%m-%d')
+		AND DATE(REG_DTTM) <![CDATA[ <=  ]]> STR_TO_DATE(now(), '%Y-%m-%d')
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		GROUP BY STR_TO_DATE(REG_DTTM,'%Y-%m-%d')
+		ORDER BY STR_TO_DATE(REG_DTTM,'%Y-%m-%d') ASC
+	</select>
+	
+</mapper>
+

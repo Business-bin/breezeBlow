@@ -1,0 +1,522 @@
+/********************************************************************
+Name   : 전역 환경 설정
+Desc   :
+Param  :
+********************************************************************/
+$(function() {
+	$( "#datepicker" ).datepicker( $.datepicker.regional[ "ko" ] );
+
+	//로딩바
+	var ima = '<div class="wrap-loading display-none"><div><img src="/resources/images/ajax-loader.gif" /></div></div>';
+	var loading = $(ima).appendTo(document.body).hide();
+
+	 //Ajax 시작시 로딩바 보여 줌.
+	 $(document).ajaxStart(function() {
+		 if(window.location.pathname == "/"){return false;}
+		 //alert("start");
+		 loading.show();
+		 wrapWindowByMask();
+	 });
+
+	 //Ajax 완료시 로딩바 감춤.
+	 $(document).ready(function() {
+		 $(this).ajaxStop(function() {
+			// alert("stop");
+			 loading.hide();
+			 $('#mask').hide();
+		 });
+	 });
+
+});
+
+/********************************************************************
+Name   : wrapWindowByMask
+Desc   :
+Param  :
+********************************************************************/
+function wrapWindowByMask(){
+	//화면의 높이와 너비를 구한다.
+	var maskHeight = $(document).height();
+	var maskWidth = $(window).width();
+
+	//마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
+	$('#mask').css({'width':maskWidth,'height':maskHeight});
+
+	//애니메이션 효과 - 일단 1초동안 까맣게 됐다가 80% 불투명도로 간다.
+	//$('#mask').fadeIn(1000);
+	$('#mask').fadeTo("slow",0.6);
+}
+
+
+
+
+/********************************************************************
+Name   :      idCheck
+Desc   :
+Param  :
+********************************************************************/
+function idCheck(email) {
+	//var email = $('#loginId').val();
+	var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+	if(exptext.test(email)==false){
+		//이메일 형식이 알파벳+숫자@알파벳+숫자.알파벳+숫자 형식이 아닐경우
+		alert("메일형식이 올바르지 않습니다.");
+		return false;
+	}
+	return true;
+}
+
+/********************************************************************
+Name   :      isValidFormPassword
+Desc   :
+Param  :
+********************************************************************/
+function checkPassword(pw) {
+
+	//var check = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,16}$/;
+	var num = pw.search(/[0-9]/g);
+	var eng = pw.search(/[a-z]/ig);
+	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+	if( (num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0) ){
+		alert("영문, 숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.");
+		return false;
+	}
+	if (pw.length < 8 || pw.length > 16) {
+		alert("8자리 ~ 16자리 이내로 입력해주세요.");
+		return false;
+	}
+	if(pw.search(/₩s/) != -1){
+		alert("비밀번호는 공백업이 입력해주세요.");
+		return false;
+	}
+
+	return true;
+}
+
+
+/********************************************************************
+Name   : fnMsgLengthAlert
+Desc   : 메시지의 길이를 체크 txtObj 길이 체크할 객체, sTarget : span id, maxLength 최대 길이
+		 체크후 초과시 알림창, 초과된 텍스트 제거
+Param  :
+********************************************************************/
+function fnMsgLengthAlert(txtObj, sTarget, maxLength) {
+	console.log(txtObj + ":" + sTarget + maxLength);
+	var	sTmpStr, sTmpChar;
+	var	sObj				= document.getElementById(sTarget);
+	var	txtLength			= 0;
+	var	nOriginLen			= 0;
+	var	nStrLength			= 0;
+	var	sReturnTmpStr		= "";
+	txtLength				= calculate_byte(txtObj.value);
+
+	if (maxLength < txtLength) {
+		alert("최대 문자수를 초과하였습니다.");
+		sTmpStr		= new String(txtObj.value);
+		nOriginLen	= sTmpStr.length;
+
+		for ( var i=0 ; i < nOriginLen ; i++ ) {
+			sTmpChar = sTmpStr.charAt(i);
+			if (escape(sTmpChar).length > 4) {
+				nStrLength += 2;
+			} else if (sTmpChar!='\r') {
+				nStrLength ++;
+			}
+			if(nStrLength <= maxLength){
+				sReturnTmpStr += sTmpChar;
+			}
+		}
+		txtObj.value	= sReturnTmpStr;
+	}
+	txtLength				= calculate_byte(txtObj.value);
+	sObj.innerHTML			= SetNumComma(txtLength);
+}
+
+
+/********************************************************************
+Name   : fnMsgLength
+Desc   : 글자수 체크
+Param  :
+********************************************************************/
+function fnMsgLength(txtObj, sTarget, maxLength) {
+	var sObj				= document.getElementById(sTarget);
+	var txtLength			= 0;
+	txtLength				= calculate_byte(txtObj.value);
+	sObj.innerHTML			= SetNumComma(txtLength);
+	console.log(txtLength + " : " + maxLength);
+	if (maxLength < txtLength) {
+		sObj.innerHTML	=	"<font color='red'>" + SetNumComma(calculate_byte(txtObj.value)) + "</font>";
+	}
+}
+
+/********************************************************************
+Name   : calculate_byte
+Desc   : byte 체크
+Param  :
+********************************************************************/
+function calculate_byte( sTargetStr ) {
+	var sTmpStr, sTmpChar;
+	var nOriginLen = 0;
+	var nStrLength = 0;
+	sTmpStr = new String(sTargetStr);
+	nOriginLen = sTmpStr.length;
+	for ( var i=0 ; i < nOriginLen ; i++ ) {
+		sTmpChar = sTmpStr.charAt(i);
+		if (escape(sTmpChar).length > 4) {
+			nStrLength += 2;
+		}else if (sTmpChar!='\r') {
+			nStrLength ++;
+		}
+	}
+	return nStrLength;
+}
+
+
+/********************************************************************
+Name   :  SetNumComma
+Desc   : 숫자함수 천단위마다 콤마를 삽입한다.
+Param  :
+********************************************************************/
+function SetNumComma(str) {
+	var initStr = "" + str;
+	var minusStr = "";
+	if(initStr.indexOf("-") == 0){
+		minusStr = "-";
+	}
+	var tmpStr  = onlyNumber( "" + str );
+	var sResult = "";
+	if (tmpStr != "")  {
+		tmpStr  = "" + parseInt(tmpStr, 10);		// 0부터 시작할 경우 앞에 0 모두 제거
+		var len	 = tmpStr.length;
+		var cnt	 = 0;
+		for (var i = len - 1; i >= 0; i--) {
+			if (cnt > 0 && cnt % 3 == 0 ) {
+				sResult  = "," + sResult;
+			}
+			sResult  = tmpStr.charAt(i) + sResult;
+			cnt++;
+		}
+	}
+	sResult = minusStr + sResult;
+	return sResult;
+}
+
+
+/********************************************************************
+Name   :  onlyNumber
+Desc   : 숫자값만을 리턴한다. 콤마제거시에 사용한다.
+Param  :
+********************************************************************/
+function onlyNumber (str) {
+	var len	  = str.length;
+	var sReturn  = "";
+
+	for (var i = 0; i < len; i++) {
+		if ( (str.charAt(i) >= "0") && (str.charAt(i) <= "9") )
+			sReturn += str.charAt(i);
+	}
+	return sReturn;
+}
+
+
+
+/********************************************************************
+Name   :  dateDiffDay
+Desc   :  두날짜간 일수 계산
+Param  : date1 : 날짜 , date2: 날짜 , sChar : - (구분자), days : 30
+********************************************************************/
+function dateDiffDay(date1, date2 , sChar , days) {
+
+	var diffDate_1 = getDate(date1, sChar);
+	var diffDate_2 = getDate(date2, sChar);
+
+    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+    diff = Math.ceil(diff / (1000 * 3600 * 24));
+   	if( diff > days){
+		alert(days + "일 범위가 초가 되었습니다.");
+		return false;
+	}
+    return true;
+}
+
+/********************************************************************
+Name   : dayDiffCheck
+Desc   : 구간 체크
+Param  : date1 : 날짜 , date2: 날짜 , sChar : - (구분자)
+********************************************************************/
+function dayDiffCheck(date1, date2, sChar){
+	var dt1		= getDate(date1, sChar);
+	var dt2		= getDate(date2, sChar);
+	var dt3 	=  new Date();
+	if(dt1.getTime() > dt2.getTime()){
+		alert("종료일자가 시작일자보다 작을수 없습니다.")
+		return false;
+	} else if(dt2.getTime() > dt3.getTime()){
+		alert("종료일자가 미래일이 될수 없습니다.")
+		return false;
+	}
+	return true;
+}
+
+
+/********************************************************************
+Name   : getDate
+Desc   : String => date 로 변
+Param  : sDate : 날짜 , sChar : - (구분자)
+********************************************************************/
+function getDate( sDate, sChar ){
+	var strLen		= sDate.length;
+	var tmpDate		= new Date();
+	var year		= 0;
+	var month		= 0;
+	var date		= 0;
+
+	if (strLen != 10 && strLen != 8){
+		return tmpDate;
+	}
+	if (strLen == 10){
+		var arrDate		= sDate.split(sChar);
+		if (arrDate.length != 3){
+			return tmpDate;
+		}
+		year		= parseInt(arrDate[0], 10);
+		month		= parseInt(arrDate[1], 10) - 1;
+		date		= parseInt(arrDate[2], 10);
+	} else {
+		year		= parseInt(sDate.substring(0, 4), 10);
+		month		= parseInt(sDate.substring(4, 6), 10) - 1;
+		date		= parseInt(sDate.substring(6, 8), 10);
+	}
+	tmpDate.setFullYear(year);
+	tmpDate.setMonth(month);
+	tmpDate.setDate(date);
+
+	return tmpDate;
+}
+
+
+/********************************************************************
+Name   : grapeRemove
+Desc   : 그래프 삭제 (초기화)
+Param  : id
+********************************************************************/
+function grapeRemove(id){
+	var chart = $(id).highcharts();
+    var seriesLength = chart.series.length;
+    for(var i = seriesLength -1; i > -1; i--) {
+        chart.series[i].remove();
+    }
+}
+
+
+/********************************************************************
+Name   : common_validation
+Desc   : 공통 체크
+Param  : formName
+********************************************************************/
+function common_validation(formName) {
+
+	// 필수 항목들을 가져온다.
+	var formObj = $("form[name="+formName+"]");
+	var objs = formObj.find("[check_null]");
+
+	// 가져온 필수 항목들의 값을 검증한다.
+	for(var i = 0; i < objs.length; i++) {
+	    // 값이 없는 경우 desc_nm 속성에 있는 한글명을 포함해 alert해준다.
+		if(objs.eq(i).attr("check_null") == "true"){
+			if(isEmpty(objs.eq(i).val())) {
+				alert('"' + objs.eq(i).attr("desc_nm") + '" 은(는) 필수입니다.');
+				objs.eq(i).focus();
+				return false;
+			}
+		}
+	}
+
+	objs = formObj.find("[check_format]");
+	for(var i = 0; i < objs.length; i++) {
+		var obj = objs.eq(i);
+		var objType = obj.attr("check_format");
+		//날짜
+		if(objType == 'date') {
+
+		}
+		//숫자
+		if(objType == 'number') {
+			if(!isDigit(obj.val())) {
+				alert("숫자 형식으로 입력해주세요.");
+				obj.focus();
+				return false;
+			}
+		}
+		//문자
+		if(objType == 'text') {
+			if(!isString(obj.val())) {
+				alert("숫자 형식으로 입력해주세요.");
+				obj.focus();
+				return false;
+			}
+		}
+	}
+
+	return true;
+
+}
+
+/********************************************************************
+Name   : fnOnlyNumber
+Desc   : 숫자만 리턴한다. 숫자가 존재하지 않을 경우 0을 리턴한다. 콤마 제거시에 사용한다.
+Param  : str
+********************************************************************/
+function fnOnlyNumber(str){
+	var	len		= str.length;
+	var oRtn	= {};
+	var iRtn	= 0;
+	var sRtn	= "";
+
+	for (var i = 0; i < len; i++) {
+		if ((str.charAt(i) >= "0" && str.charAt(i) <= "9") || (str.charAt(i) == "-") || (str.charAt(i) == "."))
+			sRtn	+= str.charAt(i);
+	}
+	if (sRtn != "")
+		iRtn		= parseInt(sRtn, 10);
+
+	oRtn.number	= iRtn;
+	oRtn.string	= sRtn;
+
+	return oRtn;
+}
+
+
+/********************************************************************
+Name   : trim
+Desc   : 문자열의 자우공백을 제거한다.
+Param  : str
+********************************************************************/
+function trim(str) {
+	if(isEmpty(str)){
+		return "";
+	}
+	var start = 0;
+	var end   = str.length - 1;
+
+	for (var i=0; i < str.length; i++) {
+		 if (str.substring(i,i+1) != " ") {
+			 start = i;
+			 break;
+		 }
+	}
+
+	for (var i=str.length - 1; i >= 0; i--) {
+		 if (str.substring(i,i+1) != " ") {
+			 end = i + 1;
+			 break;
+		 }
+	}
+
+	return str.substring(start, end);
+}
+
+
+
+
+/********************************************************************
+Name   : isEmpty
+Desc   : 문자함수 문자열이 공백인지 체크한다.
+Param  : P
+********************************************************************/
+function isEmpty(P) {
+	if (P != null) {
+	  P = fnReplaceCharAll(P,"\n","");
+	  P = fnReplaceCharAll(P,"\r","");
+   }
+   return ((P == null) || (P.replace(/ /gi,"").length == 0));
+}
+
+
+/********************************************************************
+Name   : isString
+Desc   : 변수에 문자만 있는지 체크한다.
+Param  : P
+********************************************************************/
+function isString(P) {
+   var len = P.length;
+
+   for (var i = 0; i < len; i++) {
+	  if ( ((P.charAt(i) >= "a") && (P.charAt(i) <= "z")) || ((P.charAt(i) >= "A") && (P.charAt(i) <= "Z")) ) {
+	  }
+	  else {
+		 return false;
+	  }
+   }
+   return true;
+}
+
+/********************************************************************
+Name   : isDigit
+Desc   : 변수에 숫자만 있는지 체크한다.
+Param  : P
+********************************************************************/
+function isDigit (P) {
+   var len = P.length;
+
+   for (var i = 0; i < len; i++) {
+	  if ( (P.charAt(i) >= "0") && (P.charAt(i) <= "9") ) {
+	  }
+	  else {
+		 return false;
+	  }
+   }
+   return true;
+}
+
+
+/********************************************************************
+Name   : fnReplaceCharAll
+Desc   : 문자열에서 대상문자를 모두 대체문자로 변경한다. (원본문자열, 대상 문자, 대체 문자)
+Param  : str, tarCh, repCh
+********************************************************************/
+function fnReplaceCharAll(str, tarCh, repCh) {
+
+	var nowCh  = "";
+	var sumStr = "";
+
+	if (typeof str == "string") {
+		var len	= str.length;
+
+		for (var i = 0; i < len; i++) {
+			if (str.charAt(i) == tarCh)
+				nowCh = repCh;
+			else
+				nowCh = str.charAt(i);
+
+		  sumStr = sumStr + nowCh;
+		}
+	}
+	return sumStr;
+}
+
+/********************************************************************
+Name   : SetNumObj
+Desc   : 객체에 숫자만 입력하도록 한다.
+Param  : obj
+********************************************************************/
+function SetNumObj(obj) {
+	obj.value   = SetNum(obj.value);
+	obj.select();
+	return;
+}
+
+/********************************************************************
+Name   : SetNum
+Desc   :  객체에 숫자만 입력하도록 한다. 콤마를 제거한값이 "" 일 경우에 0을 리턴한다
+Param  : str
+********************************************************************/
+function SetNum(str) {
+	var result = fnReplaceCharAll(str, ",", "");
+	return result == "" ? 0 : result;
+}
+
+
+
+
+

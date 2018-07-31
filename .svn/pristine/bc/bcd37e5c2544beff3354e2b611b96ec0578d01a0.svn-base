@@ -1,0 +1,134 @@
+package com.brb.etc.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.brbcom.common.util.ApplicationContextHolder;
+import com.brb.brbcom.common.util.RequestParameterUtil;
+import com.brb.brbcom.common.util.Util;
+import com.brb.brbcom.foundation.property.PropertyService;
+import com.brb.etc.service.EtcService;
+
+/**
+ * 
+ * @author back
+ *
+ */
+@Controller
+public class EtcController {
+	
+	protected PropertyService propertyService;
+	String smsId ="";
+	String smsPw = "";
+	String adminPhone = "";
+	String smsUrl = "";
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(EtcController.class);
+	
+	
+	@Autowired
+	EtcService etcService;
+	
+	
+	public EtcController(){
+		propertyService = (PropertyService)ApplicationContextHolder.getContext().getBean("propertiesService");
+		this.smsId     		= propertyService.getString("SMS_ID");
+		this.smsPw     		= propertyService.getString("SMS_PW");
+		this.smsUrl	 		= propertyService.getString("SMS_URL");
+		this.adminPhone 	= propertyService.getString("SMS_ADMIN");
+	}
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "etc/popList" )
+	public ModelAndView smslist(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)throws Exception{
+		ModelAndView view = new ModelAndView();
+		view.setViewName("etc/popList") ;
+		return view;
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "etc/popNew" )
+	public ModelAndView smsNew(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)throws Exception{
+		ModelAndView view = new ModelAndView();
+		view.setViewName("etc/popNew") ;
+		return view;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param modelMap
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "etc/popListSearch" , method = RequestMethod.POST)
+	public ModelAndView smsListSearch(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)throws Exception{
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		Map infoMap = new HashMap<String, String>();
+		List infoList = null;
+		int rowSize = Util.attrParseInt(dMap, "rows");
+		int currentPage = Util.attrParseInt(dMap, "page");
+		String sidx = dMap.getString("sidx") == "" ? "POP_SQ" : dMap.getString("sidx");
+		
+		if("POP_SQ".equals(sidx)){
+			sidx = "POP_SQ";
+		}
+		String sord = dMap.getString("sord");
+	    String orderbyColum = sidx.trim() + "  "+sord;
+	    dMap.put("orderBy", orderbyColum);
+	  	dMap.put("R_PAGE", (currentPage -1) *10 );
+	  	dMap.put("R_ROW", rowSize);
+		int totalcnt = 0;
+		
+		//리스트 조회
+		infoList = etcService.getPopList(dMap);
+		//리스트 카운트 조회
+		infoMap = etcService.getPopListTotal(dMap);
+		
+		if(null != infoMap ){
+			totalcnt  = Integer.parseInt(infoMap.get("total").toString());
+		}
+		double dSize = Util.attrParseInt(dMap, "rows");
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+		
+		view.addObject("rows", infoList);
+		view.addObject("total", liTotalPage);
+		view.addObject("page", currentPage);
+		view.addObject("records", totalcnt);	
+		return view;
+	}
+	
+	
+}

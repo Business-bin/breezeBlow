@@ -1,0 +1,181 @@
+package com.brb.product.controller;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.brbcom.common.util.RequestParameterUtil;
+import com.brb.product.model.CpVo;
+import com.brb.product.service.ProductService;
+/**
+ *
+ * @author back
+ *
+ */
+@Controller
+public class ProductController {
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
+
+	@Autowired
+	ProductService productService;
+
+	@RequestMapping(value="/product/productList")
+	public ModelAndView productList(@ModelAttribute CpVo cvo){
+		ModelAndView view = new ModelAndView();
+		if(cvo.getCurPage() != null && cvo.getCurPage() != 0){
+			BrbMap<Object, Object> bMap = productService.getProdList(cvo);
+			view.addObject("prodList", bMap.get("prodList"));
+			view.addObject("totalPage", bMap.get("totalPage"));
+			view.addObject("curPage", cvo.getCurPage());
+		}
+		view.setViewName("product/productList");
+		return view;
+	}
+
+	@RequestMapping(value="/product/productDet")
+	public ModelAndView productDet(@ModelAttribute CpVo cvo){
+		ModelAndView view = new ModelAndView();
+		view.addObject("prodDet", productService.getProdDet(cvo));
+		view.addObject("code", productService.getCode());
+		view.addObject("gubun", cvo.getGubun());
+		view.setViewName("product/productDet");
+		return view;
+	}
+
+	@RequestMapping(value="/product/insertProduct")
+	public void insertProduct(@ModelAttribute CpVo cvo, HttpSession session){
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try{
+			BufferedOutputStream bos = null;
+	    	String fileName = cvo.getProdFile().getOriginalFilename();
+	    	cvo.setCpOrgImageNm(fileName);
+	    	byte[] bytes = cvo.getProdFile().getBytes();
+	    	String saveFileName = getExtension(fileName, today);
+	    	cvo.setCpChImageNm(saveFileName);
+	    	String savePath = "C:\\work\\" + saveFileName;
+    		bos = new BufferedOutputStream(new FileOutputStream(savePath));
+    		bos.write(bytes);
+    		bos.flush();
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("imgUpload Fail, error : "+e);
+	    } finally{
+	    	logger.debug("File Upload Success!!");
+	    }
+		cvo.setRegAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+		productService.insertProduct(cvo);
+	}
+
+	@RequestMapping(value="/product/updateProduct")
+	public void updateProduct(@ModelAttribute CpVo cvo, HttpSession session){
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try{
+			File file = new File("C:\\work\\"+cvo.getCpChImageNm());
+			if(file.exists()){
+				if(file.delete()){
+					logger.debug(cvo.getCpChImageNm()+"File Delete Success!!");
+				}else{
+					logger.debug(cvo.getCpChImageNm()+"File Delete Fail!!");
+				}
+			}else{
+				logger.debug(cvo.getCpChImageNm()+"No File!!");
+			}
+
+			BufferedOutputStream bos = null;
+	    	String fileName = cvo.getProdFile().getOriginalFilename();
+	    	cvo.setCpOrgImageNm(fileName);
+	    	byte[] bytes = cvo.getProdFile().getBytes();
+	    	String saveFileName = getExtension(fileName, today);
+	    	cvo.setCpChImageNm(saveFileName);
+	    	String savePath = "C:\\work\\" + saveFileName;
+    		bos = new BufferedOutputStream(new FileOutputStream(savePath));
+    		bos.write(bytes);
+    		bos.flush();
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("ImgUpload Fail, error : "+e);
+	    } finally{
+	    	logger.debug("File Upload Success!!");
+	    }
+		cvo.setUptAdmSq(Integer.parseInt((String)session.getAttribute("ADM_SQ")));
+		productService.updateProduct(cvo);
+	}
+
+
+	@RequestMapping(value="/product/excelUpload")
+	public ModelAndView excelUpload(){
+		ModelAndView view = new ModelAndView();
+		view.setViewName("product/excelUpload");
+		return view;
+	}
+
+	@RequestMapping(value="/product/excelUploadFile", method = RequestMethod.POST)
+	public void excelUploadFile(MultipartHttpServletRequest request){
+		List<MultipartFile> mpf = request.getFiles("imgFile");
+		String [] oriName = new String[mpf.size()];
+		String today = "";
+		for(int i=0; i<mpf.size(); i++){
+			oriName[i] = mpf.get(i).getOriginalFilename();
+		}
+		String excelType = request.getParameter("excelType");
+		if(excelType.equals("xlsx")){
+			today = productService.xlsxExcelReader(request, oriName);
+		}else if(excelType.equals("xls")){
+			today = productService.xlsExcelReader(request, oriName);
+		}
+		try{
+			BufferedOutputStream bos = null;
+	    	for(int i=0; i<mpf.size(); i++){
+		    	String fileName = mpf.get(i).getOriginalFilename();
+		    	byte[] bytes = mpf.get(i).getBytes();
+		    	String saveFileName = getExtension(fileName, today);
+		    	String savePath = "C:\\work\\" + saveFileName;
+	    		bos = new BufferedOutputStream(new FileOutputStream(savePath));
+	    		bos.write(bytes);
+	    		bos.flush();
+	    	}
+	    	bos.close();
+	    } catch (Exception e){
+	    	logger.debug("Excel Upload Fail!!");
+	    }
+	}
+
+	/**
+	 * getExtension
+	 * @param fileName
+	 * @return
+	 */
+	private String getExtension(String fileName, String today){
+	    int dotPosition = fileName.lastIndexOf('.');
+	    if ((-1 != dotPosition) && (fileName.length() - 1 > dotPosition)) {
+	    	return fileName.substring(0, dotPosition)+today+"."+fileName.substring(dotPosition + 1);
+	    }
+	    return "";
+	}
+}

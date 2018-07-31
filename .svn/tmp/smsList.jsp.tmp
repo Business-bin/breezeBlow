@@ -1,0 +1,225 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/sample/sample2.css">
+<link rel="stylesheet" type="text/css" href="/resources/css/mem/mem.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+<<<<<<< .mine
+<section>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+				<li><a href="/mem/memList">회원 목록</a></li>
+				<li><a href="/mem/memStat">회원 통계</a></li>
+				<li><a href="#">수치별 통계</a></li>
+				<li><a href="#">Push발송</a></li>
+				<li><a href="/sms/smsList">SMS 발송</a></li>
+			</ul>
+			<!-- <div class="pagetitle"><i class="axi axi-assignment-ind"></i> SMS </div> -->
+			<div class="navi">
+				<ul>
+					<li>sms관리</li>
+					<li>sms전송</li>
+||||||| .r106
+=======
+
+<form id="poupform" name="poupform" method="post" action="/sms/smsDetPop" target="smsDetPop">
+  <input type="hidden" id= "R_SMS_SQ" name="R_SMS_SQ" value="" />
+</form>
+	<section>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+>>>>>>> .r122
+				</ul>
+<<<<<<< .mine
+			</div>
+
+			<table class="basictables">
+				<tr>
+					<th style="width:50px" >지역선택</th>
+					<td>
+						<select style="width:100%" name="sido" id= "sido">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>서울</option>
+		                    <option value='002'>경기</option>
+		                    <option value='003'>광주</option>
+		                    <option value='004'>부산</option>
+						</select>
+					</td>
+					<th style="width:50px" >구군 선택</th>
+					<td>
+						<select style="width:100%" name="gugun" id= "gugun">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>강남구</option>
+		                    <option value='002'>송파구</option>
+						</select>
+					</td>
+					<th style="width:50px" >동선택</th>
+					<td>
+						<select style="width:100%" name="dong" id= "dong">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>방배동</option>
+		                    <option value='002'>서초동</option>
+						</select>
+					</td>
+					<th style="width:50px" >회원 선택</th>
+					<td>
+						<select style="width:100%" name="dong" id= "dong">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>B2BAAA</option>
+		                    <option value='002'>B2BBBB</option>
+						</select>
+					</td>
+					<th style="width:50px" >기기 선택</th>
+					<td>
+						<select style="width:100%" name="dong" id= "dong">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>IOS</option>
+		                    <option value='002'>ANDROID</option>
+						</select>
+					</td>
+					<th style="width:50px" >상품 선택</th>
+					<td>
+						<select style="width:100%" name="dong" id= "dong">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>1상품</option>
+		                    <option value='002'>2상품</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th style="width:50px" >등록일</th>
+					<td colspan="3">
+						<input type="date" id="monthfrom">~<input type="date" id="monthto">
+					</td>
+					<th style="width:50px" >검색종류</th>
+					<td colspan="2">
+						<select style="width:100%" name="dong" id= "dong">
+							<option value='000' selected="selected">전체</option>
+		                    <option value='001'>1상품</option>
+		                    <option value='002'>2상품</option>
+						</select>
+					</td>
+					<td colspan="4">
+						<input style="width:100%" type="text" id="searStr">
+					</td>
+					<td colspan="2">
+						<button style="width:100%"  class="button" id="sarchBtn"><i class="axi axi-person-add"></i>조회</button>
+					</td>
+				</tr>
+			</table>
+
+			</div>
+
+
+			<!--  테스ㅡㅌ  -->
+			<table id="sms_list"></table>
+			<div id="pager"></div>
+			<!-- <table id="grid"></table>
+			<div id="pager"></div> -->
+
+
+			<div class="button_area tright">
+				<button class="button" id="sarchBtn"><i class="axi axi-person-add"></i>신규발송</button>
+||||||| .r106
+=======
+				<div class="pagetitle"><i class="axi axi-assignment-ind"></i> SMS리스트 </div>
+				<div class="navi">
+					<ul>
+						<li>sms관리</li>
+						<li>sms리스트</li>
+					</ul>
+				</div>
+				
+				<table class="basictables">
+					<tr>
+						<th style="width:50px" >지역선택</th>
+						<td>
+							<select style="width:100%" name="sido" id= "sido" onchange="addrList('gugun',this.value)">
+								<option value='000' selected="selected">전체</option>      
+							</select>
+						</td>
+						<th style="width:50px" >구군 선택</th>
+						<td>
+							<select style="width:100%" name="gugun" id= "gugun" onchange="addrList('dong',this.value)">
+								<option value='000' selected="selected">전체</option>      
+							</select>
+						</td>
+						<th style="width:50px" >동선택</th>
+						<td>
+							<select style="width:100%" name="dong" id= "dong">
+								<option value='000' selected="selected">전체</option>      
+							</select>
+						</td>
+						<th style="width:50px" >회원 선택</th>
+						<td>
+							<select style="width:100%" name="btbsnm" id= "btbsnm">
+								<option value='000' selected="selected">전체</option>      
+							</select>
+						</td>
+						<th style="width:50px" >기기 선택</th>
+						<td>
+							<select style="width:100%" name="mtype" id= "mtype">
+								<option value='000' >전체</option>      
+			                    <option value='IOS'>IOS</option>
+			                    <option value='ANDROID'>ANDROID</option>
+							</select>
+						</td>
+						<th style="width:50px" >상품 선택</th>
+						<td>
+							<select style="width:100%" name="prod" id= "prod">
+								<option value='000' selected="selected">전체</option>      
+<!-- 			                    <option value='001'>1상품</option>
+			                    <option value='002'>2상품</option> -->
+							</select>
+						</td>
+					</tr>
+					<tr>
+						
+					</tr>
+					<tr>
+						<th style="width:50px" >등록일</th>
+						<td style="width:320px" >
+							<input style="width:100px;" type="text" id="monthfrom"> ~ <input style="width:100px;" type="text" id="monthto">
+						</td>
+						<th style="width:50px" >검색종류</th>
+						<td colspan="1">
+							<select style="width:100%" name="searchType" id= "searchType">    
+			                    <option value='001'>제목</option>
+			                    <option value='002'>내용</option>
+							</select>
+						</td>
+						<td colspan="5">
+							<input style="width:100%" type="text" id="searStr">
+						</td>
+						<td colspan="3">
+							<button style="width:100%"  class="button" id="sarchBtn"><i class="axi axi-person-add"></i>조회</button>
+						</td>
+					</tr>
+				</table>
+				</div>
+				
+				<!--  테스ㅡㅌ  -->
+				<table id="sms_list"></table>
+				<div id="pager"></div>
+			
+				
+				<div class="button_area tright">
+					<button class="button" id="newBtn"><i class="axi axi-person-add"></i>신규발송</button>
+				</div>
+>>>>>>> .r122
+			</div>
+		</div>
+</section>
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/sms/smsList.js"></script>

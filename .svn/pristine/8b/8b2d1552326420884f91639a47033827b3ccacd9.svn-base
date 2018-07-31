@@ -1,0 +1,84 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/mem/mem.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+<form action="/mem/memList" method="post" id="listForm">
+	<input type="hidden" value="${totalPage}" id="totalPage" name="totalPage" />
+	<input type="hidden" value="${curPage}" id="curPage" name="curPage" />
+	<input type="hidden" value="10" id="rowPerPage" name="rowPerPage" />
+</form>
+<form action="/mem/memDet" method="post" id="detForm">
+	<input type="hidden" value="" id="gubun" name="gubun" />
+	<input type="hidden" value="" id="memSq" name="memSq" />
+</form>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+					<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+				</ul>
+				<!-- <div class="navi">
+					<ul>
+						<li>회원</li>
+						<li>회원리스트</li>
+					</ul>
+				</div> -->
+				<table class="basictables basichover">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>거주지역</th>
+							<th>성별</th>
+							<th>핸드폰번호</th>
+							<th>현재상태</th>
+							<th>가입일자</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:set value="${startIndex}" var="st"/>
+						<c:forEach items="${memList}" var="mem" varStatus="m">
+							<tr onclick="memDet(${mem.MEM_SQ})">
+								<td class="tcenter"><c:out value="${st+m.index+1}"/></td>
+								<td class="tcenter">${mem.MEM_EMAIL}</td>
+								<td class="tcenter">${mem.MEM_NM}</td>
+								<td class="tcenter">거주지역</td>
+								<td class="tcenter">${mem.MEM_GEN}</td>
+								<td class="tcenter">핸드폰번호</td>
+								<td class="tcenter">${mem.CODENAME}</td>
+								<td class="tcenter">
+									<fmt:parseDate value="${mem.REG_DTTM}" var="dttm" pattern="yyyy-mm-dd"/>
+									<fmt:formatDate value="${dttm}" pattern="yyyy-MM-dd"/>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+				<div class="paging"  id="paging" onclick="clickPaging(event,'listForm')">
+				</div>
+				<div class="button_area tright">
+					<a href="#" class="button" id="temp">조회</a>
+					<a href="#" class="button" id="newMem">신규추가</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/mem/mem.js"></script>

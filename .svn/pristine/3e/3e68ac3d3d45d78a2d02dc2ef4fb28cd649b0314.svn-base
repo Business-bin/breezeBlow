@@ -1,0 +1,273 @@
+package com.brb.product.service;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.product.dao.ProductDao;
+import com.brb.product.model.CpVo;
+
+
+@Service("ProductService")
+public class ProductServiceImpl implements ProductService{
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
+	@Autowired
+	ProductDao productDao;
+
+	@Override
+	public BrbMap<Object, Object> getProdList(BrbMap<Object, Object> bMap) throws DataAccessException {
+		BrbMap<Object, Object> rMap = new BrbMap<>();
+		rMap.put("prodList", productDao.getProdList(bMap));
+		rMap.put("totalPage", productDao.getProdTotal(bMap));
+		return rMap;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getProdDet(CpVo cvo) throws DataAccessException {
+		return productDao.getProdDet(cvo);
+	}
+
+	@Override
+	public void insertProduct(CpVo cvo) throws DataAccessException {
+		productDao.insertProduct(cvo);
+	}
+
+	@Override
+	public void updateProduct(CpVo cvo) throws DataAccessException {
+		productDao.updateProduct(cvo);
+	}
+
+	@Override
+	public List<BrbMap<Object, Object>> getCode() throws DataAccessException {
+		return productDao.getCode();
+	}
+
+	public String xlsExcelReader(MultipartHttpServletRequest req, String [] oriName) {
+		List<CpVo> list = new ArrayList<>();
+		MultipartFile file = req.getFile("excel");
+		HSSFWorkbook workbook = null;
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try {
+			workbook = new HSSFWorkbook(file.getInputStream());
+			HSSFSheet curSheet;
+			HSSFRow curRow;
+			HSSFCell curCell;
+			CpVo vo;
+			String temp="";
+			for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
+				curSheet = workbook.getSheetAt(sheetIndex);
+				for (int rowIndex = 0; rowIndex < curSheet.getPhysicalNumberOfRows(); rowIndex++) {
+					if (rowIndex != 0) {
+						curRow = curSheet.getRow(rowIndex);
+						vo = new CpVo();
+						if (curRow.getCell(0) != null) {
+							if (!"".equals(curRow.getCell(0).getStringCellValue())) {
+								for (int cellIndex = 0; cellIndex < curRow.getPhysicalNumberOfCells(); cellIndex++) {
+									curCell = curRow.getCell(cellIndex);
+									if(curCell != null){
+										if(cellIndex == 0){ vo.setCpSq((int)curCell.getNumericCellValue());
+										}else if(cellIndex == 1){ vo.setCpNm(curCell.getStringCellValue());
+										}else if(cellIndex == 2){ vo.setCpDes(curCell.getStringCellValue());
+										}else if(cellIndex == 3){ vo.setCpDetSpec(curCell.getStringCellValue());
+										}else if(cellIndex == 4){
+											vo.setCpOrgImageNm(curCell.getStringCellValue());
+											for(int i=0; i<oriName.length; i++){
+												if(oriName[i].equals(curCell.getStringCellValue())){
+													temp = oriName[i];
+												}
+											}
+										}else if(cellIndex == 5){
+											if(temp != ""){
+												String [] temp2 = temp.split("\\.");
+												temp = temp2[0]+today+"."+temp2[1];
+									            vo.setCpChImageNm(temp);
+												temp = "";
+											}else{
+												vo.setCpChImageNm(curCell.getStringCellValue());
+											}
+										}else if(cellIndex == 6){
+											vo.setCpOrgThumNm(curCell.getStringCellValue());
+											for(int i=0; i<oriName.length; i++){
+												if(oriName[i].equals(curCell.getStringCellValue())){
+													temp = oriName[i];
+												}
+											}
+										}else if(cellIndex == 7){
+											if(temp != ""){
+									            String [] temp2 = temp.split("\\.");
+												temp = temp2[0]+today+"."+temp2[1];
+									            vo.setCpChThumNm(temp);
+												temp = "";
+											}else{
+												vo.setCpChThumNm(curCell.getStringCellValue());
+											}
+										}else if(cellIndex == 8){
+											vo.setSalNum((int)curCell.getNumericCellValue());
+										}else if(cellIndex == 9){
+											vo.setStat(curCell.getStringCellValue());
+										}else if(cellIndex == 10){
+											vo.setRegDttm(curCell.getStringCellValue());
+										}else if(cellIndex == 11){
+											if(curCell.getStringCellValue() != null && curCell.getStringCellValue() != ""){
+												vo.setUptDttm(curCell.getStringCellValue());
+											}
+										}else if(cellIndex == 12){
+											if(curCell.getStringCellValue() != null && curCell.getStringCellValue() != ""){
+												vo.setDelDttm(curCell.getStringCellValue());
+											}
+										}else if(cellIndex == 13){
+											vo.setRegAdmSq((int)curCell.getNumericCellValue());
+										}else if(cellIndex == 14){
+											vo.setUptAdmSq((int)curCell.getNumericCellValue());
+										}else if(cellIndex == 15){
+											vo.setDelAdmSq((int)curCell.getNumericCellValue());
+										}else if(cellIndex == 16){
+											vo.setDelYn(curCell.getStringCellValue());
+										}else{
+											break;
+										}
+									}
+								} // end for
+								list.add(vo);
+							} // end
+						} // end if
+					}
+
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		productDao.insertExcel(list);
+		return today;
+	}
+
+	public String xlsxExcelReader(MultipartHttpServletRequest req, String [] oriName) {
+		List<CpVo> list = new ArrayList<>();
+
+		MultipartFile file = req.getFile("excel");
+		XSSFWorkbook workbook = null;
+		Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		try {
+			workbook = new XSSFWorkbook(file.getInputStream());
+			XSSFSheet curSheet;
+			XSSFRow curRow;
+			XSSFCell curCell;
+			CpVo vo;
+			int cellCount = 0;
+			for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
+				curSheet = workbook.getSheetAt(sheetIndex);
+				for (int rowIndex = 0; rowIndex < curSheet.getPhysicalNumberOfRows(); rowIndex++) {
+					if(rowIndex == 0){
+						cellCount = curSheet.getRow(rowIndex).getPhysicalNumberOfCells();
+					}
+					if (rowIndex != 0) {
+						String temp = "";
+						curRow = curSheet.getRow(rowIndex);
+						vo = new CpVo();
+						if (curRow.getCell(0) != null) {
+							for (int cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+								curCell = curRow.getCell(cellIndex);
+								if(curCell != null){
+									if(cellIndex == 0){ vo.setCpSq((int)curCell.getNumericCellValue());
+									}else if(cellIndex == 1){ vo.setCpNm(curCell.getStringCellValue());
+									}else if(cellIndex == 2){ vo.setCpDes(curCell.getStringCellValue());
+									}else if(cellIndex == 3){ vo.setCpDetSpec(curCell.getStringCellValue());
+									}else if(cellIndex == 4){
+										vo.setCpOrgImageNm(curCell.getStringCellValue());
+										for(int i=0; i<oriName.length; i++){
+											if(oriName[i].equals(curCell.getStringCellValue())){
+												temp = oriName[i];
+											}
+										}
+									}else if(cellIndex == 5){
+										if(temp != ""){
+											String [] temp2 = temp.split("\\.");
+											temp = temp2[0]+today+"."+temp2[1];
+								            vo.setCpChImageNm(temp);
+											temp = "";
+										}else{
+											vo.setCpChImageNm(curCell.getStringCellValue());
+										}
+									}else if(cellIndex == 6){
+										vo.setCpOrgThumNm(curCell.getStringCellValue());
+										for(int i=0; i<oriName.length; i++){
+											if(oriName[i].equals(curCell.getStringCellValue())){
+												temp = oriName[i];
+											}
+										}
+									}else if(cellIndex == 7){
+										if(temp != ""){
+								            String [] temp2 = temp.split("\\.");
+											temp = temp2[0]+today+"."+temp2[1];
+								            vo.setCpChThumNm(temp);
+											temp = "";
+										}else{
+											vo.setCpChThumNm(curCell.getStringCellValue());
+										}
+									}else if(cellIndex == 8){
+										vo.setSalNum((int)curCell.getNumericCellValue());
+									}else if(cellIndex == 9){
+										vo.setStat(curCell.getStringCellValue());
+									}else if(cellIndex == 10){
+										vo.setRegDttm(curCell.getStringCellValue());
+									}else if(cellIndex == 11){
+										if(curCell.getStringCellValue() != null && curCell.getStringCellValue() != ""){
+											vo.setUptDttm(curCell.getStringCellValue());
+										}
+									}else if(cellIndex == 12){
+										if(curCell.getStringCellValue() != null && curCell.getStringCellValue() != ""){
+											vo.setDelDttm(curCell.getStringCellValue());
+										}
+									}else if(cellIndex == 13){
+										vo.setRegAdmSq((int)curCell.getNumericCellValue());
+									}else if(cellIndex == 14){
+										vo.setUptAdmSq((int)curCell.getNumericCellValue());
+									}else if(cellIndex == 15){
+										vo.setDelAdmSq((int)curCell.getNumericCellValue());
+									}else if(cellIndex == 16){
+										vo.setDelYn(curCell.getStringCellValue());
+									}else{
+										break;
+									}
+								}
+							}
+							list.add(vo);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		productDao.insertExcel(list);
+		return today;
+	}
+}

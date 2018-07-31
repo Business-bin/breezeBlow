@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/mem/mem.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start -->
+<section>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+				<li><a href="/mem/memList">회원 목록</a></li>
+				<li><a href="/mem/memStat">회원 통계</a></li>
+				<li><a href="/push/pushList">Push발송</a></li>
+				<li><a href="/sms/smsList">SMS 발송</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="container1" class="stat" style = "width: 600px; height: 400px; margin: 0 auto; float:left; margin-left:80px;"></div>
+	<div id="container2" class="stat" style = "width: 600px; height: 400px; margin: 0 auto; float:left; margin-left:30px;"></div>
+	<div id="container3" class="stat" style = "width: 600px; height: 400px; margin: 0 auto; float:left; margin-left:80px; margin-top:50px;"></div>
+	<div id="container4" class="stat" style = "width: 600px; height: 400px; margin: 0 auto; float:left; margin-left:30px; margin-top:50px;"></div>
+</section>
+<!--  -->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<script src="/resources/js/mem/memData.js"></script>

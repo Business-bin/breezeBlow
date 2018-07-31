@@ -1,0 +1,74 @@
+/**
+ * 전역 환경 설정
+ */
+$(function() {
+
+ 
+
+/* //Ajax 시작시 로딩바 보여 줌.
+ $(document).ajaxStart(function() {
+  //alert("ajaxStart");
+  LoadingBar.block();
+ });
+
+ 
+
+ //Ajax 완료시 로딩바 감춤.
+ $(document).ready(function() {
+  $(this).ajaxStop(function() {
+   //alert("ajaxStop");
+   LoadingBar.none();
+  });
+ });
+ */
+ 
+}); 
+
+
+/*
+ * 공통  객체 
+*/
+var Common = {
+ //콘솔 창, alert 대신 사용
+ log : function(log) {
+  $("#divJavaScriptConsole").append("<div>"+log+"</div>");
+ },
+ // 메시지 창
+ message : function(message, width, height) {
+  $("#divMessage").dialog({
+   width : width,
+   height : height,
+   draggable : false,
+   resizable : false,
+   modal : true,
+   buttons: {
+    "Close" : function() {
+     $(this).dialog("close");
+    }
+   }
+  }).empty().append(message);
+ }
+}; 
+
+
+//로딩바 구현2
+var LoadingBar = {
+ none : function() {
+	 //alert("none");
+  //$("#divLoadingBar:ui-dialog").dialog("close");
+  $("#divLoadingBar:ui-dialog").dialog("destroy");
+ },
+ block : function() {
+	 //alert("boock");
+  $("#divLoadingBar").dialog({
+   width: 200,
+   height: 80,
+   draggable : false,
+   resizable: false,
+   modal: true
+  });
+
+  $("div[aria-labelledby = 'ui-dialog-title-divLoadingBar'] a.ui-dialog-titlebar-close").remove();
+  //$("a.ui-dialog-titlebar-close").remove();
+ }
+}; 

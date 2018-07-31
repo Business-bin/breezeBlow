@@ -1,0 +1,163 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="customTag" uri="/WEB-INF/customTag.tld" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/product/product.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+				<li><a href="/product/modelList">모델 관리</a></li>
+				<li><a href="/product/productList">제품 관리</a></li>
+				<li><a href="/product/breezeReport">Breeze 통계</a></li>
+				<li><a href="/product/fwrList">펌웨어 관리</a></li>
+			</ul>
+			<div class="tbar">
+				<div class="w100 fl"><i class="axi axi-play-arrow"></i>제품 등록</div>
+			</div>
+			<div id="chBox" class="mgt4">
+				<div class="checks small">
+					<input type="radio" id="rone" name="om" value="N" checked="checked"/><label for="rone">개별등록</label>
+					<input type="radio" id="rmany" name="om" value="Y" /><label for="rmany" class="mgl20">대량등록</label>
+				</div>
+			</div>
+			<form action="/product/insertProduct" method="post" id="insertProdForm" enctype="multipart/form-data">
+				<input type="hidden" id="duCheck" value="N"/>
+				<div id="one" class="w100" style="height: 210px;">
+					<table class="basictables mgt14 w100">
+						<colgroup>
+							<col width="30%" />
+							<col width="70%" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<th>모델정보</th>
+								<td>
+									<input type="hidden" id="mdSq" class="" name="mdSq" />
+									<input type="text" id="cpNm" name="cpNm"/>
+									<button class="button" id="modelBtn" type="button">제품모델 검색</button>
+								</td>
+							</tr>
+							<tr>
+								<th>제품분류</th>
+								<td>
+									<div class="checks small">
+										<input type="radio" id="mini1" name="miniYn" value="N" readonly="readonly"/><label for="mini1">마스터</label>
+										<input type="radio" id="mini2" name="miniYn" value="Y" readonly="readonly"/><label for="mini2">미니</label>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th>마스터정보</th>
+								<td>
+									<input type="hidden" id="pprtMaMac" class="" name="pprtMaMac" />
+									<input type="text" id="cpNm2" />
+									<button class="button" id="prodBtn" type="button">제품정보 검색</button>
+								</td>
+							</tr>
+							<tr>
+								<th>Mac Address</th>
+								<td>
+									<input type="text" id="pprtMac" class="" name="pprtMac" value="" />
+									<button class="button" id="dupCheck" type="button">중복확인</button>
+								</td>
+							</tr>
+							<tr>
+								<th>펌웨어 버전</th>
+								<td>
+									<select id="fwrSq" name="fwrSq">
+										<option></option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form action="/product/csvLoad" id="csvUpload" method="post" enctype="multipart/form-data">
+				<div id="many">
+					<table class="basictables mgt14 mgb10 w100">
+						<thead>
+							<tr>
+								<th>CSV 파일정보</th><td colspan="4"><input type="file" id="csvFile" name="csvFile" /></td>
+							</tr>
+							<tr>
+								<td colspan="5" class="ac"><button type="button" class="button" onclick="csvLoad('csvUpload','/product/csvLoad')">불러오기</button></td>
+							</tr>
+							<tr>
+								<th>Mac Address</th><th>모델번호</th><th>제품분류</th><th>마스터번호</th><th>펌웨어 버전</th>
+							</tr>
+						</thead>
+						<tbody id="csvBody">
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div>
+				<button class="button" type="button" id="newProd">제품 등록</button>
+				<button class="button" type="button" id="newProd2">제품 등록</button>
+				<button class="button" id="backProdList" type="button">취소</button>
+			</div>
+		</div>
+	</div>
+	<div id="dim-layer"></div>
+	<div id="layerPopup2">
+	<table class="basictables tcenter">
+		<tbody>
+			<tr>
+				<th>시리얼번호 검색</th>
+			</tr>
+			<tr>
+				<td><input type="text" id="pprtMac" name="pprtMac" value="" />
+					<button class="button" id="macSearch" type="button">검색</button>
+					<button class="button" id="close" type="button">닫기</button></td>
+			</tr>
+			</tbody>
+		</table>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<table id="mac_list"></table>
+						<div id="pager"></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="layerPopup4">
+	<table class="basictables tcenter">
+		<tbody>
+			<tr>
+				<th>제품 모델 검색</th>
+			</tr>
+			<tr>
+				<td><input type="text" id="prodNm" value="" />
+					<button class="button" id="modelSearch" type="button">검색</button>
+					<button class="button" id="close2" type="button">닫기</button></td>
+			</tr>
+			</tbody>
+		</table>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<table id="model_list"></table>
+						<div id="pager"></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/product/productNew.js"></script>

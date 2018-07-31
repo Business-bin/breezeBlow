@@ -1,0 +1,340 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(document).ready(function(){
+
+	console.log("main");
+
+	 grid.fn_MemGrid();
+	 grid.fn_BtbGrid();
+	 grid.fn_AsGrid();
+	 grid.fn_QnaGrid();
+
+});
+
+
+/********************************************************************
+Name   : 그리드                                                  
+Desc   : 
+Param  :            
+********************************************************************/
+var grid = {
+	fn_MemGrid:function(){
+		
+		$("#mem_list" ).jqGrid( 'GridUnload' );
+		$("#mem_list").jqGrid({
+			url:"/main/memList"
+			,caption:"회원리스트"
+			,datatype 	    : 'json'
+		    ,mtype         : 'POST' 
+	    	, postData	  : {
+	        }
+			,height:150
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["회원명", "거주지역","사용기기","가입일"]
+			,colModel:[
+		          {name:"NM", 	index:"NM", 	sortable:false,	width:100,		align:'center'},
+		          {name:"AREA", 	index:"AREA", 	sortable:false,	width:100,		align:'center'},
+		          {name:"MOBILE_TYPE", 	index:"MOBILE_TYPE", 	sortable:false,	width:100,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:false,	width:100,		align:'center'}
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'NM'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법ㄴ
+			,jsonReader:{ repeatitems:false 
+				, id:"SMS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		
+			,gridComplete : function(data,status) {
+				
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#mem_list").jqGrid('getRowData',rowid);
+		    	//pouup(ret.SMS_SQ);
+		     }
+		}).trigger('reloadGrid');
+		
+		$("#mem_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+	,
+	fn_BtbGrid:function(){
+		
+		$("#btb_list" ).jqGrid( 'GridUnload' );
+		$("#btb_list").jqGrid({
+			url:"/main/B2bList"
+			,caption:"b2b리스트"
+			,datatype 	    : 'json'
+		    ,mtype         : 'POST' 
+	    	, postData	  : {
+	        }
+			,height:150
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["사이트명", "회사명","도메인정보","등록일"]
+			,colModel:[
+		          {name:"BTBS_SITE_NM", 	index:"BTBS_SITE_NM", 	sortable:false,	width:100,		align:'center'},
+		          {name:"BTBS_COMP_NM", 	index:"BTBS_COMP_NM", 	sortable:false,	width:100,		align:'center'},
+		          {name:"BTBS_DOMAIN", 	index:"BTBS_DOMAIN", 	sortable:false,	width:100,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:false,	width:100,		align:'center'}
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'BTBS_SITE_NM'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+		/*	,jsonReader:{ repeatitems:false 
+				, id:"BTBS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		*/
+			,gridComplete : function(data,status) {
+				
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#btb_list").jqGrid('getRowData',rowid);
+		    	//pouup(ret.SMS_SQ);
+		     }
+		}).trigger('reloadGrid');
+		
+		$("#btb_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+	
+	,
+	fn_AsGrid:function(){
+		
+		$("as_list" ).jqGrid( 'GridUnload' );
+		$("#as_list").jqGrid({
+			//url:"/main/memList"
+			//,
+			caption:"as접수목록"
+			,datatype 	    : 'clientside'
+		    ,mtype         : 'POST' 
+	    	, postData	  : {
+	        }
+			,height:150
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["회원명", "제품 S/N","등록일시","상태"]
+			,colModel:[
+		          {name:"NM", 	index:"NM", 	sortable:false,	width:100,		align:'center'},
+		          {name:"AREA", 	index:"AREA", 	sortable:false,	width:100,		align:'center'},
+		          {name:"MOBILE_TYPE", 	index:"MOBILE_TYPE", 	sortable:false,	width:100,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:false,	width:100,		align:'center'}
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false 
+				, id:"SMS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		
+			,gridComplete : function(data,status) {
+				
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#as_list").jqGrid('getRowData',rowid);
+		    	//pouup(ret.SMS_SQ);
+		     }
+		}).trigger('reloadGrid');
+		
+		$("#as_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+	
+	,
+	fn_QnaGrid:function(){
+		
+		$("qna_list" ).jqGrid( 'GridUnload' );
+		$("#qna_list").jqGrid({
+			//url:"/main/memList"
+			//,
+			caption:"문의접수목록"
+			,datatype 	    : 'clientside'
+		    ,mtype         : 'POST' 
+	    	,postData	  : {}
+			,height:150
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["회원명", "카테고리","접수일자","상태"]
+			,colModel:[
+		          {name:"NM", 	index:"NM", 	sortable:false,	width:100,		align:'center'},
+		          {name:"AREA", 	index:"AREA", 	sortable:false,	width:100,		align:'center'},
+		          {name:"MOBILE_TYPE", 	index:"MOBILE_TYPE", 	sortable:false,	width:100,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:false,	width:100,		align:'center'}
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false 
+				, id:"SMS_SQ" 
+				, root: "rows" 
+				, page : "page" 
+				, total : "total" 
+				,records : "records" }
+		
+			,gridComplete : function(data,status) {
+				
+			}
+			, recordpos:'right' 
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#qna_list").jqGrid('getRowData',rowid);
+		    	//pouup(ret.SMS_SQ);
+		     }
+		}).trigger('reloadGrid');
+		
+		$("#qna_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+}
+
+function setHiChart(){
+	Highcharts.chart('containers', {
+
+	    title: {
+	        text: '테스트, 2010-2016'
+	    },
+
+	    subtitle: {
+	        text: 'Source: 테스트'
+	    },
+
+	    yAxis: {
+	        title: {
+	            text: 'Number of Employees'
+	        }
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'middle'
+	    },
+
+	    plotOptions: {
+	        series: {
+	            label: {
+	                connectorAllowed: false
+	            },
+	            pointStart: 2010
+	        }
+	    },
+
+	    series: [{
+	        name: 'Installation',
+	        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+	    }, {
+	        name: 'Manufacturing',
+	        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+	    }, {
+	        name: 'Sales & Distribution',
+	        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+	    }, {
+	        name: 'Project Development',
+	        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+	    }, {
+	        name: 'Other',
+	        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+	    }],
+
+	    responsive: {
+	        rules: [{
+	            condition: {
+	                maxWidth: 500
+	            },
+	            chartOptions: {
+	                legend: {
+	                    layout: 'vertical',
+	                    align: 'center',
+	                    verticalAlign: 'middle'
+	                }
+	            }
+	        }]
+	    }
+
+	});
+}
+
+
+
+

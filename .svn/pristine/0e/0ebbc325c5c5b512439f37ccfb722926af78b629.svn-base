@@ -1,0 +1,121 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function() {
+	var gubun = $("#gubun").val();
+	$("#layerPopup").draggable();
+	$("#modelFile").hide();
+
+	if($("#stat").val() == "05"){
+		$("#drsn").show();
+		$("#rs").attr("rowspan","8");
+	}else{
+		$("#drsn").hide();
+	}
+
+	$("#delModel").click(function() {
+		$("#dim-layer").show();
+		$("#layerPopup").show();
+	});
+
+	$("#del").click(function(){
+		$.ajax({
+			type : "post",
+			url : "/product/deleteModel",
+			data : {
+				delRsn : $("#delRsn2").val(),
+				mdSq : $("#mdSq").val()
+			}, success : function(result){
+				alert("삭제되었습니다.");
+				$("#dim-layer").hide();
+				$("#layerPopup").hide();
+			}, error : function(result){
+
+			}
+		})
+	});
+
+	$("#close").click(function() {
+		$("#dim-layer").hide();
+		$("#layerPopup").hide();
+	});
+
+	$("#backModelList").click(function() {
+		location.href = "/product/modelList";
+	});
+
+	$("#modProd").click(function() {
+		$("#insertProdForm").attr("action", "/product/updateProduct");
+		$("#insertProdForm").submit();
+	});
+
+	$("#modelFile").change(function() {
+		if (this.files && this.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#modelImg').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(this.files[0]);
+		}
+	});
+
+	$(".tabmenu>li").eq(0).addClass("active");
+
+	var s = $("#stat").val();
+	if (s == "01") {
+		document.getElementById("stat1").checked = true;
+	} else if (s == "02") {
+		document.getElementById("stat2").checked = true;
+	} else if (s == "03") {
+		document.getElementById("stat3").checked = true;
+	} else if (s == "04") {
+		document.getElementById("stat4").checked = true;
+	} else if (s == "05"){
+		document.getElementById("stat5").checked = true;
+	} else {
+		document.getElementById("stat4").checked = true;
+	}
+});
+
+function fileupload(formId, url, msg) {
+
+	if(validation()){
+		var form = $('#'+formId)[0];
+	    var data = new FormData(form);
+
+	    $.ajax({
+	        type: "POST",
+	        enctype: 'multipart/form-data',
+	        url: url,
+	        data: data,
+	        processData: false,
+	        contentType: false,
+	        cache: false,
+	        timeout: 600000,
+	        success: function (data) {
+	        	alert(msg);
+	        },
+	        error: function (e) {
+	            $("#result").text(e.responseText);
+	            console.log("ERROR : ", e);
+	        }
+	    });
+	}
+}
+
+function validation(){
+	if(!isEmpty(cpNm,"제품명")){return false;}
+	if(!isEmpty(mdNm,"모델명")){return false;}
+	if($("#mini1").prop("checked") != true && $("#mini2").prop("checked") != true){
+		alert("제품분류 선택은 필수입니다.");
+		return false;
+	}
+	if(!isEmpty(detStd, "상세규격")){return false;}
+	if(!isEmpty(des, "기기설명")){return false;}
+	if(!isEmpty(usg, "주요사용처")){return false;}
+	if(!isEmpty(detSpec, "상세스펙")){return false;}
+	if(!isEmpty(miniYn, "재고수량")){return false;}
+	if(!isEmpty(modelFile, "모델사진")){return false;}
+}

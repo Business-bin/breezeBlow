@@ -1,0 +1,140 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="customTag" uri="/WEB-INF/customTag.tld" %>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/product/product.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+	<div id="dim-layer"></div>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+				<li><a href="#"><i class="axi axi-menu"></i> Site Info</a></li>
+				<li><a href="#"><i class="axi axi-info"></i> Infomation</a></li>
+				<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+				<li><a href="#"><i class="axi axi-assignment-ind"></i>Manager</a></li>
+				<li><a href="#"><i class="axi axi-history2"></i>Time Table</a></li>
+				<li><a href="#"><i class="axi axi-ion-android-note"></i>Meeting Note</a></li>
+				<li><a href="#"><i class="axi axi-code"></i>Common Code</a></li>
+			</ul>
+			<div class="navi">
+				<ul>
+					<li>B2B</li>
+					<li>B2B회원</li>
+					<li id="naviGubun">B2B회원상세</li>
+				</ul>
+			</div>
+			<form action="/product/insertProduct" method="post" id="insertProdForm" enctype="multipart/form-data">
+				<input type="hidden" id="gubun" value="${gubun}" />
+				<input type="hidden" id="cpOrgImageNm" class="init" name="cpOrgImageNm" value="${prodDet.CP_ORG_IMAGE_NM}" />
+				<input type="hidden" id="cpChImageNm" class="init" name="cpChImageNm" value="${prodDet.CP_CH_IMAGE_NM}" />
+				<div style="width: 430px; height: 380px;">
+					<table class="basictables">
+						<colgroup>
+							<col width="130px" />
+							<col width="100px" />
+							<col width="200px" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td rowspan="5"><img src="" id="prodImg" /></td>
+								<th>제품명</th>
+								<td><input type="text" id="cpNm" class="init" name="cpNm" value="${prodDet.CP_NM}" /></td>
+							</tr>
+							<tr>
+								<th>제품고유번호</th>
+								<td><input type="text" id="cpSq" class="init" name="cpSq" value="${prodDet.CP_SQ}" /></td>
+							</tr>
+							<tr>
+								<th>제품상세규격</th>
+								<td><input type="text" id="cpDetSpec" class="init" name="cpDetSpec" value="${prodDet.CP_DET_SPEC}" /></td>
+							</tr>
+							<tr>
+								<th>판매상태</th>
+								<td>
+									<select id="stat" name="stat" class="init">
+										<option value="">선택</option>
+										<c:forEach items="${code}" var="co">
+											<c:if test="${co.CODE eq prodDet.STAT}">
+												<option value="${co.CODE}" selected="selected">${co.CODENAME}</option>
+											</c:if>
+											<c:if test="${co.CODE ne prodDet.STAT}">
+												<option value="${co.CODE}">${co.CODENAME}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th>판매수량</th>
+								<td><input type="text" id="salNum" class="init" name="salNum" value="${prodDet.SAL_NUM}" /></td>
+							</tr>
+							<tr>
+								<td class="tcenter">
+									<label for="prodFile" id="fileBox">사진업로드</label>
+									<input type="file" id="prodFile" class="init" name="prodFile" />
+								</td>
+								<th>등록일시</th>
+								<td>
+									<fmt:formatDate value="${prodDet.REG_DTTM}" var="dttm" pattern="yyyy-MM-dd" />
+									<input type="text" id="regDttm" name="regDttm" value="${dttm}" disabled="disabled"/>
+								</td>
+							</tr>
+							<tr>
+								<th>제품설명</th>
+								<td colspan="4"><textarea rows="5" cols="20" id="cpDes" class="init" name="cpDes">${prodDet.CP_DES}</textarea></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div>
+				<c:if test="${gubun eq 'new'}">
+					<button class="button" onclick="fileupload('insertProdForm','/product/insertProduct')">등록</button>
+				</c:if>
+				<c:if test="${gubun eq 'det'}">
+					<button class="button" onclick="fileupload('insertProdForm','/product/updateProduct')">수정</button>
+					<button class="button" id="delProd">삭제</button>
+				</c:if>
+				<button class="button" id="backProdList">목록</button>
+			</div>
+		</div>
+	</div>
+
+		<!-- <div id="contents">
+		  <div id="layerPopup">
+		  	<table class="basictables">
+					<tbody>
+						<tr>
+							<th>관리자ID</th>
+							<td><input type="text" id="" name=""/></td>
+						</tr>
+						<tr>
+							<th>관리자명</th>
+							<td><input type="text" id="" name=""/></td>
+						</tr>
+						<tr>
+							<th>B2B고객명</th>
+							<td><input type="text" id="" name=""/></td>
+						</tr>
+						<tr>
+							<th>삭제사유</th>
+							<td><textarea rows="5" cols="20"></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+		    <button class="button" id="del2" type="button">삭제하기</button>
+		    <button class="button" id="close" type="button">닫기</button>
+		  </div>
+		  </div> -->
+	</section>
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/product/product.js"></script>

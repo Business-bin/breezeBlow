@@ -1,0 +1,179 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	
+	console.log("adminAdd");
+	
+	
+	
+	$('#btn_add').click(function(){
+		console.log("btn_add");
+		addAdmin();
+		
+	});
+	
+	$('#btn_check').click(function(){
+		console.log("btn_check");
+		checkId();
+		
+	});
+
+});
+
+
+/********************************************************************
+Name   : addAdmin                                            
+Desc   : 관리자 신규 생성
+Param  :            
+********************************************************************/
+function addAdmin(){
+		
+	var adm_hp = $('#hp_1').val()+'-'+ $('#hp_2').val()+'-'+$('#hp_3').val();
+	var adm_tel = '';
+	if($('#tel_2').val()== '' && $('#tel_3').val()== ''){
+		adm_tel = '';
+	}else{
+		adm_tel = $('#tel_1').val()+'-'+$('#tel_2').val()+'-'+$('#tel_3').val();
+	}
+	
+	
+	var val = $("#adm_gen option:selected").val();
+	$('#adm_gen').val(val);
+
+	if ($('#adm_email').val() == '') {
+		alert('아이디를 입력하세요.');
+		$('#adm_email').focus();
+	}else if($('#adm_nm').val()==''){
+		alert('관리자명을 입력하세요.');
+		$('#adm_nm').focus();
+	}else if ($('#adm_pwd').val() == '') {
+		alert('비밀번호를 입력하세요.');
+		$('#adm_pwd').focus();
+	}else if ($('#adm_pwd1').val() == '') {
+		alert('비밀번호 확인을 입력하세요.');
+		$('#adm_pwd1').focus();
+	}else if ($('#hp_1').val() == '') {
+		alert('휴대전화번호를 입력하세요.');
+		$('#hp_1').focus();
+	}else if ($('#hp_2').val() == '') {
+		alert('휴대전화번호를 입력하세요.');
+		$('#hp_2').focus();
+	}else if ($('#hp_3').val() == '') {
+		alert('휴대전화번호를 입력하세요.');
+		$('#hp_3').focus();
+	}else if(idCheck($('#adm_email').val()) == false){
+		$('#adm_email').focus();
+	}else if($('#check_yn').val() != 'Y' || $('#check_id').val() != $('#adm_email').val()){
+		alert("아이디  중복확인을 해주세요.");
+	}else if(checkPassword($('#adm_pwd').val())== false){
+		alert("비밀번호는 영문/숫자/특수문자 2가지 이상 조합하여 8자 이상이어야 합니다.");
+		$('#adm_pwd').focus();
+	}else if($('#adm_pwd').val() != $('#adm_pwd1').val()){
+		alert("입력한 비밀번호가 일치하지 않습니다.");
+		$('#adm_pwd1').focus();
+	} else if(confirm("S관리자 신규 등록하시겠습니까?") == true){
+
+		$.ajax({
+			url : '/admin/adminAddProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+				adm_email      : $('#adm_email').val(),	
+				adm_nm         : $('#adm_nm').val(),
+				adm_pwd        : $('#adm_pwd').val(),
+				adm_gen        : $('#adm_gen').val(),	    
+				adm_empn 	   : $('#adm_empn').val(),	
+				adm_part 	   : $('#adm_part').val(),	
+				adm_rank	   : $('#adm_rank').val(),		
+				adm_hp	       : adm_hp,		            
+				adm_tel        : adm_tel                    
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("등록 되었습니다.");
+				window.location.replace("/admin/adminList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+	
+}
+//아이디 중복체크
+function checkId(){
+
+	if($('#adm_email').val()==''){
+		alert('아이디를 입력하세요.');
+		$('#adm_email').focus();
+		return false;
+	}
+	
+	if(idCheck($('#adm_email').val()) == false){
+		$('#adm_email').focus();
+	}else{
+
+		$.ajax({
+			url : '/admin/checkId',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+				user_id	       : $('#adm_email').val()       
+			},
+			success : function(jsonData) {
+				console.log("success");
+				var useYn = jsonData.useYn;
+				var checkYn = jsonData.checkYn;
+				if(useYn == "Y"){
+					$('#check_yn').val(checkYn);
+					$('#check_id').val($('#adm_email').val());
+					alert("사용 가능한 아이디입니다.");
+					$('#adm_nm').focus();
+				}else{
+					alert("이미 사용 중이거나 탈퇴한 아이디입니다.");
+					$('#adm_email').focus();
+				}
+				
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+	}
+}
+
+function onlyNumber(event){
+	event = event || window.event;
+	var keyID = (event.which) ? event.which : event.keyCode;
+	if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+		return;
+	else
+		return false;
+}
+
+function removeChar(event) {
+	event = event || window.event;
+	var keyID = (event.which) ? event.which : event.keyCode;
+	if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+		return;
+	else
+		event.target.value = event.target.value.replace(/[^0-9]/g, "");
+}
+
+function proc(event, val1, val2){
+	var val1 =  $('#'+val1).val();
+	if(val1.length >=4 && event.keycode !=8){
+		$('#'+val2).focus();
+	}
+}
+
+
+
+
+

@@ -1,0 +1,101 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function() {
+	var gubun = $("#gubun").val();
+	$("#modelFile").hide();
+	if (gubun == "new") {
+		$("#mod").hide();
+		$("#del1").hide();
+		$("#naviGubun").text("관리자등록");
+	} else {
+		$("#new").hide();
+		$("#cpSq").attr("readOnly", "readOnly");
+	}
+	$("#layerPopup").hide();
+	$("#dim-layer").hide();
+	$("#delModel").click(function() {
+		$("#contents > a").blur();
+		$("#dim-layer").show();
+		$("#layerPopup").show();
+		$("#layerPopup a").focus();
+		return false;
+	});
+	$("#layerPopup a").keydown(function(e) {
+		if (e.shiftKey && e.keyCode == 9) { // Shift + Tab 키를 의미합니다.
+			$("#contents > a").focus();
+			$("#layerPopup").hide();
+			return false;
+		}
+	});
+
+	$("#close").click(function() {
+		$("#contents > a").focus();
+		$("#dim-layer").hide();
+		$("#layerPopup").hide();
+	});
+
+	$("#backFwrList").click(function() {
+		location.href = "/product/fwrList";
+	});
+
+	$("#newFwr").click(function() {
+		$("#insertFwrForm").submit();
+	});
+
+	$("#modFwr").click(function() {
+		$("#insertFwrForm").attr("action", "/product/updateFwr");
+		$("#insertFwrForm").submit();
+	});
+
+	$(".tabmenu>li").eq(2).addClass("active");
+
+	var s = $("#stat").val();
+	if(s != null){
+		if (s == "01") {
+			document.getElementById("stat1").checked = true;
+		} else if (s == "02") {
+			document.getElementById("stat2").checked = true;
+		} else if (s == "03") {
+			document.getElementById("stat3").checked = true;
+		} else if (s == "04") {
+			document.getElementById("stat4").checked = true;
+		} else {
+			document.getElementById("stat5").checked = true;
+		}
+	}
+});
+
+function prodDet(sq){
+	$("#cpSq").val(sq);
+	$("#gubun").val("det");
+	$("#detForm").submit();
+}
+
+function fileupload(formId, url) {
+	var form = $('#'+formId)[0];
+    var data = new FormData(form);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: url,
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            $("#result").text(data);
+            $(".init").val("");
+            $("#prodImg").attr("src","");
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+        }
+    });
+}

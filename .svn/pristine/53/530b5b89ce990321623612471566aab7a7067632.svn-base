@@ -1,0 +1,77 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function(){
+
+	$('#btnMain').click(function(){
+		console.log("btn_sch");
+		location.href="/main";
+	});
+
+	$('#btnSample').click(function(){
+		console.log("btn_sch");
+		location.href="/sample/sample";
+	});
+
+	$('#btnSample2').click(function(){
+		console.log("btn_sch");
+		location.href="/sample/sample2";
+	});
+
+	$('#btnSample3').click(function(){
+		console.log("btn_sch");
+		location.href="/sample/sample3";
+	});
+
+
+	$('#logout').click(function(){
+		if (confirm("로그아웃 하시겠습니까?") == true){
+			logout()
+		}
+	});
+
+	$("#btnMemList").click(function(){
+		location.href="/mem/memList";
+	});
+
+	$("#btnProdList").click(function(){
+		location.href="/product/productList";
+	});
+	
+	$('#btnAdmin').click(function(){
+		console.log("btn_sch");
+		location.href="/admin/adminList";
+	});
+	
+	$('#btnBtb').click(function(){
+		console.log("btnBtb");
+		location.href="/btb/btbList";
+	});	
+	
+	$('#btnBoard').click(function(){
+		console.log("btnBoard");
+		location.href="/board/noticeList";
+	});
+	
+});
+
+
+function logout(){
+	$.ajax(
+			{async : true
+			,type : "POST"
+			,url : "/login/logout"
+			,dataType : "json"
+			,data: {R_SADM_EMAIL : $('#loginId').val(),
+				    R_SADM_PWD : $('#loginPw').val()
+			 }
+			,success : function(data) {
+				location.href="/";
+			}
+			,error:	function(request,status,error){
+
+			}
+	});
+}

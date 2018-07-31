@@ -1,0 +1,267 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	console.log("btbView");	
+	document.domain = "test.com";
+	
+	if($("#stat").val() == "01"){
+        $("#btn_use").hide();
+        $("#btn_stop").show();
+	}else if($("#stat").val() == "02"){
+        $("#btn_stop").hide();
+        $("#btn_use").show();
+	}
+	
+	
+	var val = $('#adm_hp1').val();
+	$("select[name='hp_1']").val(val).attr("selected", "selected");
+	
+	
+//	$('#btn_templ').click(function(){
+//		console.log("btn_templ");
+//		modTempl();
+//	});
+	
+	$('#addrSearchBtn').click(function(){
+		goPopup();
+	});
+	
+	$('#btn_mod').click(function(){
+		console.log("btn_mod");
+		modBtb();
+	});
+	
+	$('#btn_stop').click(function(){
+		console.log("btn_stop");
+		goStop();
+	});
+	
+	$('#btn_use').click(function(){
+		console.log("btn_use");
+		goUse();
+	});
+	
+	
+	$('#btn_del').click(function(){
+		console.log("btn_del");
+		delBtb();
+	});
+	
+	
+});
+
+/********************************************************************
+Name   : 주소팝업                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function goPopup(){
+	// 주소검색을 수행할 팝업 페이지를 호출합니다.
+	// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(http://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+	var pop = window.open("/common/jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+	
+	// 모바일 웹인 경우, 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(http://www.juso.go.kr/addrlink/addrMobileLinkUrl.do)를 호출하게 됩니다.
+    //var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
+}
+
+//function modTempl(){
+////	alert(1);
+//	if(confirm("템플릿 정보를 수정하시겠습니까?") == true){
+//		
+//		$.ajax({
+//			url : '/btb/modTemplProc',
+//			method : 'POST',
+//			dataType: 'JSON',
+//			data : {
+//				user_name      : $('#user_name').val(),
+//				user_id	       : $('#user_id').val(),	  
+//				user_pw        : $('#user_pw').val(),
+//				user_email	   : $('#user_email').val(),
+//				sex            : $('#sex').val(),	    
+//				emp_no 	       : $('#emp_no').val(),	
+//				department	   : $('#department').val(),		
+//				position	   : $('#position').val(),	
+//				adm_sq         : $('#adm_sq').val(),
+//				phone_no	   : $('#phone_no').val(),		            
+//				mobile_no      : $('#mobile_no').val()                    
+//			},
+//			success : function(jsonData) {
+//				console.log("success");
+//				alert("저장 되었습니다.");
+//				window.location.replace("/admin/adminList");
+//			},
+//			error : function(e) {
+//				console.error('ajax 에러: ' + e.status);
+//			}
+//		});
+//		
+//	}else{
+//		return;
+//	}
+//	
+//}
+
+
+function modBtb(){
+
+	var btbm_tel = $('#hp_1').val()+'-'+ $('#hp_2').val()+'-'+$('#hp_3').val();
+
+	if ($('#comp_nm').val() == '') {
+		alert('회사명을 입력하세요.');
+		$('#comp_nm').focus();
+	}if ($('#btbs_nm').val() == '') {
+		alert('사이트명을 입력하세요.');
+		$('#btbs_nm').focus();
+	}else if ($('#btbs_domain').val() == '') {
+		alert('도메인정보를 입력하세요.');
+		$('#btbs_domain').focus();
+	}else if($('#roadFullAddr').val()==''){
+		alert('주소를 입력하세요.');
+		$('#roadFullAddr').focus();
+	}else if($('#btbs_cur_templ').val()==''){
+		alert('템플릿 정보를 입력하세요.');
+		$('#btbs_cur_templ').focus();
+	}else if($('#btbm_nm').val()==''){
+		alert('이름을 입력하세요.');
+		$('#btbm_nm').focus();
+	}else if($('#btbm_rank').val()==''){
+		alert('직급을 입력하세요.');
+		$('#btbm_rank').focus();
+	}else if($('#btbm_email').val()==''){
+		alert('이메일을 입력하세요.');
+		$('#btbm_email').focus();
+	}else if($('#hp_2').val()==''){
+		alert('연락처를 입력하세요.');
+		$('#hp_2').focus();
+	}else if($('#hp_3').val()==''){
+		alert('연락처를 입력하세요.');
+		$('#hp_3').focus();
+	}else if(confirm("저장 하시겠습니까?") == true){
+		
+		$.ajax({
+			url : '/btb/btbViewProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+				btbs_sq        : $('#btbs_sq').val(),
+				btbs_nm        : $('#btbs_nm').val(),
+				comp_nm	       : $('#comp_nm').val(),	  
+				btbs_domain    : $('#btbs_domain').val(),
+				zipNo          : $('#zipNo').val(),
+				roadFullAddr   : $('#roadFullAddr').val(),
+				btbs_cur_templ : $('#btbs_cur_templ').val(),
+				btbm_nm        : $('#btbm_nm').val(),
+				btbm_rank      : $('#btbm_rank').val(),	    
+				btbm_email 	   : $('#btbm_email').val(),	
+				btbm_tel	   : btbm_tel,
+				siNm	       : $('#siNm').val(),		
+				sggNm	       : $('#sggNm').val(),
+				emdNm	       : $('#emdNm').val()
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("저장 되었습니다.");
+				window.location.replace("/btb/btbList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+}
+
+//삭제
+function delBtb(){
+
+	$('#gubun').val("D"); // [사용중지:S / 정지해제:U / 삭제:D]
+	var url_reTarget = '/btb/btbDel';
+	launchCenter(url_reTarget,'상세', 300, 300,'menubar=no, status=no, toolbar=no');
+}
+
+//사용정지
+function goStop(){
+
+	$('#gubun').val("S"); // [사용중지:S / 정지해제:U / 삭제:D]
+	var url_reTarget = '/btb/btbDel';
+	launchCenter(url_reTarget,'상세', 300, 300,'menubar=no, status=no, toolbar=no');	
+}
+
+//정지해제
+function goUse(){
+
+	$('#gubun').val("U"); // [사용중지:S / 정지해제:U / 삭제:D]
+	var url_reTarget = '/btb/btbDel';
+	launchCenter(url_reTarget,'상세', 300, 300,'menubar=no, status=no, toolbar=no');	
+}
+
+
+//popup
+function launchCenter(url, name, width, height, att) {
+
+	var str = "height=" + height + ",innerHeight=" + height;
+	str += ",width=" + width + ",innerWidth=" + width;
+
+	if (window.screen) {
+		// screen.width : 현재 운영체제의 너비
+		// screen.height : 현재 운영체제의 높이
+		var ah = screen.availHeight - 30;
+		var aw = screen.availWidth - 10;
+
+		// 중앙위치 구해오기
+		var xc = (aw - width) / 2;
+		var yc = (ah - height) / 2;
+
+		str += ",left=" + xc + ",screenX=" + xc;
+		str += ",top=" + yc + ",screenY=" + yc;
+		str += "," + att
+	}
+	
+	return window.open(url, name, str);
+}
+
+/********************************************************************
+Name   : 결과리턴                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function jusoCallBack(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn,detBdNmList,bdNm,bdKdcd,siNm,sggNm,emdNm,liNm,rn,udrtYn,buldMnnm,buldSlno,mtYn,lnbrMnnm,lnbrSlno,emdNo){
+		
+		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
+		$("#roadFullAddr").val(roadFullAddr);
+		$("#roadAddrPart1").val(roadAddrPart1);
+		$("#roadAddrPart2").val(roadAddrPart2);
+		$("#addrDetail").val(addrDetail);
+		$("#engAddr").val(engAddr);
+		$("#jibunAddr").val(jibunAddr);
+		$("#zipNo").val(zipNo);
+		$("#admCd").val(admCd);
+		$("#rnMgtSn").val(rnMgtSn);
+		$("#bdMgtSn").val(bdMgtSn);
+		$("#detBdNmList").val(detBdNmList);
+		/** 2017년 2월 추가제공 **/
+		$("#bdNm").val(bdNm);
+		$("#bdKdcd").val(bdKdcd);
+		$("#siNm").val(siNm);
+		$("#sggNm").val(sggNm);
+		$("#emdNm").val(emdNm);
+		$("#liNm").val(liNm);
+		$("#rn").val(rn);
+		$("#udrtYn").val(udrtYn);
+		$("#buldMnnm").val(buldMnnm);
+		$("#buldSlno").val(buldSlno);
+		$("#mtYn").val(mtYn);
+		$("#lnbrMnnm").val(lnbrMnnm);
+		$("#lnbrSlno").val(lnbrSlno);
+		/** 2017년 3월 추가제공 **/
+		$("#emdNo").val(emdNo);
+		
+}
+
+
+

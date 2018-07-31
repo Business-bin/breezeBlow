@@ -1,0 +1,218 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	
+	console.log("btbList");
+	
+	/****************  페이징 처리 ***************/
+	// 현재 페이지 번호
+	if($('#page').val()== ''){
+		$('#page').val(1);
+	}
+	// 총 페이지 수
+	if($('#total_page').val()== ''){
+		$('#total_page').val(0);
+	}
+	
+	var pageNo = $('#page').val();  
+	var totalPage = $('#total_page').val();  
+	
+	//paging처리
+	showPaging(pageNo,totalPage);
+	/****************  페이징 처리 ***************/
+	
+	var val = $('#category1').val();
+	if(val != ''){
+		$("select[name='category']").val(val).attr("selected", "selected");
+	}
+	
+
+	
+	$('#btn_sch').click(function(){
+		console.log("btn_sch");
+		getBtbList();
+	});
+	
+
+});
+	
+$(function() {
+    $( "#start_dt" ).datepicker({
+    	 showOn: "both", 
+         buttonImage: "button.png", 
+         buttonImageOnly: true,
+         changeMonth: true, 
+         changeYear: true,
+         nextText: '다음 달',
+         prevText: '이전 달',
+     //    numberOfMonths: [2,2],
+         
+	     showButtonPanel: true, 
+         currentText: '오늘 날짜', 
+         closeText: '닫기', 
+         dateFormat: "yymmdd",
+        
+         changeMonth: true, 
+         dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+         dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+         monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+    });
+    
+    
+    if($('#sch_flag').val() != 'Y'){
+    	$('#start_dt').val(getFirstDate());
+    }
+    
+});
+
+$(function() {
+    $( "#end_dt" ).datepicker({
+    	 showOn: "both", 
+         buttonImage: "button.png", 
+         buttonImageOnly: true,
+         changeMonth: true, 
+         changeYear: true,
+         nextText: '다음 달',
+         prevText: '이전 달',
+  //       numberOfMonths: [2,2],
+         
+	     showButtonPanel: true, 
+         currentText: '오늘 날짜', 
+         closeText: '닫기', 
+         dateFormat: "yymmdd",
+        
+         changeMonth: true, 
+         dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+         dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+         monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+    
+    });
+    
+    if($('#sch_flag').val() != 'Y'){
+    	$('#end_dt').val($.datepicker.formatDate('yymmdd', new Date()));
+    }
+});
+
+
+function showPaging(page,totalPage){
+	page = parseInt(page);
+	totalPage = parseInt(totalPage);
+	var paging = $('#paging');
+	paging.html("");
+	var defSpan = $(document.createElement('span'));
+	var limit = 10;
+	var st = Math.floor((page-1)/limit)*(limit)+1;
+	var ed = Math.min(st+limit-1,totalPage);
+	var spans = [];
+	if(totalPage<=0){
+		paging.html("NoPage");
+		return;
+	}
+
+
+	var span = defSpan.clone();
+	span.prop('page',1);
+	span.text('처음');
+	spans.push(span);
+
+	var span = defSpan.clone();
+	span.prop('page',(st-1)<=0?-1:(st-1));
+	span.text('이전');
+	spans.push(span);
+
+	for(var i=st,m=ed;i<=m;i++){
+		var span = defSpan.clone();
+		span.prop('page',i);
+		if(i == page){
+			span.addClass('current');
+		}
+		span.text(i);
+		spans.push(span);
+	}
+
+	var span = defSpan.clone();
+	span.prop('page',(ed+1)>=totalPage?-1:(ed+1));
+	span.text('다음');
+	spans.push(span);
+
+	var span = defSpan.clone();
+	span.prop('page',totalPage);
+	span.text('마지막');
+	spans.push(span);
+	
+	for(var i=0,m=spans.length;i<m;i++){
+		paging.append(spans[i]);
+	}
+
+}
+
+function submitPaging(n){
+	if(!selectedShForm){return false;}
+	selectedShForm.page.value = n;
+//	if(selectedShForm.onsubmit()){
+//		selectedShForm.submit();
+//	}
+	
+	$('#selectedShForm').attr('action', '/btb/btbListProc');
+	$("#selectedShForm").submit();
+}
+
+function clickPaging(event,paging){
+//	alert("clickPaging");
+	event = $(event)[0];
+	if(event.target && event.target.tagName =='SPAN' && event.target.page && event.target.page>0){
+		submitPaging(event.target.page)
+	}
+	return false;
+}
+
+/**
+ *  현재월의 1일 가져오기
+ */
+function getFirstDate(){
+	var date = new Date();
+	var year = date.getFullYear();                 //yyyy
+	var month = (1 + date.getMonth());             //M
+	month = month >= 10 ? month : '0' + month;     // month 두자리로 저장
+//	var day = date.getDate();                      //d
+//	day = day >= 10 ? day : '0' + day;             //day 두자리로 저장
+	return  year + '' + month + '' + '01';
+}
+
+
+
+// 관리자 리스트 조회 
+function getBtbList(){
+	
+	if($('#start_dt').val()==''){
+		alert('등록일을 입력하세요.');
+		$('#start_dt').focus();
+	}else if ($('#end_dt').val() == '') {
+		alert('등록일을 입력하세요.');
+		$('#end_dt').focus();
+	}
+//	else if ($('#keyword').val() == '') {
+//		alert('검색종류를 입력하세요.');
+//		$('#keyword').focus();
+
+	$('#selectedShForm').attr('action', '/btb/btbListProc');
+	$("#selectedShForm").submit();
+
+}
+
+//상세보기 화면 
+function goView(val){
+	alert(val);
+	$('#btbs_sq').val(val);
+	$('#selectedShForm').attr('action', '/btb/btbView');
+	$("#selectedShForm").submit();
+}
+
+
+
+

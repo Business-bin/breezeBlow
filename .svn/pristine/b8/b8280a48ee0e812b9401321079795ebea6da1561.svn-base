@@ -1,0 +1,49 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="/resources/css/main/main.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!--  -->
+<section>
+		<div class="container">	 
+			<div class="container_body">
+				<div id="containers" style="min-width: 310px; height: 400px; margin: 50 auto"></div>
+				
+				<div class="checks">
+				  <input type="checkbox" id="ex_chk"> 
+				  <label for="ex_chk">체크박스</label> 
+				</div>
+				<br />
+
+				<div class="checks small">
+				  <input type="checkbox" id="ex_chk2"> 
+				  <label for="ex_chk2">체크박스</label> 
+				</div>
+				
+				<br />
+
+				<div class="checks etrans">
+				  <input type="checkbox" id="ex_chk3"> 
+				  <label for="ex_chk3">체크박스</label> 
+				</div>
+				<br>
+				<div class="checks">
+                   <input type="radio" id="ex_rd" name="ex_rds"> 
+                   <label for="ex_rd">라디오버튼</label> 
+                 </div>
+
+				<br>
+				
+				<div class="checks small">
+                   <input type="radio" id="ex_rd2" name="ex_rds"> 
+                   <label for="ex_rd2">라디오버튼</label> 
+                 </div>
+			</div>
+		</div>
+</section>
+	 
+	 
+<!--  -->	 
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<script src="/resources/js/main/main.js"></script>

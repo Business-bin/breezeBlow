@@ -1,0 +1,24 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(document).ready(function(){
+
+	$('#btnMain').click(function(){
+		console.log("btn_sch");
+		location.href="/main";
+	});
+	
+	$('#btnSample').click(function(){
+		console.log("btn_sch");
+		location.href="/sample/sample";
+	});
+	
+	$('#btnSample2').click(function(){
+		console.log("btn_sch");
+		location.href="/sample/sample2";
+	});
+	
+});
+

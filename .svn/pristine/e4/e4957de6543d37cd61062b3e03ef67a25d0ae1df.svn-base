@@ -1,0 +1,100 @@
+package com.brb.app.dao;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+
+import com.brb.app.model.PolyVo;
+import com.brb.brbcom.common.collections.BrbMap;
+
+@Repository("PolyDao")
+public class PolyDao{
+
+	@Autowired
+	@Resource(name="sqlSessionTemplate")
+	private SqlSession queryM;
+
+	@Autowired
+	@Resource(name="sqlSessionTemplate_s")
+	private SqlSession queryS;
+
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(PolyDao.class);
+
+	/**
+	 * 개인정보동의 리스트
+	 * @param BrbMap<Object, Object>
+	 * @return  List
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("rawtypes")
+	public List getPolyList(BrbMap<Object, Object> bMap)
+			throws DataAccessException {
+		return queryS.selectList("poly.getPolyList", bMap);
+	}
+
+	/**
+	 * 개인정보동의 종류 리스트
+	 * @param
+	 * @return  List
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("rawtypes")
+	public List getPoly()
+			throws DataAccessException {
+		return queryS.selectList("poly.getPoly");
+	}
+
+	/**
+	 * 개인정보동의 리스트 총 개수
+	 * @param BrbMap<Object, Object>
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getPolyTotal(BrbMap<Object, Object> bMap)
+			throws DataAccessException {
+		return (Integer)queryS.selectOne("poly.getPolyTotal", bMap);
+	}
+
+	/**
+	 * 개인정보동의 상세
+	 * @param String
+	 * @return BrbMap<Object, Object>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public BrbMap<Object, Object> getPolyDet(String polySq)
+			throws DataAccessException {
+		return (BrbMap<Object, Object>)queryS.selectOne("poly.getPolyDet", polySq);
+	}
+
+	/**
+	 * 개인정보동의 수정
+	 * @param PolyVo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void updatePoly(PolyVo pvo)
+			throws DataAccessException {
+		queryM.update("poly.updatePoly", pvo);
+	}
+
+	/**
+	 * 개인정보동의 등록
+	 * @param PolyVo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void insertPoly(PolyVo pvo)
+			throws DataAccessException {
+		queryM.insert("poly.insertPoly", pvo);
+	}
+}

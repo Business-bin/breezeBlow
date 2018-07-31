@@ -1,0 +1,171 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" type="text/css" href="/resources/css/pop/pop.css" />
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+
+<!-- 소스 작성 start-->
+	<section>
+		<div class="container">
+			<div class="container_body">
+			<div class="tbar">
+				<div class="w50 fl"><i class="axi axi-play-arrow"></i>팝업 상세 내용</div>
+			</div>
+			<form name="popForm" id="popForm" action="/etc/popInsert" method="post" enctype="multipart/form-data">
+			<input type="hidden" id= "R_POP_SQ" name="R_POP_SQ" value="${R_POP_SQ}" />
+
+			<table class="basictables mgt14">
+				<colgroup>
+					<col width="10%"/>
+					<col width="90%"/>
+				</colgroup>
+				<tr>
+
+					<th>등록자</th>
+					<td>
+						<input type="text" value="${POPDET.BTBS_NM}" id="adminName" name="adminName" readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<th>현재상태</th>
+					<td>
+						<select style="width:100px;" name="stat" id= "stat" >
+							<option value='001' <c:if test="${POPDET.STAT eq '001'}">selected</c:if>>노출중</option>
+							<option value='002' <c:if test="${POPDET.STAT eq '002'}">selected</c:if>>노출중지</option>
+							<option value='003' <c:if test="${POPDET.STAT eq '003'}">selected</c:if>>대기중</option>
+							<option value='004' <c:if test="${POPDET.STAT eq '004'}">selected</c:if>>삭제</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>시작일시</th>
+					<td>
+						<input type="text" id="monthfrom" value="${fn:substring(POPDET.BEGIN_DTTM,0,10)}" >
+						<input type="text" id="monthfromTime" readonly="readonly" value="${fn:substring(POPDET.BEGIN_DTTM,11,15)}">
+						<input type="checkbox" id="ex_chk" checked="checked">
+						<label for="ex_chk">시작일시를 오늘로</label>
+					</td>
+				</tr>
+				<tr>
+					<th>종료일시</th>
+					<td>
+						<input type="text" id="monthto" value="${fn:substring(POPDET.END_DTTM,0,10)}">
+						<input type="text" id="monthtoTime" readonly="readonly" value="${fn:substring(POPDET.END_DTTM,11,15)}" />
+						<input type="checkbox" id="ex_chk2" checked="checked">
+						<label for="ex_chk2">종료일시를 오늘로부터 7일 후로</label>
+
+					</td>
+				</tr>
+				<tr>
+					<th >팝업타입</th>
+					<td>
+						<div class="checks small">
+						<input type="radio" value="01" id="popType1" name="popType" <c:if test="${POPDET.POP_TP eq '01'}"> checked="checked" </c:if>>
+						<label for="popType1">이미지형  </label>
+						<input type="radio" value="02" id="popType2" name="popType" <c:if test="${POPDET.POP_TP eq '02'}"> checked="checked" </c:if>>
+							<label for="popType2">텍스트형  </label>
+						</div>
+					</td>
+				</tr>
+			    <tr>
+					<th >팝업제목 </th>
+					<td>
+						<input style="width:100%;" type="text" id="popNm" name="popNm"   value="${POPDET.POP_NM}" placeholder="팝업제목  입력하세요">
+					</td>
+				</tr>
+				<tr id="popimg">
+					<th >팝업이미지</th>
+					<td>
+						<div class="filebox bs3-primary">
+                            <input class="upload-name" value="${POPDET.POP_IMG_FILE_NM}" disabled="disabled">
+
+                            <label for="imageFile">이미지선택</label>
+                            <input type="file" id="imageFile" name="imageFile" class="upload-hidden">
+                        </div>
+						<input type="hidden" id="file_path" value="${POPDET.POP_IMG_PATH}">
+						<input type="hidden" id="old_file_nm" value="${POPDET.POP_IMG_FILE_NM}">
+						<input type="hidden" id="old_file_path" value="${POPDET.POP_IMG_PATH}">
+					</td>
+				</tr>
+
+				<tr id="poplink">
+					<th >링크URL</th>
+					<td>
+						<input style="width:100%;" type="text" value="${POPDET.LNK_URL}" id="linkurl" name="linkurl"  placeholder="링크URL 입력하세요 " >
+					</td>
+				</tr>
+				<tr id="popsize">
+            		<th >팝업 사이즈</th>
+            		<td>
+                	가로사이즈<input style="width:150px;" type="number" value="${POPDET.POP_WIDTH}" id="popwidth" name="popwidth" max="999" maxlength="3" oninput="maxLengthCheck(this)"  placeholder="가로사이즈 입력하세요 " >  세로 사이즈 <input style="width:150px;" type="number" value="${POPDET.POP_HEIGHT}" id="popheight" name="popheight" max="999" maxlength="3" oninput="maxLengthCheck(this)"  placeholder="세로사이즈 입력하세요 " >
+            		</td>
+        	    </tr>
+				<tr id="popcontent" >
+            		<th >팝업내용</th>
+            		<td>
+                		<textarea rows="10" cols="30" id="popCont"  name="popCont" style="width:100%; height:250px; ">${POPDET.POP_CONT}</textarea>
+            		</td>
+        	    </tr>
+
+			</table>
+			</form>
+			<form action="/etc/popList" method="post" id="backForm">
+					<input type="hidden" name="monthfrom" value="${dMap.monthfrom}"/>
+					<input type="hidden" name="monthto" value="${dMap.monthto}"/>
+					<input type="hidden" name="searchType" value="${dMap.searchType}"/>
+					<input type="hidden" name="searStr" value="${dMap.searStr}"/>
+				</form>
+			<div class="button_area tcenter">
+				<button class="button" id="popViewBtn">미리보기</button>
+				<button class="button" id="popModBtn">수정</button>
+				<button class="button" id="popDelBtn">삭제</button>
+				<button class="button" id="popListBtn">목록</button>
+			</div>
+
+		</div>
+	</div>
+	<div id="dim-layer"></div>
+	<div id="layerPopup">
+		<table class="basictables" style="width:100%; height:100%;">
+			<tbody>
+				<tr>
+					<td id="innerHtml"></td>
+				</tr>
+				<tr>
+					<td style="height:30px; "  colspan="2" class="tright">
+						<button class="button" id="close" type="button">닫기</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="layerPopup3">
+		<table class="basictables">
+			<tbody>
+				<tr>
+					<th>관리자ID</th>
+					<td><input type="text" id="admEmail" name="admEmail"
+						value="<%=adminMail%>" disabled="disabled" /></td>
+				</tr>
+				<tr>
+					<th>삭제사유</th>
+					<td><textarea rows="5" cols="20" id="delRsn" name="delRsn"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="tright">
+						<button class="button" id="delBtn" type="button">삭제하기</button>
+						<button class="button" id="close2" type="button">닫기</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</section>
+
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/etc/popDet.js"></script>

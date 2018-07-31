@@ -1,0 +1,110 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/admin/adminList.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<section>
+<form name="modifyForm" id="modifyForm" method="post" action="">
+<input type="hidden" name="user_name" id="user_name"/>
+</form>
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="/admin/adminList">S관리자 목록</a></li>
+					<li><a href="#"><b>S관리자 활동로그</b></a></li>
+				</ul>
+				<br>
+                <form name="selectedShForm" id="selectedShForm" method="post" action="/admin/adminLogListProc"> 
+                <input type="hidden" name="sch_flag" id="sch_flag" value="${dMap.sch_flag}"/>
+                <input type="hidden" name="adm_sq" id="adm_sq" value=""/>
+				<table class="basictables basichover">
+					<tbody>
+						<tr>
+							<th><span class="tcenter">등록일</span></th>
+							<td>
+								<input type="text" name="start_dt" id="start_dt" value="${dMap.start_dt} "> ~
+								<input type="text" name="end_dt" id="end_dt" value="${dMap.end_dt}">
+							</td>
+							<th><span class="tcenter">검색종류</span></th>
+							<td>
+								<select name="category" style="width:100px">
+									<option value="email">아이디</option>
+									<option value="user_name">관리자명</option>
+								</select>
+								<input type="text" name="keyword" id="keyword" value="${dMap.keyword}"/>
+							</td>	
+							<td class="tcenter"><button type="button" class="button" name="btn_sch" id="btn_sch" >검색</button></td>
+						</tr>
+					</tbody>
+				</table>
+			    </form>	
+			    <%--
+				<table>
+					<tr>
+						<td>관리자 활동로그 </td>
+						<td align="right">Total: <c:if test="${dMap.total_cnt == null}">0 </c:if> ${dMap.total_cnt}</td>
+					</tr>
+				</table>
+				<table class="basictables basichover">
+						<colgroup>
+							<col style="width:30px;"/>
+							<col style="width:300px;" />
+							<col style="width:300px;" />
+							<col style="width:300px;"/>
+							<col/>
+							<col/>
+						</colgroup>
+					<thead>
+
+						<tr>
+							<th>번호</th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>로그인일시</th>
+							<th>접속IP</th>
+							<th>접속환경</th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:if test="${rMap.adminLogList == null || rMap.adminLogList == '[]'}">
+						<tr>
+							<td colspan=7 style="text-align: center;">데이터가 없습니다.</td>
+						</tr>
+					</c:if>
+				
+					<c:forEach items="${rMap.adminLogList}" var="admin">
+						<tr>
+							<td class="tcenter">${admin.ROWNUM}</td>
+							<td class="tcenter">${admin.ADM_EMAIL}</td>
+							<td class="tcenter">${admin.ADM_NM}</td>
+							<td class="tcenter">${admin.DTTM}</td>
+							<td class="tcenter">${admin.IP}</td>
+							<td class="tcenter">${admin.CON_ENV}</td>
+						</tr>
+					</c:forEach>
+					</tbody>
+				</table>
+				<div class="paging"  id="paging" onclick="clickPaging(event, 'selectedShForm')"></div>
+			
+			 --%>
+			<table>
+				<tr>
+					<td>관리자 활동로그</td>
+					<td align="right">Total: <span id="totalCnt">0</span></td>
+				</tr>
+			</table>			 
+			<table id="admin_log_list"></table>
+			<div id="pager"></div>			
+			</div> 
+		</div>
+	</section>
+	 
+	 
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/admin/adminLogList.js"></script>

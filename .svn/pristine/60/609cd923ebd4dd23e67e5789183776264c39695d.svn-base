@@ -1,0 +1,30 @@
+/********************************************************************
+Name   : APP버전 상세
+Desc   :
+Param  :
+********************************************************************/
+$(function(){
+	/* 신규/상세/수정 구분 */
+	if($("#gubun").val() == "new"){
+		$("#modApp").hide();
+	}else{
+		$("#addApp").hide();
+	}
+
+	/* 수정 */
+	$("#modApp").click(function(){
+		ajaxForm("insertAppForm","/app/updateAppVrs","수정되었습니다.");
+	});
+
+	/* 리스트로 이동 */
+	$("#backAppList").click(function(){
+		location.href="/app/appVrsList?idx=0";
+	});
+
+	/* 신규 등록 */
+	$("#addApp").click(function(){
+		ajaxForm("insertAppForm","/app/insertAppVrs","등록되었습니다.");
+	});
+
+	$(".tabmenu>li").eq(0).addClass("on");
+});

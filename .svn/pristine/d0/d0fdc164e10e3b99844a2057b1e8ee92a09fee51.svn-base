@@ -1,0 +1,28 @@
+/********************************************************************
+Name   : 전역 환경 설정
+Desc   :
+Param  :
+********************************************************************/
+var oEditors = [];
+$(function(){
+	/* 레이어 팝업 */
+	$("#layerPopup").hide();
+	$("#dim-layer").hide();
+	$("#modAlarm").click(function() {
+		$("#dim-layer").show();
+		$("#layerPopup").show();
+		$("#layerPopup a").focus();
+		return false;
+	});
+	$("#close").click(function() {
+		$("#dim-layer").hide();
+		$("#layerPopup").hide();
+	});
+	/* 레이어 팝업 */
+
+	/* 수정 */
+	$("#modPoly").click(function(){
+	});
+
+	$(".tabmenu>li").eq(4).addClass("on");
+});

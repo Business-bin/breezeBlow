@@ -1,0 +1,28 @@
+package com.brb.main.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+/**
+ * 
+ * @author back
+ *
+ */
+@Controller
+public class MainController {
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+	
+	
+	@RequestMapping("/main")
+	public ModelAndView testInfo() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("main/main") ;
+		return mav;
+	}
+	
+}

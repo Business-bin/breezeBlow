@@ -1,0 +1,86 @@
+package com.brb.main.dao;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+
+import com.brb.brbcom.common.collections.BrbMap;
+
+@Repository("MainDao")
+public class MainDao{ 
+
+	@Autowired
+	@Resource(name="sqlSessionTemplate")
+	private SqlSession queryM;
+	     
+	@Autowired
+	@Resource(name="sqlSessionTemplate_s")
+	private SqlSession queryS;
+
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(MainDao.class);
+	
+
+	
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings({ "rawtypes"})
+	public List getMemList(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return queryS.selectList("mem.getMainMemList",pdMap);
+	}
+	
+
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("rawtypes")
+	public BrbMap getMemListTotal(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return (BrbMap) queryS.selectOne("mem.getMainMemListTotal",pdMap);
+	}
+	
+	
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings({ "rawtypes"})
+	public List getB2bList(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return queryS.selectList("mem.getMainB2bList",pdMap);
+	}
+	
+
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("rawtypes")
+	public BrbMap getB2bListTotal(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return (BrbMap) queryS.selectOne("mem.getMainB2bListTotal",pdMap);
+	}
+	
+	
+	
+}

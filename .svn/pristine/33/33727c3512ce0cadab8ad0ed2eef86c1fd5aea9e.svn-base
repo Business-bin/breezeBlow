@@ -1,0 +1,137 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/admin/adminList.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+
+<!-- jQuery UI CSS파일  --> 
+<link rel="stylesheet" href="/resources/css/jquery-ui.css"/>  
+
+
+<section>
+<!-- 
+<form name="modifyForm" id="modifyForm" method="post" action="">
+<input type="hidden" name="user_name" id="user_name"/>
+</form>
+ -->
+		<div class="container">
+			<div class="container_body">
+				<ul class="tabmenu web">
+					<li><a href="#"><b>B2B 관리자 목록</b></a></li>
+					<li><a href="/btb/btbAdminLogList">B2B 관리자 활동로그</a></li>
+					<!-- 
+					<li><a href="#"><i class="axi axi-sitemap"></i> Menu</a></li>
+					<li><a href="#"><i class="axi axi-assignment-ind"></i> Manager</a></li>
+					<li><a href="#"><i class="axi axi-history2"></i> Time Table</a></li>
+					<li><a href="#"><i class="axi axi-ion-android-note"></i> Meeting Note</a></li>
+					<li><a href="#"><i class="axi axi-code"></i> Common Code</a></li>
+					 -->
+				</ul>
+				<br>
+				<!-- 
+				<div class="pagetitle"><i class="axi axi-sitemap"></i> Menu</div>
+				<div class="navi">
+					<ul>
+						<li>Home</li>
+						<li>Setting</li>
+						<li>Menu</li>
+					</ul>
+				</div>
+				 -->
+                <form name="selectedShForm" id="selectedShForm" method="post" action=""> 
+                <input type="hidden" name="sch_flag" id="sch_flag" value="${dMap.sch_flag}"/>
+                <input type="hidden" name="page_cnt" id="page_cnt" value="10"/>
+                <input type="hidden" name="page" id="page" value="${dMap.page}"/>
+                <input type="hidden" name="total_page" id="total_page" value="${dMap.total_page}"/>
+                <input type="hidden" name="category1" id="category1" value="${dMap.category}"/>
+                <input type="hidden" name="adm_sq" id="adm_sq" value=""/>
+				<table class="basictables basichover">
+					<tbody>
+						<tr>
+							<th><span class="tcenter">등록일</span></th>
+							<td>
+								<input type="text" name="start_dt" id="start_dt" value="${dMap.start_dt} "> ~
+								<input type="text" name="end_dt" id="end_dt" value="${dMap.end_dt}">
+							</td>
+							<th><span class="tcenter">검색종류</span></th>
+							<td>
+								<select name="category" style="width:100px">
+									<option value="email">Email 계정</option>
+									<option value="adm_nm">관리자명</option>
+									<option value="btbs_nm">소속B2B 고객명</option>
+								</select>
+								<input type="text" name="keyword" id="keyword" value="${dMap.keyword}"/>
+							</td>	
+							<td class="tcenter"><button type="button" class="button" name="btn_sch" id="btn_sch" >검색</button></td>
+						</tr>
+					</tbody>
+				</table>
+			    </form>	
+			    
+				<div>관리자 목록</div>
+				<table class="basictables basichover">
+						<colgroup>
+							<col style="width:30px;"/>
+							<col style="width:300px;" />
+							<col style="width:300px;" />
+							<col style="width:300px;"/>
+							<col/>
+							<col/>
+							<col/>
+						</colgroup>
+					<thead>
+
+						<tr>
+							<th>순번</th>
+							<th>관리자계정</th>
+							<th>이름</th>
+							<th>소속</th>
+							<th>직급</th>
+							<th>휴대폰</th>
+							<th>등록일</th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:if test="${rMap.adminList == null || rMap.adminList == '[]'}">
+						<tr>
+							<td colspan=7 style="text-align: center;">데이터가 없습니다.</td>
+						</tr>
+					</c:if>
+				
+					<c:forEach items="${rMap.adminList}" var="admin">
+						<tr>
+							<td class="tcenter">${admin.ROWNUM}</td>
+							<td class="tcenter">${admin.ADM_ID}</td>
+							<td><a href="javascript:goView(${admin.ADM_SQ});">${admin.ADM_NM}</a></td>
+							<td class="tcenter">${admin.ADM_PART}</td>
+							<td class="tcenter">${admin.ADM_POSITION}</td>
+							<td class="tcenter">${admin.ADM_HP}</td>
+							<td class="tcenter">${admin.REG_DTTM}</td>
+						</tr>
+					</c:forEach>
+					</tbody>
+				</table>
+				<div class="paging"  id="paging" onclick="clickPaging(event)">
+				</div>
+				<div class="button_area tright">
+					<!-- <a href="#" class="button" style="float:left;" onclick="chkval('listno', 'MenuDelete', '/inc/datainfo.php', '/html/menu_list.php');"><i class="axi axi-delete2"></i> Delete</a>  -->
+					<!-- <a href="#" class="button" style="float:left;" onclick="javascript:delList();"><i class="axi axi-delete2"></i> Delete</a>  -->
+					<!-- <a href="/html/menu_form.php" class="button" id="menuAddBtn"><i class="axi axi-menu"></i> Menu Add</a>  -->
+					<a href="/btb/btbAdminAdd" class="button" style="" >신규추가</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	 
+	 
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbAdminList.js"></script>
+<!-- jQuery 기본 js파일  --> 
+<!-- <script src="/resources/js/jquery-1.9.1.js"></script>    -->
+<!-- jQuery UI 라이브러리 js파일  --> 
+<!-- <script src="/resources/js/jquery-ui.js"></script>   -->

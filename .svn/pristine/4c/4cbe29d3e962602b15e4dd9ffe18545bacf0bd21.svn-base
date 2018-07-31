@@ -1,0 +1,171 @@
+package com.brb.btb.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+
+import com.brb.btb.dao.BtbDao;
+import com.brb.brbcom.common.collections.BrbMap;
+
+
+@Service("BtbService")
+public class BtbServiceImpl implements BtbService{
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(BtbServiceImpl.class);
+	
+	@Autowired
+	BtbDao btbDao;
+	
+	
+
+	@Override
+	public BrbMap<Object, Object> getBtbList(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("btbList", btbDao.getBtbList(fMap));
+		return resMap;
+	}
+	
+
+	@Override
+	public BrbMap<Object, Object> getBtbListCnt(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("btbListCnt", btbDao.getBtbListCnt(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getBtb(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("btb", btbDao.getBtb(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public int addBtb(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.addBtb(fMap);
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getBtbSq() throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.getBtbSq();
+	}	
+
+	@Override
+	public int modBtb(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.modBtb(fMap);
+	}
+	
+	@Override
+	public int delBtb(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.delBtb(fMap);
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getAdminList(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminList", btbDao.getAdminList(fMap));
+		return resMap;
+	}
+	
+
+	@Override
+	public BrbMap<Object, Object> getAdminListCnt(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminListCnt", btbDao.getAdminListCnt(fMap));
+		return resMap;
+	}	
+	
+	
+	@Override
+	public BrbMap<Object, Object> getAdminLogList(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminLogList", btbDao.getAdminLogList(fMap));
+		return resMap;
+	}
+
+	@Override
+	public BrbMap<Object, Object> getAdminLogListCnt(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("adminLogListCnt", btbDao.getAdminLogListCnt(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public BrbMap<Object, Object> getAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		
+		BrbMap<Object, Object> resMap = new BrbMap<>();
+		resMap.put("admin", btbDao.getAdmin(fMap));
+		return resMap;
+	}
+	
+	@Override
+	public int addAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.addAdmin(fMap);
+	}
+
+	@Override
+	public int modAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.modAdmin(fMap);
+	}
+	
+	@Override
+	public int delAdmin(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.delAdmin(fMap);
+	}	
+	
+	
+//	/**
+//	 * 
+//	 */
+//	@Override
+//	public BrbMap<Object, Object> getTestListAll(BrbMap<Object, Object> fMap) 
+//			throws DataAccessException {
+//		
+//		BrbMap<Object, Object> resMap = new BrbMap<>();
+//		resMap.put("test", sampleDao.getTestListAll(fMap));
+//		return resMap;
+//	}
+//	
+//	/**
+//	 * 
+//	 */
+//	@Override
+//	public BrbMap<Object, Object> getTestUser(BrbMap<Object, Object> fMap) 
+//			throws DataAccessException {
+//		
+//		BrbMap<Object, Object> resMap = new BrbMap<>();
+//		resMap.put("test", sampleDao.getTestUser(fMap));
+//		
+//		return resMap;
+//	}
+//	
+//	@Override
+//	public int addTestUser(BrbMap<Object, Object> fMap) 
+//			throws DataAccessException {
+//		return sampleDao.addTestUser(fMap);
+//	}
+//	
+//	@Override
+//	public int modTestUser(BrbMap<Object, Object> fMap) 
+//			throws DataAccessException {
+//		return sampleDao.modTestUser(fMap);
+//	}
+
+}

@@ -1,0 +1,69 @@
+
+
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+$(document).ready(function(){
+
+	console.log("smslist");
+
+	$("#monthfrom").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){ 
+			var dateArr = dateText.split("/"); 
+			year = dateArr[2]; 
+			month = dateArr[0];
+			day = dateArr[1]; 
+		}
+	});
+	
+	$("#monthto").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){ 
+			var dateArr = dateText.split("/"); 
+			year = dateArr[2]; 
+			month = dateArr[0];
+			day = dateArr[1]; 
+		}
+	});
+	
+	
+	  //저장버튼 클릭시 form 전송
+    $("#sarchBtn").click(function(){
+    	console.log($("#monthfrom").val());
+    	console.log($("#monthto").val());
+    	submitPaging(1,"smslistForm");
+    	showPaging($("#curPage").val(),$("#totalPage").val());
+    });    
+});
+
+
+
+/********************************************************************
+Name   :      getList                                            
+Desc   : 
+Param  :            
+********************************************************************/
+function getList(){
+	console.log("testList11");
+	$.ajax(
+			{async : true
+			,type : "POST"
+			,url : "/sample/testList"
+			,dataType : "json"
+			,data: {ID : '1'}
+			,success : function(jsonData) {
+				console.log("success" + jsonData.name);
+				console.log(jsonData);
+				$('#test').val(jsonData.name);
+				alert("test");
+			}
+			,error:	function(request,status,error){
+				console.log("error");
+				console.log(request);
+				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+	});
+}

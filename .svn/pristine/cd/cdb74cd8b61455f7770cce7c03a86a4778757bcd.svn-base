@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="board">	
+	
+	<select id="getNoticeList"  parameterType="brbMap" resultType="brbMap">
+		SELECT A.* FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_title'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'ntc_yn'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC
+		LIMIT #{begin_index}, #{page_cnt}        
+	</select>
+	
+	<select id="getNoticeListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'email'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'user_name'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC     
+	</select>
+	
+	<select id="getNotice"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_BD WHERE BD_SQ = #{bd_sq} 
+	</select>
+	
+	<insert id="addNotice" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,NTC_YN
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BTBS_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{ntc_yn}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'S', 
+	    	now(),
+	    	#{reg_adm_sq},
+	    	1
+	    )
+	</insert>
+	
+	<update id="modNotice" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET 
+	    	   BD_NM        =  #{bd_nm},
+	    	   BD_CONT      =  #{bd_cont},
+	    	   NTC_YN       =  #{ntc_yn},
+	    	   UPT_DTTM     =  now(),
+	    	   UPT_USER_SQ  =  #{upt_adm_sq}
+	    WHERE BD_SQ = #{bd_sq} 
+	</update>
+	
+	<update id="delNotice" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET STAT          = 'D',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_SQ         = #{bd_sq} 
+	</update>
+	
+	<select id="getQnaList"  parameterType="brbMap" resultType="brbMap">
+		SELECT A.* FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_title'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'ntc_yn'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC
+		LIMIT #{begin_index}, #{page_cnt}        
+	</select>
+	
+	<select id="getQnaListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'email'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'user_name'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC     
+	</select>
+	
+	<!-- 
+	<select id="getQna"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_BD A, TB_BD_DET B WHERE A.BD_SQ = B.BD_SQ AND A.BD_SQ = #{bd_sq} 
+	</select>
+	 -->
+	<select id="getQna"  parameterType="brbMap" resultType="brbMap">
+		SELECT A.*, B.* FROM TB_BD A, TB_BD_DET B WHERE A.BD_SQ = B.BD_SQ AND A.BD_SQ = #{bd_sq}      
+	</select>	
+	
+	<insert id="addQna" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,NTC_YN
+			,BD_IP
+			,BD_OS
+			,BD_STAT
+			,DEL_YN
+			,REG_DTTM
+			,REG_ADM_SQ
+			,BTBS_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{ntc_yn}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'S', 
+	    	'N',
+	    	now(),
+	    	#{reg_adm_sq},
+	    	1
+	    )
+	</insert>
+	
+	<update id="modQna" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET 
+			   BD_ANS_SQ = #{bd_ans_sq}
+	    WHERE  BD_SQ = #{bd_sq} 
+	</update>
+	
+	<update id="delQna" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET DEL_YN       = 'Y',
+	           DEL_DTTM     = now(),
+	           DEL_ADM_SQ   = #{del_adm_sq}
+	     WHERE BD_SQ        = #{bd_sq} 
+	</update>
+	
+	<select id="getFaqList"  parameterType="brbMap" resultType="brbMap">
+		SELECT A.* FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+        <if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'bd_title'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'ntc_yn'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC
+		LIMIT #{begin_index}, #{page_cnt}        
+	</select>
+	
+	<select id="getFaqListCnt"  parameterType="brbMap" resultType="brbMap">
+		SELECT COUNT(*) AS CNT FROM TB_BD A
+		WHERE 1=1  
+		<if test='start_dt != null and start_dt != "" and end_dt != null and end_dt != ""'>
+     	    AND A.REG_DTTM BETWEEN  CONCAT(#{start_dt},'000000') AND CONCAT(#{end_dt},'235959')   
+        </if> 
+       	<if test='keyword != null and keyword != ""'>
+			<choose>
+				<when test="category == 'email'">AND A.BD_NM LIKE CONCAT('%', #{keyword}, '%')</when>
+				<when test="category == 'user_name'">AND A.NTC_YN LIKE CONCAT('%', #{keyword}, '%')</when>
+				<otherwise></otherwise>
+			</choose>
+		</if>
+		ORDER BY A.REG_DTTM DESC     
+	</select>
+	
+	<select id="getFaq"  parameterType="brbMap" resultType="brbMap">
+		SELECT * FROM TB_BD WHERE BD_SQ = #{bd_sq} 
+	</select>
+	
+	<insert id="addFaq" parameterType="brbMap">
+	    INSERT INTO TB_BD (
+			 BD_SQ
+			,BD_TP_1
+			,BD_NM
+			,BD_CONT
+			,BD_USER_EMAIL
+			,BD_USER_NM
+			,BD_USER_HP
+			,READ_CNT
+			,NTC_YN
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BTBS_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_SQ'), 
+	    	#{bd_tp_1}, 
+	    	#{bd_nm}, 
+	    	#{bd_cont}, 
+	    	#{bd_user_email},  
+	    	#{bd_user_nm}, 
+	    	#{bd_user_hp},
+	    	0, 
+	    	#{ntc_yn}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'S', 
+	    	now(),
+	    	#{reg_adm_sq},
+	    	1
+	    )
+	</insert>
+	
+	<update id="modFaq" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET 
+	    	   BD_NM        =  #{bd_nm},
+	    	   BD_CONT      =  #{bd_cont},
+	    	   NTC_YN       =  #{ntc_yn},
+	    	   UPT_DTTM     =  now(),
+	    	   UPT_USER_SQ  =  #{upt_adm_sq}
+	    WHERE BD_SQ = #{bd_sq} 	    
+	</update>
+	
+	<update id="delFaq" parameterType="brbMap">
+	    UPDATE TB_BD
+	       SET STAT          = 'D',
+	           DEL_DTTM      = now(),
+	           DEL_USER_SQ   = #{del_user_sq}
+	     WHERE BD_SQ         = #{bd_sq} 	     
+	</update>
+	
+	<insert id="qnaReply" parameterType="brbMap">
+	    INSERT INTO TB_BD_DET (
+			 BD_DET_SQ
+			,BD_DET_USER_EMAIL
+			,BD_DET_CONT
+			,BD_DET_USER_HP
+			,BD_IP
+			,BD_OS
+			,STAT
+			,REG_DTTM
+			,REG_USER_SQ
+			,BD_SQ
+	    ) VALUES ( 
+	        NEXTVAL('TB_BD_DET_SQ'), 
+	        #{bd_user_email}, 
+	        #{bd_reply},  
+	    	#{bd_user_hp}, 
+	    	#{bd_ip},
+	    	#{bd_os},
+	    	'S',
+	    	now(), 
+	    	#{reg_adm_sq},
+	    	#{bd_sq}
+	    )
+		<selectKey keyProperty="bd_ans_sq" resultType="int" order="AFTER">
+		  SELECT MAX(BD_DET_SQ) FROM TB_BD_DET WHERE BD_SQ = #{bd_sq}
+		 <!--	SELECT LAST_INSERT_ID() FROM TB_BD_DET -->
+		</selectKey>
+		
+	</insert>	
+	
+</mapper>

@@ -1,0 +1,267 @@
+package com.brb.product.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+
+import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.product.model.MdVo;
+import com.brb.product.model.FwrVo;
+import com.brb.product.model.PprtVo;
+
+@Repository("ProductDao")
+public class ProductDao{
+
+	@Autowired
+	@Resource(name="sqlSessionTemplate")
+	private SqlSession queryM;
+
+	@Autowired
+	@Resource(name="sqlSessionTemplate_s")
+	private SqlSession queryS;
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(ProductDao.class);
+
+	/**
+	 * 모델 리스트
+	 * @param BrbMap<Object, Object>
+	 * @return List
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getModelList(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return queryS.selectList("product.getModelList", bMap);
+	}
+
+	/**
+	 * 모델 리스트 총 개수
+	 * @param BrbMap<Object, Object>
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getModelTotal(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return (Integer)queryS.selectOne("product.getModelTotal", bMap);
+	}
+
+	/**
+	 * 모델 리스트2(제품등록)
+	 * @param BrbMap<Object, Object>
+	 * @return List
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getModelList2(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return queryS.selectList("product.getModelList2", bMap);
+	}
+
+	/**
+	 * 모델 리스트 총 개수2(제품등록)
+	 * @param BrbMap<Object, Object>
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getModelTotal2(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return (Integer)queryS.selectOne("product.getModelTotal2", bMap);
+	}
+
+	/**
+	 * 모델상세
+	 * @param MdVo
+	 * @return BrbMap<Object, Object>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public BrbMap<Object, Object> getModelDet(MdVo mvo) throws DataAccessException {
+		return (BrbMap<Object, Object>)queryS.selectOne("product.getModelDet", mvo);
+	}
+
+	/**
+	 * 모델 등록
+	 * @param MdVo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void insertModel(MdVo mvo) throws DataAccessException {
+		queryM.insert("product.insertModel", mvo);
+	}
+
+	/**
+	 * 모델 수정
+	 * @param MdVo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void updateModel(MdVo mvo) throws DataAccessException {
+		queryM.update("product.updateModel", mvo);
+	}
+
+	/**
+	 * 모델명 리스트
+	 * @param
+	 * @return List<String>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getModel() throws DataAccessException {
+		return (List<String>)queryS.selectList("product.getModel");
+	}
+
+	/**
+	 * 제품 리스트
+	 * @param BrbMap<Object, Object>
+	 * @return List<BrbMap<Object, Object> bMap>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getProdList(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return queryS.selectList("product.getProdList", bMap);
+	}
+
+	/**
+	 * 제품 리스트 총 개수
+	 * @param BrbMap<Object, Object>
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getProdTotal(BrbMap<Object, Object> bMap) throws DataAccessException{
+		return (Integer)queryS.selectOne("product.getProdTotal", bMap);
+	}
+
+	/**
+	 * 제품 검색 조건
+	 * @param
+	 * @return List<BrbMap<Object, Object>>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getProdSearch() throws DataAccessException{
+		return queryS.selectList("product.getProdSearch");
+	}
+
+	/**
+	 * 제품 코드 리스트
+	 * @param
+	 * @return List<BrbMap<Object, Object>>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getCode() throws DataAccessException{
+		return queryS.selectList("product.getCode");
+	}
+
+	/**
+	 * 제품 상세
+	 * @param PprtVo
+	 * @return BrbMap<Object, Object>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public BrbMap<Object, Object> getProdDet(PprtVo pvo) throws DataAccessException{
+		return (BrbMap<Object, Object>)queryS.selectOne("product.getProdDet", pvo);
+	}
+
+	/**
+	 * 시리얼 검색
+	 * @param BrbMap<Object, Object>
+	 * @return BrbMap<Object, Object>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getMacList(BrbMap<Object, Object> bMap){
+		return queryS.selectList("product.getMacList", bMap);
+	}
+
+	/**
+	 * 시리얼 검색 총 개수
+	 * @param BrbMap<Object, Object>
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getMacTotal(BrbMap<Object, Object> bMap){
+		return (Integer)queryS.selectOne("product.getMacTotal", bMap);
+	}
+
+	/**
+	 * 제품 등록
+	 * @param
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void insertProduct(PprtVo pvo) throws DataAccessException{
+		queryM.insert("product.insertProduct", pvo);
+	}
+
+	public boolean validation(ArrayList<PprtVo> pvo) throws DataAccessException{
+		int count=0;
+		for(int i=0; i<pvo.size(); i++){
+			count += (Integer)queryS.selectOne("product.validation", pvo.get(i).getPprtMac());
+		}
+		if(count == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	/**
+	 * 제품 수정
+	 * @param
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void updateProduct(MdVo mvo) throws DataAccessException{
+		queryM.insert("product.updateProduct", mvo);
+	}
+
+	/**
+	 * 펌웨어 리스트
+	 * @param BrbMap<Object, Object> bMap
+	 * @return List<BrbMap<Object, Object>>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getFwrList(BrbMap<Object, Object> bMap) throws DataAccessException {
+		return queryS.selectList("product.getFwrList", bMap);
+	}
+
+	/**
+	 * 펌웨어 리스트 총 개수
+	 * @param BrbMap<Object, Object> bMap
+	 * @return Integer
+	 * @throws DataAccessException
+	 */
+	public Integer getFwrTotal(BrbMap<Object, Object> bMap) throws DataAccessException{
+		return (Integer)queryS.selectOne("product.getFwrTotal", bMap);
+	}
+
+	/**
+	 * 펌웨어 상세
+	 * @param FwrVo
+	 * @return BrbMap<Object, Object>
+	 * @throws DataAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public BrbMap<Object, Object> getFwrDet(FwrVo fvo) throws DataAccessException{
+		return (BrbMap<Object, Object>)queryS.selectOne("product.getFwrDet", fvo);
+	}
+
+	public void insertFwr(FwrVo fvo) throws DataAccessException{
+		queryM.insert("product.insertFwr", fvo);
+	}
+
+	public void insertExcel(List<MdVo> list)
+			throws DataAccessException{
+		for(int i=0; i<list.size(); i++){
+			queryM.insert("product.insertExcel", list.get(i));
+		}
+	}
+}

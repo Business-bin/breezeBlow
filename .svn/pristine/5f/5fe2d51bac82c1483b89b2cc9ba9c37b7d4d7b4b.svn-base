@@ -1,0 +1,25 @@
+/* 레이어팝업 */
+#dim-layer{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	opacity: 0.3;
+}
+#layerPopup{
+	position: absolute;
+	left: 35%;
+	top: 30%;
+	width: 440px;
+	height: 200px;
+	background-color: white;
+	border:1px solid #757a88;
+	padding: 5px;
+}
+
+.asView{display: inline;font-weight: bold;}
+.asView1{display: inline;font-weight: bold;float: right;}
+
+.btn{margin-left: 10px;}

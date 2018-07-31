@@ -1,0 +1,74 @@
+package com.brb.brbcom.common.util;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class Util {
+
+	/**
+	 * localip 가져오기
+	 * @return
+	 */
+	public static String getLocalServerIp(){
+		try{
+		    for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();){
+		        NetworkInterface intf = en.nextElement();
+		        for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();){
+		            InetAddress inetAddress = enumIpAddr.nextElement();
+		            if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()){
+		            	return inetAddress.getHostAddress().toString();
+		            }
+		        }
+		    }
+		}
+		catch (SocketException ex) {}
+		return "";
+	}
+	
+
+	/**
+	 * 브라우저체크
+	 * @param request
+	 * @return
+	 */
+	public static String getBrowser(HttpServletRequest request) {
+		String checkBrow = "";
+        String header = request.getHeader("User-Agent").toLowerCase();
+        if(header.indexOf("edge") != -1){
+        	return checkBrow = "edge"; 
+        }
+        if (header.indexOf("chrome") != -1){ 
+        	return checkBrow =   "Chrome";
+        }
+        if (header.indexOf("opera") != -1) {
+        	return checkBrow =   "Opera"; 
+        }
+        if (header.indexOf("firefox") != -1){ 
+        	return checkBrow =   "Firefox";
+        }
+        if (header.indexOf("safari") != -1){ 
+        	return checkBrow =   "Safari";
+        }
+        if(header.indexOf("rv:11") != -1){
+        	return checkBrow = "IE11"; 
+        }
+        if(header.indexOf("msie 10") != -1){
+        	return checkBrow = "IE10"; 
+        }
+        if(header.indexOf("msie 9") != -1){
+        	return checkBrow = "IE9"; 
+        }
+        if(header.indexOf("msie 8") != -1){
+        	return checkBrow = "IE8"; 
+        }
+        if(header.indexOf("msie 7") != -1){
+        	return checkBrow = "IE7"; 
+        }
+        return checkBrow;
+    }
+	
+}

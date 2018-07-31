@@ -1,0 +1,322 @@
+/********************************************************************
+Name   : ready
+Desc   :
+Param  :
+********************************************************************/
+$(document).ready(function(){
+
+	console.log("smslist");
+	var now = new Date(); 
+	$("#monthfrom").val($.datepicker.formatDate($.datepicker.ATOM, new Date(now.getFullYear(), now.getMonth(),1)));
+	$("#monthto").val($.datepicker.formatDate($.datepicker.ATOM, new Date()));
+	$("#monthfrom").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+<<<<<<< .mine
+
+||||||| .r77
+=======
+>>>>>>> .r122
+	$("#monthto").datepicker({
+		 changeMonth: true,
+		onSelect: function(dateText , inst){
+			var dateArr = dateText.split("/");
+			year = dateArr[2];
+			month = dateArr[0];
+			day = dateArr[1];
+		}
+	});
+
+	//초기화 그리드
+	grid.fn_initLoadGrid();
+<<<<<<< .mine
+
+
+||||||| .r77
+=======
+	
+	//주소 시 리스트
+	addrList('sido','SI');
+	
+	//b2b사이트 리스트
+	getBtb();
+	
+>>>>>>> .r122
+	//sms목록 조회
+    $("#sarchBtn").click(function(){
+    	grid.fn_SearchGrid();
+    });
+
+    $(".tabmenu>li").eq(4).addClass("on");
+    
+    //신규 생성
+    $("#newBtn").click(function(){
+    	location.href = "/sms/smsNew";
+    });   
+});
+
+/********************************************************************
+Name   : 조회 체크                                                  
+Desc   : 
+Param  :            
+********************************************************************/
+function validation(){
+	
+}
+
+/********************************************************************
+Name   : 지역선택                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function addrList(id,groupid){
+	
+	$.ajax({async : true
+		, url: '/sms/addrList'
+		, dataType: 'JSON'
+		, type: 'POST'
+		, data: { 
+			R_GROUPID 		: groupid,
+		}
+		, success: function(data) {
+			console.log(data.ADDR.length);
+//			if(null != data.ADDR && data.ADDR.length > 0){
+//				itemChange(data.ADDR,id)
+//			}
+			itemChange(data.ADDR,id)
+		}
+		,complete : function(data) {
+		}
+		, error: function(xhr, ajaxOptions, thrownError) {
+	
+		}
+	});
+	
+}
+
+/********************************************************************
+Name   : selectbox change                                                
+Desc   : 
+Param  :            
+********************************************************************/
+function itemChange(changItem ,id ){
+
+	var id = "#"+id;
+	$(id).empty();
+	if(id == "#gugun"){
+		$("#dong").empty();
+		var option = $("<option value='000'>전체</option>");
+		$("#dong").append(option);
+	}
+	var option = $("<option value='000'>전체</option>");
+	$(id).append(option);
+	for(var i = 0; i < changItem.length; i++){
+		var codedata  = changItem[i].CODE;
+		var codename  = changItem[i].CODENAME;
+        option = $("<option value="+ codedata +">"+codename+"</option>");
+        $(id).append(option);
+    }
+}
+
+
+/********************************************************************
+Name   : b2b조회                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function getBtb(){
+	
+	$.ajax({async : true
+		, url: '/sms/getBtbSite'
+		, dataType: 'JSON'
+		, type: 'POST'
+		, data: {}
+		, success: function(data) {
+			console.log(data.B2B.length);
+			var btblist = data.B2B
+			if(null != btblist && btblist.length > 0){
+				$("#btbsnm").empty();
+				var option = $("<option value='000'>전체</option>");
+				$("#btbsnm").append(option);
+				for(var i = 0; i < btblist.length; i++){
+					var codedata  = btblist[i].BTBS_SQ;
+					var codename  = btblist[i].BTBS_SITE_NM;
+			        option = $("<option value="+ codedata +">"+codename+"</option>");
+			        $("#btbsnm").append(option);
+			    }
+			}
+		}
+		,complete : function(data) {
+		}
+		, error: function(xhr, ajaxOptions, thrownError) {
+	
+		}
+	});
+	
+}
+
+
+/********************************************************************
+Name   : 그리드                                                  
+Desc   : 
+Param  :            
+********************************************************************/
+var grid = {
+	fn_initLoadGrid:function(){
+		$( "#sms_list" ).jqGrid( 'GridUnload' );
+		$("#sms_list").jqGrid({
+			caption:"sms리스트"
+			,datatype 	    : 'clientside'
+			,height:500
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["SMS_SQ","타입", "제목","내용","지역","회원","기기","상품","발송건수","발송일시"]
+			,colModel:[
+		          {name:"SMS_SQ", 	index:"SMS_SQ" , 		sortable:true,	width:0,		align:'center' ,hidden:true},
+		          {name:"SMS_TP", 	index:"SMS_TP", 	sortable:true,	width:10,		align:'center'},
+		          {name:"SMS_SUBJECT", 	index:"SMS_SUBJECT", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_CONT", 	index:"SMS_CONT", 	sortable:false,	width:100,		align:'center'},
+		          {name:"AREA", 	index:"AREA", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_TO_BTB", 	index:"SMS_TO_BTB", 	sortable:true,	width:30,		align:'center'},
+		          {name:"MOBILE_TYPE", 	index:"MOBILE_TYPE", 	sortable:true,	width:30,		align:'center'},
+		          {name:"PROD", 	index:"PROD", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_CNT", 	index:"SMS_CNT", 	sortable:true,	width:30,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:true,	width:30,		align:'center'},
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false
+				, id:"SMS_SQ"
+				, root: "rows"
+				, page : "page"
+				, total : "total"
+				,records : "records" }
+
+			,gridComplete : function(data,status) {
+			}
+			, recordpos:'right'
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		     }
+
+		}).trigger('reloadGrid');
+
+        $("#sms_list").jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+              groupHeaders:[
+                {startColumnName: 'AREA', numberOfColumns: 4, titleText: "발송대상" }
+              ]
+        });
+	}
+	,fn_SearchGrid:function(){
+
+		$( "#sms_list" ).jqGrid( 'GridUnload' );
+		$("#sms_list").jqGrid({
+			url:"/sms/smsListSearch"
+			,caption:"sms리스트"
+			,datatype 	    : 'json'
+		    ,mtype         : 'POST'
+	    	, postData	  : {
+	    		R_FROMDT : $('#monthfrom').val().replace(/-/g,''),
+	    		R_TODT : $('#monthto').val().replace(/-/g,''),
+	    		R_ADDR_1 : $("#sido option:selected").text() == '전체' ? '' : $("#sido option:selected").text(),
+	    		R_ADDR_2 : $("#gugun option:selected").text() == '전체' ? '' :  $("#gugun option:selected").text(),
+	    		R_ADDR_3 : $("#dong option:selected").text() == '전체' ? '' : $("#dong option:selected").text(),
+	    		R_BTB_SQ : $('#btbsnm').val() == '000' ? '' : $('#btbsnm').val(),
+	    		R_MOBILE_TYPE : $('#mtype').val() == '000' ? '' : $('#mtype').val() ,
+	    		R_PROD : $('#prod').val() == '000' ? '' : $('#prod').val(),
+	    		R_SEARCH_TYPE : $('#searchType').val(),
+	    		R_KEYWORD: $('#searStr').val()
+	        }
+			,height:500
+			,width:500
+			,rowNum:10
+			,rowList:[10,20,30]
+			,rownumbers : true
+			,viewrecords: true
+			,colNames:["SMS_SQ","타입", "제목","내용","지역","회원","기기","상품","발송건수","발송일시"]
+			,colModel:[
+		          {name:"SMS_SQ", 	index:"SMS_SQ" , 		sortable:true,	width:0,		align:'center' ,hidden:true},
+		          {name:"SMS_TP", 	index:"SMS_TP", 	sortable:true,	width:10,		align:'center'},
+		          {name:"SMS_SUBJECT", 	index:"SMS_SUBJECT", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_CONT", 	index:"SMS_CONT", 	sortable:false,	width:100,		align:'center'},
+		          {name:"AREA", 	index:"AREA", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_TO_BTB", 	index:"SMS_TO_BTB", 	sortable:true,	width:30,		align:'center'},
+		          {name:"MOBILE_TYPE", 	index:"MOBILE_TYPE", 	sortable:true,	width:30,		align:'center'},
+		          {name:"PROD", 	index:"PROD", 	sortable:true,	width:30,		align:'center'},
+		          {name:"SMS_CNT", 	index:"SMS_CNT", 	sortable:true,	width:30,		align:'center'},
+		          {name:"REG_DTTM", 	index:"REG_DTTM", 	sortable:true,	width:30,		align:'center'},
+		          ]
+			,pager:"#pager"
+	        ,sortname     : 'SMS_SQ'     //초기화 될때 sort할 컬럼을 지정
+	        ,sortorder    : 'asc'       //초기화정렬방법
+			,jsonReader:{ repeatitems:false
+				, id:"SMS_SQ"
+				, root: "rows"
+				, page : "page"
+				, total : "total"
+				,records : "records" }
+
+			,gridComplete : function(data,status) {
+
+			}
+			, recordpos:'right'
+			,gridview: true
+			,emptyrecords :" 등록된 데이터가 없습니다."
+	    	,loadError:function(xhr, status, error) {
+	    	
+	    	  console.log(status);
+	    	  console.log(xhr);
+	    	  console.log(error);
+	    	}
+	    	,onSelectRow   : function(rowid, status, e) {
+		    	var ret = jQuery("#sms_list").jqGrid('getRowData',rowid);
+		    	pouup(ret.SMS_SQ);
+		     }
+		}).trigger('reloadGrid');
+
+		$("#sms_list").jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+              groupHeaders:[
+            	 {startColumnName: 'AREA', numberOfColumns: 4, titleText: "발송대상" }
+              ]
+        });
+		$("#sms_list").jqGrid(
+				"navGrid",
+				"#pager",
+				{search:false, edit:false, add:false, del:false},
+				{closeAfterEdit:false, reloadAfterSubmit:false},
+				{closeAfterAdd:false, reloadAfterSubmit:false},
+				{reloadAfterSubmit:false}
+		);
+	}
+}
+
+
+
+/********************************************************************
+Name   : sms상세                                                 
+Desc   : 
+Param  :            
+********************************************************************/
+function pouup(id){
+	var popupX = (window.screen.width / 2) - (800 / 2);
+	var popupY= (window.screen.height /2) - (800 / 2);
+	window.open('', 'smsDetPop', 'status=no, height=800, width=800, left='+ popupX + ', top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);
+	$('#R_SMS_SQ').val(id);
+	$("#poupform").submit();
+}
+

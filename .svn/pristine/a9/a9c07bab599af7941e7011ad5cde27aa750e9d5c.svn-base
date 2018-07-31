@@ -1,0 +1,126 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- css 변환 -->
+<link rel="stylesheet" href="/resources/css/admin/adminList.css">	
+<div id="o-wrapper">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/leftMenu.jsp" %>
+<!-- 소스 작성 start-->
+<section>
+	<div class="container">
+		<div class="container_body">
+			<ul class="tabmenu web">
+				<li><a href="#"><b>B2B 사이트</b></a></li>
+				<li><a href="/btb/btbAdminList">B2B 관리자</a></li>
+			</ul>
+			<br>
+               <form name="selectedShForm" id="selectedShForm" method="post" action="/btb/btbListProc"> 
+               <%--
+               <input type="hidden" name="sch_flag" id="sch_flag" value="${dMap.sch_flag}"/>
+               <input type="hidden" name="page_cnt" id="page_cnt" value="10"/>
+               <input type="hidden" name="curPage" id="curPage" value="${dMap.curPage}"/>
+               <input type="hidden" name="totalPage" id="totalPage" value="${dMap.totalPage}"/>
+               <input type="hidden" name="category1" id="category1" value="${dMap.category}"/>
+                --%>
+               <input type="hidden" name="btbs_sq" id="btbs_sq" value=""/>
+               
+               
+			<table class="basictables basichover">
+				<tbody>
+					<tr>
+						<th><span class="tcenter">등록일</span></th>
+						<td>
+							<input type="text" name="start_dt" id="start_dt" value=""> ~
+							<input type="text" name="end_dt" id="end_dt" value="">
+						</td>
+						<th><span class="tcenter">검색종류</span></th>
+						<td>
+							<select name="category" style="width:100px">
+								<option value="comp_nm">회사명</option>
+								<option value="btbs_nm">사이트명</option>
+							</select>
+							<input type="text" name="keyword" id="keyword" value=""/>
+						</td>	
+						<td class="tcenter"><button type="button" class="button" name="btn_sch" id="btn_sch" >검색</button></td>
+					</tr>
+				</tbody>
+			</table>
+		    </form>	
+<%--		    
+			<table>
+				<tr>
+					<td>B2B 목록 </td>
+					<td align="right">Total: <c:if test="${dMap.total_cnt == null}">0 </c:if> ${dMap.total_cnt}</td>
+				</tr>
+			</table>			
+			<table class="basictables basichover">
+					<colgroup>
+						<col style="width:30px;"/>
+						<col style="width:300px;" />
+						<col style="width:300px;" />
+						<col style="width:300px;"/>
+						<col/>
+						<col/>
+					</colgroup>
+				<thead>
+
+					<tr>
+						<th>번호</th>
+						<th>사이트명</th>
+						<th>회사명</th>
+						<th>도메인정보</th>
+						<th>현재상태</th>
+						<th>등록일</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:if test="${rMap.btbList == null || rMap.btbList == '[]'}">
+					<tr>
+						<td colspan=7 style="text-align: center;">데이터가 없습니다.</td>
+					</tr>
+				</c:if>
+			
+				<c:forEach items="${rMap.btbList}" var="btb">
+					<tr>
+						<td class="tcenter">${btb.ROWNUM}</td>
+						<td class="tcenter">${btb.BTBS_NM}</td>
+						<td class="tcenter"><a href="javascript:goView(${btb.BTBS_SQ});">${btb.BTBS_COMP_NM}</a></td>
+						<td class="tcenter">${btb.BTBS_DOMAIN}</td>
+						<td class="tcenter">${btb.CODENAME}</td>
+						<td class="tcenter">${btb.REG_DTTM}</td>
+					</tr>
+				</c:forEach>
+				</tbody>
+			</table>
+			<div class="paging"  id="paging" onclick="clickPaging(event, 'selectedShForm')">
+			</div>
+ --%>			
+			
+			<table>
+				<tr>
+					<td>B2B사이트 목록</td>
+					<td align="right">Total: <span id="totalCnt">0</span></td>
+				</tr>
+			</table>			 
+			<table id="btb_list"></table>
+			<div id="pager"></div>
+			<table id="grid"></table>
+			<div id="pager"></div>
+			
+			
+			<div class="button_area tright">
+				<a href="/btb/btbAdd" class="button" style="" >신규추가</a>
+			</div>
+		</div>
+	</div>
+</section>
+	 
+	 
+<!-- 소스 작성 end-->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+</div>
+<!-- js 작성 -->
+<script src="/resources/js/btb/btbList.js"></script>
+<!-- jQuery 기본 js파일  --> 
+<!-- <script src="/resources/js/jquery-1.9.1.js"></script>    -->
+<!-- jQuery UI 라이브러리 js파일  --> 
+<!-- <script src="/resources/js/jquery-ui.js"></script>   -->

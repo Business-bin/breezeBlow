@@ -1,0 +1,59 @@
+/********************************************************************
+Name   : ready                                                 
+Desc   : 
+Param  :            
+********************************************************************/	
+$(document).ready(function(){
+	
+	console.log("btbDel");
+	
+	$('#btn_del').click(function(){
+		console.log("btn_del");
+		delBtb();
+	});
+
+});
+
+
+/********************************************************************
+Name   : addAdmin                                            
+Desc   : 관리자 신규 생성
+Param  :            
+********************************************************************/
+function delBtb(){
+
+	if($('#btbs_comment').val()==''){
+		alert('삭제사유를 입력하세요.');
+		$('#btbs_comment').focus();
+	}else if(confirm("삭제 하시겠습니까?") == true){
+		
+		$.ajax({
+			url : '/btb/btbDelProc',
+			method : 'POST',
+			dataType: 'JSON',
+			data : {
+			    btbs_sq      : $('#btbs_sq').val(),
+			// 	user_id     : $('#user_id').val(),
+			 	btbs_comment : $('#btbs_comment').val()
+			},
+			success : function(jsonData) {
+				console.log("success");
+				alert("삭제 되었습니다.");
+				self.close();
+				opener.location.href = "/btb/btbList";
+			//	window.location.replace("/admin/adminList");
+			},
+			error : function(e) {
+				console.error('ajax 에러: ' + e.status);
+			}
+		});
+		
+	}else{
+		return;
+	}
+	
+}
+
+
+
+
