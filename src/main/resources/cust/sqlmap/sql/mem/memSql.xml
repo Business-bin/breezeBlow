@@ -165,14 +165,9 @@
 
   <update id="modProduct" parameterType="brbMap">
       UPDATE TB_PPRT SET
-      <choose>
-      	<when test="addr1.length == 5 or addr1.length == 7">
-      		ADDR_1 = LEFT(#{addr1},2),
-      	</when>
-      	<otherwise>
+     
       		ADDR_1 = #{addr1},
-      	</otherwise>
-      </choose>
+
           ADDR_2 = #{addr2},
           ADDR_3 = #{addr3},
           ADDR_4 = #{addr4},
@@ -204,14 +199,10 @@
 
 	<update id="regProduct" parameterType="brbMap">
       UPDATE TB_PPRT SET
-          <choose>
-	     	<when test="addr1.length == 5 or addr1.length == 7">
-	     		ADDR_1 = LEFT(#{addr1},2),
-	     	</when>
-	     	<otherwise>
-	     		ADDR_1 = #{addr1},
-	     	</otherwise>
-	     </choose>
+      
+         
+	     ADDR_1 = #{addr1},
+	
           ADDR_2 = #{addr2},
           ADDR_3 = #{addr3},
           ADDR_4 = #{addr4},

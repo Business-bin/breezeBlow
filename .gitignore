@@ -8,3 +8,4 @@ target/
 .svn/
 .settings
 *context-datasource.xml
+/bin/
