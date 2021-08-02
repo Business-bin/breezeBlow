@@ -116,7 +116,7 @@
 				#{tutSq}
 			</if>
 			<if test=" polySq == null or polySq == '' ">
-				(SELECT SEQUENCE_CUR_VALUE FROM SEQUENCE WHERE SEQUENCE_NAME='POLY_SQ')-1
+				(SELECT SEQUENCE_CUR_VALUE-1 FROM SEQUENCE WHERE SEQUENCE_NAME='POLY_SQ')
 			</if>
 	      )
   	</insert>

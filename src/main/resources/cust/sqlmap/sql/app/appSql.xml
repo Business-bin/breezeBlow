@@ -236,7 +236,11 @@
 				#{tutSq}
 			</if>
 			<if test=" tutSq == null or tutSq == '' ">
-				(SELECT SEQUENCE_CUR_VALUE FROM SEQUENCE WHERE SEQUENCE_NAME='TUT_SQ')-1
+				(SELECT 
+					AUTO_INCREMENT - 1
+				FROM information_schema.tables
+				WHERE table_schema = DATABASE()
+				  AND table_name = 'TB_TUT')
 			</if>
 	      )
   	</insert>
