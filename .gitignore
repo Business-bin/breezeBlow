@@ -1,0 +1,10 @@
+*.jar
+*.war
+*.class
+.classpath
+.project
+*MANIFEST.MF
+target/
+.svn/
+.settings
+*context-datasource.xml
