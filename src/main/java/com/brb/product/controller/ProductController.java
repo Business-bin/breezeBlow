@@ -192,7 +192,8 @@ public class ProductController {
 	    	byte[] bytes = mvo.getModelFile().getBytes();
 	    	String saveFileName = getExtension(fileName, today);
 	    	mvo.setCpImgNm("/upload/product/"+saveFileName);
-	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
+	    	System.out.println("111111111111111 savePath = "+savePath);
 	    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
     		bos.write(bytes);
     		bos.flush();
@@ -224,7 +225,7 @@ public class ProductController {
 		try{
 			if(!mvo.getModelFile().getOriginalFilename().equals("")){
 				if(mvo.getDelImageNm() != null && mvo.getDelImageNm() != ""){
-					File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + mvo.getDelImageNm());
+					File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + mvo.getDelImageNm());
 					if(file.exists()){
 						if(file.delete()){
 							logger.debug(mvo.getDelImageNm()+"File Delete Success!!");
@@ -243,7 +244,7 @@ public class ProductController {
 		    	byte[] bytes = mvo.getModelFile().getBytes();
 		    	String saveFileName = getExtension(fileName, today);
 		    	mvo.setCpImgNm("/upload/product/"+saveFileName);
-		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
 		    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
 	    		bos.write(bytes);
 	    		bos.flush();
@@ -647,7 +648,7 @@ public class ProductController {
 	    	String fileName = fvo.getFwrFile().getOriginalFilename();
 	    	byte[] bytes = fvo.getFwrFile().getBytes();
 	    	String saveFileName = getExtension(fileName, today);
-	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
 	    	fvo.setFwrFileCont(bytes);
 	    	fvo.setFwrFileNm("/upload/product/" + saveFileName);
 	    	fvo.setFwrFileNm1(fileName);
@@ -678,7 +679,7 @@ public class ProductController {
 		ModelAndView view = new ModelAndView();
 		if(fvo.getFwrFile() != null){
 			if(fvo.getDelFwrFile() != null && fvo.getDelFwrFile() != ""){
-				File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + fvo.getDelFwrFile());
+				File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + fvo.getDelFwrFile());
 				if(file.exists()){
 					if(file.delete()){
 						logger.debug("File Delete Success!!");
@@ -700,7 +701,7 @@ public class ProductController {
 		    	String fileName = fvo.getFwrFile().getOriginalFilename();
 		    	byte[] bytes = fvo.getFwrFile().getBytes();
 		    	String saveFileName = getExtension(fileName, today);
-		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
 		    	fvo.setFwrFileNm("/upload/product/" + saveFileName);
 		    	fvo.setFwrFileNm1(fileName);
 		    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
@@ -862,7 +863,7 @@ public class ProductController {
 		    	String fileName = mpf.get(i).getOriginalFilename();
 		    	byte[] bytes = mpf.get(i).getBytes();
 		    	String saveFileName = getExtension(fileName, today);
-		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "product/" + saveFileName;
+		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
 	    		bos = new BufferedOutputStream(new FileOutputStream(savePath));
 	    		bos.write(bytes);
 	    		bos.flush();

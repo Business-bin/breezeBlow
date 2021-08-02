@@ -172,7 +172,7 @@ public class EtcController {
 					fileName = file.getOriginalFilename();
 					byte[] bytes = file.getBytes();
 					String saveFileName = genId + "." + getExtension(fileName);
-					savePath =  "pop/"+saveFileName;
+					savePath =  "/pop/"+saveFileName;
 
 		        	BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(uploadpath +savePath));
 					bos.write(bytes);
@@ -247,7 +247,7 @@ public class EtcController {
 
 					byte[] bytes = file.getBytes();
 					String saveFileName = genId + "." + getExtension(fileName);
-					savePath =  "pop/"+saveFileName;
+					savePath =  "/pop/"+saveFileName;
 
 		        	BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(uploadpath +savePath));
 					bos.write(bytes);
