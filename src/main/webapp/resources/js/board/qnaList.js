@@ -107,7 +107,12 @@ var grid = {
 				alert('등록일을 입력하세요.');
 				$('#end_dt').focus();
 			}else{
-
+				var sDate = $('#start_dt').val();
+				var eDate = $('#end_dt').val();
+				if($("#nCal").prop("checked") == true){
+					sDate = "";
+					eDate = "";
+				}
 				$("#qna_list").jqGrid( 'GridUnload' );
 				$("#qna_list").jqGrid({
 					url:"/board/qnaListProc"
@@ -115,8 +120,8 @@ var grid = {
 					,datatype 	   : 'json'
 				    ,mtype         : 'POST'
 			    	, postData	   : {
-			        	start_dt   : $('#start_dt').val(),
-			        	end_dt     : $('#end_dt').val(),
+			        	start_dt   : sDate,
+			        	end_dt     : eDate,
 			        	category   : $('#category').val(),
 			        	keyword    : $('#keyword').val(),
 			        	bd_tp_2    : $('#bd_tp_2').val(),

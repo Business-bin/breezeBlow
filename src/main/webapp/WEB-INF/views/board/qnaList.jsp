@@ -40,6 +40,7 @@
 							<td colspan="6">
 								<input type="text" name="start_dt" id="start_dt" value="${pMap.start_dt}" readonly="readonly"> ~
 								<input type="text" name="end_dt" id="end_dt" value="${pMap.end_dt}" readonly="readonly">
+								날짜제외 <input type="checkbox" id="nCal" />
 							</td>
 						</tr>
 						<tr>
