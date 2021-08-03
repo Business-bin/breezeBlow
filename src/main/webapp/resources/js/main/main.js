@@ -314,6 +314,11 @@ Desc   :
 Param  :
 ********************************************************************/
 function setHiChart2(data){
+	console.log("---111---");
+	if(data.appList[0] == null){
+		$("#containers2").empty();
+		return;
+	}
 	var categoriesdata = [];
 	var seriesdata = [];
 	Highcharts.chart('containers2', {
