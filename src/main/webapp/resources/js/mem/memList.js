@@ -43,6 +43,26 @@ $(function() {
 			day = dateArr[1];
 		}
 	});
+	
+	$("#siteNm").click(function() {
+		$("#dim-layer").show();
+		$("#layerPopup2").show();
+		$("#layerPopup2").draggable();
+		$("#btbsNm").val($("#siteNm").val());
+		grid2.fn_SearchGrid2();
+	});
+	
+	$("#btnClear").click(function() {
+		$("#siteNm").val("");
+		$("#btbsSq").val("");
+	});
+	
+	
+	$("#btnClear").click(function() {
+		$("#siteNm").val("");
+		$("#btbsSq").val("");
+	});
+	
 
 	/* 검색 끝일 */
 	$("#endDate").datepicker({

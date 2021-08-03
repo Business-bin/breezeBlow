@@ -32,8 +32,9 @@
 					<tr>
 						<th class="mw80">B2B사이트명</th>
 						<td>
-							<input type="text" id="siteNm" class="" name="siteNm" value="${pMap.siteNm}"/>
+							<input type="text" id="siteNm" class="" name="siteNm" value="${pMap.siteNm}" readonly="readonly"/>
 							<input type="hidden" id="btbsSq" class="" name="btbsSq" value="${pMap.btbsSq}"/>
+							<input type="button" id="btnClear" class="" name="btnClear" value="사이트명초기화"/>
 							<div class="sbtn" id="btbSearch"><i class="axi axi-search3"></i></div>
 						</td>
 						<th class="mw60">거주지역</th>

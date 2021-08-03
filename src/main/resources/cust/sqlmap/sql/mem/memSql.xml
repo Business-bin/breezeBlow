@@ -339,8 +339,9 @@
 			B.CODENAME
 		FROM TB_MEM A RIGHT OUTER JOIN TB_CODE B
 			ON A.ADDR_1 = B.CODENAME
-			WHERE
-			B.GROUPID = 'SI'
+			WHERE 1=1 
+			and B.GROUPID = 'SI'
+			and a.addr_1 is not null
 			<if test=" btbsSq != null and btbsSq != '' ">
 				AND A.BTBS_SQ = #{btbsSq}
 			</if>

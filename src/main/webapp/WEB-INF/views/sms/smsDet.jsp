@@ -80,7 +80,7 @@
 						</td>
 					</tr>
 				</table>
-			<form action="/push/pushList" method="post" id="backForm">
+			<form action="/sms/smsList" method="post" id="backForm">
 				<input type="hidden" name="sido" value="${dMap.sido}"/>
 				<input type="hidden" name="gugun" value="${dMap.gugun}"/>
 				<input type="hidden" name="dong" value="${dMap.dong}"/>

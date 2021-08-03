@@ -191,6 +191,7 @@ function ajaxForm(formId, url, msg){
 		data : form,
 		success : function(result){
 			alert(msg);
+			location.href="/product/fwrList";
 		},
 		error : function(e){
 			alert("error : "+e);

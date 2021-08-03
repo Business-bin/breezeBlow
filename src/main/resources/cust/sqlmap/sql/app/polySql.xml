@@ -97,27 +97,25 @@
 	<insert id="insertPolyLog" parameterType="com.brb.app.model.PolyVo">
 	      INSERT INTO TB_POLY_LOG
 	      (
-			LOG_POLY_SQ, BTBS_SQ, BTBS_NM,
-			POLY_NM, POLY_CONT, VRS, DTTM, POLY_SQ
+			LOG_POLY_SQ
+			, BTBS_SQ
+			, BTBS_NM
+			, POLY_NM
+			, POLY_CONT
+			, VRS
+			, DTTM
+			, POLY_SQ
 	      )
 	      VALUES
 	      (
-	      	NEXTVAL('LOG_POLY_SQ'),
-	      	<if test=" uptAdmSq != null and uptAdmSq != '' ">
-	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
-	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{uptAdmSq}),
-			</if>
-			<if test=" regAdmSq != null and regAdmSq != '' ">
-	      		(SELECT BTBS_SQ FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
-	      		(SELECT BTBS_NM FROM TB_BTB_ADM WHERE ADM_SQ = #{regAdmSq}),
-			</if>
-			#{polyNm}, #{polyCont}, {vrs}, now(),
-			<if test=" polySq != null and polySq != '' ">
-				#{tutSq}
-			</if>
-			<if test=" polySq == null or polySq == '' ">
-				(SELECT SEQUENCE_CUR_VALUE-1 FROM SEQUENCE WHERE SEQUENCE_NAME='POLY_SQ')
-			</if>
+	      	NEXTVAL('LOG_POLY_SQ')
+	      	,#{uptAdmSq}
+	      	,#{regAdmSq}
+			,#{polyNm}
+			, #{polyCont}
+			, #{vrs}
+			, now()
+			, #{polySq}
 	      )
   	</insert>
 </mapper>
