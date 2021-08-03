@@ -57,7 +57,7 @@
 						</tr>
 						<tr>
 							<th>버전</th>
-							<td><input type="text" id="appVrs" name="appVrs" value="${appDet.APP_VRS}"/></td>
+							<td><input type="text" id="appVrs" name="appVrs" maxlength="4" value="${appDet.APP_VRS}"/></td>
 							<th>등록 OS</th>
 							<td>
 								<select id="appOs" name="appOs">

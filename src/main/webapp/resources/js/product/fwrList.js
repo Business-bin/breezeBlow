@@ -8,8 +8,6 @@ $(document).ready(function() {
 		$(".tabmenu li").eq(0).hide();
 		$(".tabmenu li").eq(3).hide();
 	}
-	grid.fn_initLoadGrid();
-	grid.fn_SearchGrid();
 
 	/* 검색 시작일 */
 	$("#startDate").datepicker({
@@ -65,6 +63,9 @@ $(document).ready(function() {
 		};
 		grid.fn_SearchGrid();
 	});
+	
+	grid.fn_initLoadGrid();
+	grid.fn_SearchGrid();
 
 	/* 탭이동 */
 	$(".tabmenu>li").eq(3).addClass("active");

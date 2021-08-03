@@ -83,21 +83,21 @@ function getGrapData(){
 					if(null != data.osList[0]){
 						setHiChart(data);
 					} else {
-						grapeRemove('#containers');
+						$('#containers').empty();
 					}
 				}
 				if(data.deviceList != null){
 					if(0 < data.deviceList.length){
 						setHiChart2(data);
 					} else {
-						grapeRemove('#containers2');
+						$('#containers2').empty();
 					}
 				}
 				if(data.ageList != null){
 					if(null !=  data.ageList[0]){
 						setHiChart3(data);
 					} else {
-						grapeRemove('#containers3');
+						$('#containers3').empty();
 					}
 				}
 			}
