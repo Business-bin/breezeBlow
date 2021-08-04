@@ -52,17 +52,10 @@ $(function() {
 		grid2.fn_SearchGrid2();
 	});
 	
-	$("#btnClear").click(function() {
-		$("#siteNm").val("");
-		$("#btbsSq").val("");
-	});
-	
-	
-	$("#btnClear").click(function() {
-		$("#siteNm").val("");
-		$("#btbsSq").val("");
-	});
-	
+//	$("#btnClear").click(function() {
+//		$("#siteNm").val("");
+//		$("#btbsSq").val("");
+//	});	
 
 	/* 검색 끝일 */
 	$("#endDate").datepicker({
@@ -215,6 +208,11 @@ function getStartDate(days) {
 	return  year + '-' + month + '-' + day;
 
 }
+
+$("#btnClear").click(function() {
+	$("#siteNm").val("");
+	$("#btbsSq").val("");
+});
 
 /* 회원상세로 이동 */
 function memDet(sq) {

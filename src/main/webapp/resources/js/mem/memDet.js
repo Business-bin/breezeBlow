@@ -392,16 +392,24 @@ function imageFormatter(cellvalue, options, rowObject){
 }
 
 function buttonFormatter(cellvalue, options, rowObject){
+//	alert(rowObject.PPRT_MAC.toString());
 	return '<button class="button" type="button" onclick="mpop(\''+rowObject.PPRT_MAC.toString()+'\')">수정</button><br><br><button class="button" id="delProd" type="button" onclick="dpop('+rowObject.PPRT_SQ+')">삭제</button>';
 }
 
-function mpop(pprtMac){
+function mpop(pprtMac){ // 00:0B:57:D8:18:10 test0
 	$("#dim-layer").show();
 	$("#layerPopup5").show();
 	$.ajax({
 		type : "POST",
 		url : "/product/productDet2",
 		data : {
+			addr1 : $("#modAddr1").val(),
+			addr2 : $("#modAddr2").val(),
+			addr3 : $("#modAddr3").val(),
+			addr4 : $("#modAddr4").val(),
+			addr5 : $("#modAddr5").val(),
+			pprtAli : $("#pprtAli").val(),
+			aliText : $("#aliText").val(),
 			pprtMac : pprtMac
 		},
 		success : function(result){
@@ -421,6 +429,12 @@ function mpop(pprtMac){
 			$("#modAddr3").val(r.addr3);
 			$("#modAddr4").val(r.addr4);
 			$("#modAddr5").val(r.addr5);
+			$('#pprtAli').val(r.PPRT_ALI).prop("selected",true);
+			if($("#pprtAli").val() == "" || $("#pprtAli").val() == null){
+				$('#pprtAli').val("").prop("selected",true);
+				$('#aliText').val(r.PPRT_ALI);
+			}
+			
 		},
 		error : function(e){
 			alert("error : "+e);
