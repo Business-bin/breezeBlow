@@ -27,6 +27,7 @@
 			,'Y' AS USERCHECK
 		FROM TB_BTB_ADM
 		WHERE 1=1
+		AND STAT = 01 
 		AND ADM_EMAIL = #{R_ADM_EMAIL}
 		AND ADM_PWD = #{R_ADM_PWD}
 	</select>
@@ -56,6 +57,7 @@
 			,'Y' AS USERCHECK
 		FROM TB_BTB_ADM
 		WHERE 1=1
+		AND STAT = 01 
 		AND ADM_EMAIL = #{R_ADM_EMAIL}
 	</select>
 

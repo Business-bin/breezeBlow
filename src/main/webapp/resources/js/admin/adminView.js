@@ -301,7 +301,7 @@ function changePwd(){
 			success : function(jsonData) {
 				console.log("success");
 				alert("비밀번호 변경이 완료되었습니다.");
-				goView();
+				logout();
 			},
 			error : function(e) {
 				console.error('ajax 에러: ' + e.status);
@@ -313,6 +313,25 @@ function changePwd(){
 	}
 
 }
+
+function logout(){
+	$.ajax(
+			{async : true
+			,type : "POST"
+			,url : "/login/logout"
+			,dataType : "json"
+			,data: {R_SADM_EMAIL : $('#adm_sq').val(),
+				    R_SADM_PWD : ''
+			 }
+			,success : function(data) {
+				location.href="/";
+			}
+			,error:	function(request,status,error){
+
+			}
+	});
+}
+
 
 function onlyNumber(event){
 	event = event || window.event;

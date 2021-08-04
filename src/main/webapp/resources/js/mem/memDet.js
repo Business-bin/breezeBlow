@@ -406,6 +406,7 @@ function mpop(pprtMac){
 		},
 		success : function(result){
 			var r = result.model.prodDet;
+			console.log(r);
 			$("#prodImg2").attr("src", r.CP_IMG_NM);
 			$("#cpNm2").text(r.CP_NM);
 			$("#mdNm2").text(r.MD_NM);
@@ -414,6 +415,12 @@ function mpop(pprtMac){
 			$("#usg2").text(r.USG);
 			$("#pprtMac2").text(r.PPRT_MAC);
 			$("#regDttm3").text(r.REG_DTTM);
+			
+			$("#modAddr1").val(r.addr1);
+			$("#modAddr2").val(r.addr2);
+			$("#modAddr3").val(r.addr3);
+			$("#modAddr4").val(r.addr4);
+			$("#modAddr5").val(r.addr5);
 		},
 		error : function(e){
 			alert("error : "+e);

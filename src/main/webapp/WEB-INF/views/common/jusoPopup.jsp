@@ -59,7 +59,7 @@ function init(){
 	}else{
 		if(document.getElementById("gubun").value == 1){
 			opener.jusoCallBack("<%=roadFullAddr%>","<%=roadAddrPart1%>","<%=addrDetail%>","<%=roadAddrPart2%>","<%=engAddr%>","<%=jibunAddr%>","<%=zipNo%>", "<%=admCd%>", "<%=rnMgtSn%>", "<%=bdMgtSn%>", "<%=detBdNmList%>", "<%=bdNm%>", "<%=bdKdcd%>", "<%=siNm%>", "<%=sggNm%>", "<%=emdNm%>", "<%=liNm%>", "<%=rn%>", "<%=udrtYn%>", "<%=buldMnnm%>", "<%=buldSlno%>", "<%=mtYn%>", "<%=lnbrMnnm%>", "<%=lnbrSlno%>", "<%=emdNo%>");
-		}else if(document.getElementById("gubun").value == 1){
+		}else if(document.getElementById("gubun").value == 2){
 			opener.jusoCallBack2("<%=siNm%>","<%=sggNm%>","<%=emdNm%>","<%=lnbrMnnm%>","<%=lnbrSlno%>","<%=addrDetail%>");
 		}else{
 			opener.jusoCallBack3("<%=siNm%>","<%=sggNm%>","<%=emdNm%>","<%=lnbrMnnm%>","<%=lnbrSlno%>","<%=addrDetail%>");
