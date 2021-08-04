@@ -110,6 +110,7 @@ $(function(){
 
 	/*	조건별 그래프 출력 */
 	$("#statSearch1").click(function(){
+		
 		if(!dayDiffCheck($('#startDate').val(),$('#endDate').val(),'-')){
 			return false ;
 		};
@@ -123,6 +124,7 @@ $(function(){
 	});
 
 	$("#statSearch2").click(function(){
+		
 		if(!dayDiffCheck($('#startDate').val(),$('#endDate').val(),'-')){
 			return false ;
 		};
@@ -133,6 +135,7 @@ $(function(){
 	});
 
 	$("#statSearch3").click(function(){
+		alert("333");
 		if(!dayDiffCheck($('#startDate').val(),$('#endDate').val(),'-')){
 			return false ;
 		};
@@ -169,8 +172,13 @@ function getStartDate(days) {
 
 /*	연령별 회원통계 그래프  */
 function ch1(){
+<<<<<<< HEAD
 	var sDate = $("#startDate").val();
 	var eDate = $("#endDate").val();
+=======
+	var sDate = $('#startDate').val();
+	var eDate = $('#endDate').val();
+>>>>>>> dev-backillsun-0803
 	if($("#nCal").prop("checked") == true){
 		sDate = "";
 		eDate = "";
@@ -253,8 +261,13 @@ function chart1(r, r2) {
 
 /*	성별 회원통계 그래프  */
 function ch2(){
+<<<<<<< HEAD
 	var sDate = $("#startDate").val();
 	var eDate = $("#endDate").val();
+=======
+	var sDate = $('#startDate').val();
+	var eDate = $('#endDate').val();
+>>>>>>> dev-backillsun-0803
 	if($("#nCal").prop("checked") == true){
 		sDate = "";
 		eDate = "";
@@ -336,8 +349,13 @@ function chart2(r1, r2, c1, c2) {
 
 /*	제품별 회원통계 그래프  */
 function ch3(){
+<<<<<<< HEAD
 	var sDate = $("#startDate").val();
 	var eDate = $("#endDate").val();
+=======
+	var sDate = $('#startDate').val();
+	var eDate = $('#endDate').val();
+>>>>>>> dev-backillsun-0803
 	if($("#nCal").prop("checked") == true){
 		sDate = "";
 		eDate = "";
@@ -430,8 +448,13 @@ function chart3(r, r2) {
 
 /*	지역별 회원통계 그래프  */
 function ch4(){
+<<<<<<< HEAD
 	var sDate = $("#startDate").val();
 	var eDate = $("#endDate").val();
+=======
+	var sDate = $('#startDate').val();
+	var eDate = $('#endDate').val();
+>>>>>>> dev-backillsun-0803
 	if($("#nCal").prop("checked") == true){
 		sDate = "";
 		eDate = "";

@@ -52,6 +52,7 @@ $(function(){
 					}
 				}
 				ajaxForm("insertPolyForm","/app/updatePoly","수정되었습니다.");
+				
 			},
 			error : function(error){
 				alert(error);
@@ -127,6 +128,7 @@ function ajaxForm(formId, url, msg){
 		data : form,
 		success : function(result){
 			alert(msg);
+			location.href="/app/polyList";
 		},
 		error : function(e){
 			alert("error : "+e);

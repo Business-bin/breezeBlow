@@ -55,7 +55,9 @@
 				AND PUSH.PUSH_CONT LIKE CONCAT('%',#{R_KEYWORD},'%')
 			</if>
 		</if>
+			<if test=" R_FROMDT != null and R_FROMDT != '' and R_TODT != null and R_TODT != '' ">
 		AND PUSH.REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+		</if>
 		ORDER BY ${orderBy}
 		LIMIT ${R_PAGE} , ${R_ROW}
 	</select>
@@ -92,7 +94,9 @@
 				AND PUSH.PUSH_CONT LIKE CONCAT('%',#{R_KEYWORD},'%')
 			</if>
 		</if>
+		<if test=" R_FROMDT != null and R_FROMDT != '' and R_TODT != null and R_TODT != '' ">
 		AND PUSH.REG_DTTM BETWEEN  CONCAT(#{R_FROMDT},'000000') AND CONCAT(#{R_TODT},'235959')
+		</if>
 
 	</select>
 
