@@ -94,6 +94,7 @@ $(function() {
 				alert("삭제되었습니다.");
 				$("#dim-layer").hide();
 				$("#layerPopup6").hide();
+				location.href="/product/fwrList";
 			}, error : function(result){
 
 			}

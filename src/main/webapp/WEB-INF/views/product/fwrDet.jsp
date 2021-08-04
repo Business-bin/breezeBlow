@@ -86,12 +86,12 @@
 											<c:when test="${fwrDet.STAT eq '01'}">
 												<option value="01" selected="selected">사용</option>
 												<option value="02">미사용</option>
-												<option value="03">삭제</option>
+												<!-- <option value="03">삭제</option> -->
 											</c:when>
 											<c:when test="${fwrDet.STAT eq '02'}">
 												<option value="01">사용</option>
 												<option value="02" selected="selected">미사용</option>
-												<option value="03">삭제</option>
+												<!-- <option value="03">삭제</option> -->
 											</c:when>
 											<c:when test="${fwrDet.STAT eq '03'}">
 												<option value="01">사용</option>
@@ -102,7 +102,7 @@
 												<option value="">선택</option>
 												<option value="01">사용</option>
 												<option value="02">미사용</option>
-												<option value="03">삭제</option>
+												<!-- <option value="03">삭제</option> -->
 											</c:otherwise>
 										</c:choose>
 									</select>

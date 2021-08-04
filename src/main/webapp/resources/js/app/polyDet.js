@@ -31,10 +31,14 @@ $(function(){
 		$("#polyCont").html(pHtml);
 		if(isEmpty($("#polyNm").val())){
 			alert("동의종류를 선택해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		if(isEmpty($("#polyCont").val())){
 			alert("내용을 입력해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		$.ajax({
@@ -72,22 +76,32 @@ $(function(){
 		$("#polyCont").html(pHtml);
 		if(isEmpty($("#polyNm").val())){
 			alert("동의종류를 선택해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		if(isEmpty($("#vrs").val())){
 			alert("버전정보를 입력해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		if(trim($("#vrs").val()).length != $("#vrs").val().length){
 			alert("버전정보에는 공백이 들어갈 수 없습니다.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		if(isEmpty($("#polyCont").val())){
 			alert("내용을 입력해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		if($("#stat1").prop("checked") == false && $("#stat2").prop("checked") == false){
 			alert("현재상태를 선택해주세요.");
+			$("#dim-layer").hide();
+			$("#layerPopup").hide();
 			return false;
 		}
 		ajaxForm("insertPolyForm","/app/insertPoly","등록되었습니다.");

@@ -177,8 +177,10 @@ function goChart(){
 		return false ;
 	};
 
+	// 날짜제외 체크여부
+	var dateChk = $("#nCal").prop("checked")
 	if(searchType == "day"){
-		if(dateDiff($('#start_dt').val(), $('#end_dt').val()) < 2){
+		if(dateDiff($('#start_dt').val(), $('#end_dt').val()) < 2 && dateChk != true){
 			alert("검색단위가 일 일경우 시작일과 종료일이 최소 2일 이상 차이가 나야 합니다.");
 			return;
 		}
@@ -188,7 +190,7 @@ function goChart(){
     	};
 
 	}else if(searchType == "month"){
-		if(dateDiff2($('#start_dt').val(), $('#end_dt').val()) < 2){
+		if(dateDiff2($('#start_dt').val(), $('#end_dt').val()) < 2 && dateChk != true){
 			alert("검색단위가 월 일경우 시작일과 종료일이 최소 2개월 이상 차이가 나야 합니다.");
 			return;
 		}

@@ -16,9 +16,14 @@
   		A.APP_VNM,
   		A.APP_OS,
   		A.STAT,
+  		B.ADM_EMAIL,
   		(SELECT CODENAME FROM TB_CODE WHERE GROUPID='APPSTAT' AND CODE = A.STAT) AS CODENAME
-  	FROM TB_APP A
-  		WHERE APP_SQ = #{appSq}
+  	FROM TB_APP A, TB_BTB_ADM B
+	WHERE CASE WHEN A.DEL_ADM_SQ IS NOT NULL THEN A.DEL_ADM_SQ
+				WHEN A.UPT_ADM_SQ IS NOT NULL THEN A.UPT_ADM_SQ
+				ELSE A.REG_ADM_SQ 
+			END = B.ADM_SQ 
+	AND APP_SQ = #{appSq}
   </select>
 
   <select id="getAppVrsList"  parameterType="brbMap" resultType="brbMap">

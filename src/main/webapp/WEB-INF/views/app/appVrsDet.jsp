@@ -40,7 +40,7 @@
 					<tbody>
 						<tr>
 							<th>관리자 ID</th>
-							<td><input type="text" id="" name="" value="test@test.com1" disabled="disabled"/></td>
+							<td><input type="text" id="adminEmail" name="adminEmail" value="${appDet.ADM_EMAIL}" disabled="disabled" style="width:300px" /></td>
 							<th>현재상태</th>
 							<td>
 								<select id="stat" name="stat">
