@@ -135,7 +135,7 @@ $(function(){
 	});
 
 	$("#statSearch3").click(function(){
-		alert("333");
+
 		if(!dayDiffCheck($('#startDate').val(),$('#endDate').val(),'-')){
 			return false ;
 		};

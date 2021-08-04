@@ -103,7 +103,9 @@
 
 				<th>등록일</th>
 				<td colspan="3" class="mw350">
-					<input type="text" id="monthfrom" name="monthfrom" value="${monthfrom}" readonly="readonly"> ~ <input type="text" id="monthto" name="monthto" value="${monthto}" readonly="readonly">
+					<input type="text" id="monthfrom" name="monthfrom" value="${monthfrom}" readonly="readonly"> ~ 
+					<input type="text" id="monthto" name="monthto" value="${monthto}" readonly="readonly">
+					날짜제외 <input type="checkbox" id="nCal" />
 				</td>
 				<th>검색종류</th>
 				<td colspan="7">
@@ -124,7 +126,6 @@
 					</c:choose>
 					</select>
 					<input type="text" id="searStr" name="searStr" value="${pMap.searStr}">
-					날짜제외 <input type="checkbox" id="nCal" />
 					<div class="sbtn" id="sarchBtn"><i class="axi axi-search3"></i></div>
 				</td>
 			</tr>
