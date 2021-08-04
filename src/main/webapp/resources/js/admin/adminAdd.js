@@ -184,7 +184,7 @@ function addAdmin(){
 	}else if($('#adm_pwd').val() != $('#adm_pwd1').val()){
 		alert("입력한 비밀번호가 일치하지 않습니다.");
 		$('#adm_pwd1').focus();
-	} else if(confirm("S관리자를 등록하시겠습니까?") == true){
+	} else if(confirm("관리자를 등록하시겠습니까?") == true){
 
 		$.ajax({
 			url : '/admin/adminAddProc',
