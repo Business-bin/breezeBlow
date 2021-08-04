@@ -23,6 +23,7 @@
 							<th class="mw60">통계기간</th>
 							<td class="mw350"><input type="text" id="monthfrom" class="" name="monthfrom" readonly="readonly"/> -
 							<input type="text" id="monthto" class="" name="monthto" readonly="readonly"/>
+							날짜제외 <input type="checkbox" id="nCal" />
 								<div class="sbtn" id="userStatusBtn"><i class="axi axi-search3"></i></div>
 							</td>
 						</tr>

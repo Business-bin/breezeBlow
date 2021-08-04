@@ -193,15 +193,20 @@ function goChart(){
 			return;
 		}
 	}
-
+	var sDate = $('#start_dt').val().replace(/-/g,'');
+	var eDate = $('#end_dt').val().replace(/-/g,'');
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax({
 		url : '/product/chartList',
 		method : 'POST',
 		dataType: 'JSON',
 		data : {
 			gubun          : gubun,
-			start_dt       : $('#start_dt').val(),
-			end_dt         : $('#end_dt').val(),
+			start_dt       : sDate,
+			end_dt         : eDate,
 			category       : $('#category').val(),
 			category2      : $('#category2').val(),
 			addr_si        : addr_si,

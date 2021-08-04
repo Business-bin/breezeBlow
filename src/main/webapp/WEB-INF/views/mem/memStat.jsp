@@ -33,9 +33,13 @@
 							<input type="radio" id="cls3" name="cls"/>
 							<label for="cls3" class="mgl50">지역별</label>
 						</div></td>
-						<th class="mw45">검색일</th>
-						<td class="mw400 ac" colspan="3"><input type="text" id="startDate" class="" name="startDate" readonly="readonly"/> -
-						<input type="text" id="endDate" class="" name="endDate" readonly="readonly"/><div class="sbtn mgl10" id="statSearch1"><i class="axi axi-search3"></i></div></td>
+						<th class="mw30">검색일</th>
+						<td class="mw500 ac" colspan="3">
+							<input type="text" id="startDate" class="" name="startDate" readonly="readonly"/> -
+							<input type="text" id="endDate" class="" name="endDate" readonly="readonly"/>
+							날짜제외 <input type="checkbox" id="nCal" />
+							<div class="sbtn mgl10" id="statSearch1"><i class="axi axi-search3"></i></div>
+						</td>
 					</tr>
 					<tr class="sel1 sel2">
 						<th>성별</th>

@@ -37,6 +37,7 @@
 					<td>
 						<input type="text" name="start_dt" id="start_dt" value="" readonly="readonly"> ~
 						<input type="text" name="end_dt" id="end_dt" value="" readonly="readonly">
+						날짜제외 <input type="checkbox" id="nCal" />
 					</td>			
 					<th>검색단위</th>
 					<td>

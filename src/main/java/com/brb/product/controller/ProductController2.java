@@ -77,8 +77,6 @@ public class ProductController2 {
 				ModelMap modelMap) throws Exception {
 		ModelAndView mav = new ModelAndView("jsonView");
 		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
-		dMap.put("start_dt", dMap.getString("start_dt").replaceAll("-", ""));
-		dMap.put("end_dt", dMap.getString("end_dt").replaceAll("-", ""));
 		List list = null;
 		try{
 			list = productService2.getChartList(dMap);

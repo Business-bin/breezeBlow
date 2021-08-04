@@ -169,12 +169,18 @@ function getStartDate(days) {
 
 /*	연령별 회원통계 그래프  */
 function ch1(){
+	var sDate = $("#startDate").val();
+	var eDate = $("#endDate").val();
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax({
 		url : "/mem/getAgeStat",
 		type : "POST",
 		data : {
-			startDate : $("#startDate").val(),
-			endDate : $("#endDate").val(),
+			startDate : sDate,
+			endDate : eDate,
 			memGen : $("#memGen").val(),
 			memKind : $("#memKind").val(),
 			prodNm : $("#prodNm").val()
@@ -247,12 +253,18 @@ function chart1(r, r2) {
 
 /*	성별 회원통계 그래프  */
 function ch2(){
+	var sDate = $("#startDate").val();
+	var eDate = $("#endDate").val();
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax({
 		url : "/mem/getGenStat",
 		type : "POST",
 		data : {
-			startDate : $("#startDate").val(),
-			endDate : $("#endDate").val()
+			startDate : sDate,
+			endDate : eDate
 		},
 		success : function(result){
 			var r = result.model.data;
@@ -324,12 +336,18 @@ function chart2(r1, r2, c1, c2) {
 
 /*	제품별 회원통계 그래프  */
 function ch3(){
+	var sDate = $("#startDate").val();
+	var eDate = $("#endDate").val();
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax({
 		url : "/mem/getProdStat",
 		type : "POST",
 		data : {
-			startDate : $("#startDate").val(),
-			endDate : $("#endDate").val()
+			startDate : sDate,
+			endDate : eDate
 		},
 		success : function(result){
 			var r = result.model.cat;
@@ -412,12 +430,18 @@ function chart3(r, r2) {
 
 /*	지역별 회원통계 그래프  */
 function ch4(){
+	var sDate = $("#startDate").val();
+	var eDate = $("#endDate").val();
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax({
 		url : "/mem/getLocStat",
 		type : "POST",
 		data : {
-			startDate : $("#startDate").val(),
-			endDate : $("#endDate").val(),
+			startDate : sDate,
+			endDate : eDate,
 			memGen : $("#memGen").val(),
 			memKind : $("#memKind").val(),
 			addr1 : $("#addr1").val()

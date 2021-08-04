@@ -67,15 +67,22 @@ Desc   :
 Param  :
 ********************************************************************/
 function getGrapData(){
-
+	var sDate = $('#monthfrom').val().replace(/-/g,'');
+	var eDate = $('#monthto').val().replace(/-/g,'');
+	if($("#nCal").prop("checked") == true){
+		sDate = "";
+		eDate = "";
+	}
 	$.ajax(
 		{async : true
 		, url: '/app/getAppGrape'
 		, dataType: 'JSON'
 		, type: 'POST'
 		, data: {
-			R_MONTHFROM : $('#monthfrom').val().replace(/-/g,''),
-			R_MONTHTO : 	$('#monthto').val().replace(/-/g,'')
+			R_MONTHFROM : sDate,
+			R_MONTHTO : 	eDate,
+			startDate : sDate,
+			endDate : eDate
 		}
 		, success: function(data) {
 			if(data != null){
