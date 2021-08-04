@@ -122,6 +122,17 @@ public class BtbDao{
 			throws DataAccessException {
 		return queryM.update("btb.goStop", pdMap);
 	}	
+
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int adminActivityStop(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return queryM.update("btb.adminActivityStop", pdMap);
+	}	
 	
 	/**
 	 * 

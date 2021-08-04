@@ -296,6 +296,7 @@ public class BtbController {
 		int cnt = 0;
 		try{
 			cnt = btbService.goStop(dMap);
+			btbService.adminActivityStop(dMap);	// 사이트 운영 중지되면 관련 관리자 이용정지
 			//action log
 	        commonService.addAdminActLog(request);
 		} catch(Exception e){

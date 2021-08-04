@@ -76,6 +76,15 @@ public interface BtbService {
 	 * @throws DataAccessException
 	 */
 	public int goStop(BrbMap<Object, Object> fMap) throws DataAccessException;	
+
+	
+	/**
+	 * 
+	 * @param fMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int adminActivityStop(BrbMap<Object, Object> fMap) throws DataAccessException;	
 	
 	/**
 	 * 

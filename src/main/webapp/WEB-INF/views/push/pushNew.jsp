@@ -84,7 +84,7 @@
 						</select> -->
 					</td>
 					<th style="width:150px" >송신 대상 건수</th>
-					<td colspan="5">
+					<td colspan="3">
 						<input style="width:100%; font-weight: bold; color:red;" type="text" value="" id="sendCnt" name="sendCnt" readonly="readonly" >
 					</td>
 				</tr>

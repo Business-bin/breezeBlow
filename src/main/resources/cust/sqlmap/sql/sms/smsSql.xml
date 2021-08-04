@@ -109,6 +109,41 @@
 	<select id="getSendCnt"  parameterType="brbMap" resultType="brbMap">
 		SELECT
 		COUNT(*) AS SENDCNT
+		FROM TB_MEM A
+		<if test="R_MD_SQ != null and R_MD_SQ != ''">
+		, TB_PPRT C ,TB_MD D
+		</if>
+		WHERE 1=1
+		AND A.AGR_SMS_YN = 'Y'
+		AND A.STAT = '01'
+		<if test="R_MD_SQ != null and R_MD_SQ != ''">
+		AND A.MEM_SQ = C.MEM_SQ
+		AND C.MD_SQ = D.MD_SQ
+		and D.MINI_YN = 'N'
+		</if>
+		<if test="R_ADDR_1 != null and R_ADDR_1 != ''">
+		AND A.ADDR_1 = #{R_ADDR_1}
+		</if>
+		<if test="R_ADDR_2 != null and R_ADDR_2 != ''">
+		AND A.ADDR_2 = #{R_ADDR_2}
+		</if>
+		<if test="R_ADDR_3 != null and R_ADDR_3 != ''">
+		AND A.ADDR_3 = #{R_ADDR_3}
+		</if>
+		<if test="R_BTBS_SQ != null and R_BTBS_SQ != ''">
+		AND A.BTBS_SQ = #{R_BTBS_SQ}
+		</if>
+		<if test="R_MD_SQ != null and R_MD_SQ != ''">
+		AND C.MD_SQ = #{R_MD_SQ}
+		</if>
+		<if test="R_MOBILE_TYPE != null and R_MOBILE_TYPE != ''">
+		AND (SELECT HP_OS FROM TB_PUSH_USER_INFO WHERE MEM_SQ = A.MEM_SQ) = #{R_MOBILE_TYPE}
+		</if>
+	</select>
+	
+	<select id="getSendCnt_001"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+		COUNT(*) AS SENDCNT
 		FROM TB_MEM A , TB_BTBS B
 		<if test="R_MD_SQ != null and R_MD_SQ != ''">
 		, TB_PPRT C ,TB_MD D

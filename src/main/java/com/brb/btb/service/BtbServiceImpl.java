@@ -73,6 +73,12 @@ public class BtbServiceImpl implements BtbService{
 		// TODO Auto-generated method stub
 		return btbDao.goStop(fMap);
 	}
+
+	@Override
+	public int adminActivityStop(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.adminActivityStop(fMap);
+	}
 	
 	@Override
 	public int goUse(BrbMap<Object, Object> fMap) throws DataAccessException {

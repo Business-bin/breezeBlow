@@ -157,6 +157,16 @@
 	     WHERE BTBS_SQ      = #{btbs_sq} 
 	</update>
 	
+	<update id="adminActivityStop" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM
+	       SET 
+	       	   STAT         = '02',
+	       	   UPT_DTTM		= now(),
+	           UPT_ADM_SQ   = #{adm_sq}
+	     WHERE BTBS_SQ      = #{btbs_sq} 
+	     AND   STAT			!= '03'
+	</update>
+	
 	<update id="goUse" parameterType="brbMap">
 	    UPDATE TB_BTBS
 	       SET 
