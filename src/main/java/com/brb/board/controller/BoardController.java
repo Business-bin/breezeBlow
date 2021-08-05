@@ -1010,6 +1010,7 @@ public class BoardController {
 		String del_adm_email = session.getAttribute("ADM_EMAIL").toString();
 		dMap.put("del_user_sq", del_user_sq); //삭제 관리자고유번호
 		dMap.put("del_adm_email", del_adm_email);
+		dMap.put("bd_stat", "03");
 
 		int cnt = 0;
 		try{

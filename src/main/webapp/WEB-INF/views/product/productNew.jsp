@@ -91,7 +91,7 @@
 								<td colspan="5" class="ac"><button type="button" class="button" onclick="csvLoad('csvUpload','/product/csvLoad')">불러오기</button></td>
 							</tr>
 							<tr>
-								<th>Mac Address</th><th>모델번호</th><th>제품분류</th><th>마스터번호</th><th>펌웨어 버전</th>
+								<th>Mac Address</th><th>모델명</th><th>제품분류</th><th>마스터번호</th><th>펌웨어 버전</th>
 							</tr>
 						</thead>
 						<tbody id="csvBody">
@@ -102,7 +102,7 @@
 			<div>
 				<button class="button" type="button" id="newProd">제품 등록</button>
 				<button class="button" type="button" id="newProd2">제품 등록</button>
-				<button class="button" id="backProdList" type="button">취소</button>
+				<button class="button" id="backProdList" type="button">목록</button>
 			</div>
 		</div>
 	</div>

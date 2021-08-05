@@ -334,22 +334,30 @@
 	</insert>
 
 	<insert id="insertProduct2" parameterType="com.brb.product.model.PprtVo">
-		INSERT INTO TB_PPRT
-		(
-			PPRT_SQ, PPRT_MAC, PPRT_MA_MAC,
-			STAT, REG_DTTM, REG_ADM_SQ,
-			MD_SQ, FWR_SQ, PPRT_ALI
-		)
-		VALUES
-		(
-			NEXTVAL('PPRT_SQ'), #{pprtMac}, #{pprtMaMac},
-			'04', NOW(), #{regAdmSq},
-			(SELECT MD_SQ FROM TB_MD WHERE MD_NM = #{mdNm}),
-			(
-			SELECT FWR_SQ FROM TB_FWR WHERE FWR_VRS_NM = #{fwrVrsNm}
-			AND FWR_MD_SQ = (SELECT MD_SQ FROM TB_MD WHERE MD_NM = #{mdNm})
-			),
-			(SELECT CP_NM FROM TB_MD WHERE MD_NM = #{mdNm})
+		INSERT INTO TB_PPRT (
+			PPRT_SQ
+			, PPRT_MAC
+			, PPRT_MA_MAC
+			,STAT
+			, REG_DTTM
+			, REG_ADM_SQ
+			,MD_SQ
+			, FWR_SQ
+			, PPRT_ALI
+		) VALUES (
+			NEXTVAL('PPRT_SQ')
+			, #{pprtMac}
+			, #{pprtMaMac}
+			,'04'
+			, NOW()
+			, #{regAdmSq}
+			,(SELECT MD_SQ FROM TB_MD WHERE MD_NM = #{mdNm})
+			,(SELECT 
+				FWR_SQ 
+			  FROM TB_FWR 
+			  WHERE FWR_VRS_NM = #{fwrVrsNm}
+			  AND FWR_MD_SQ = (SELECT MD_SQ FROM TB_MD WHERE MD_NM = #{mdNm}))
+			,(SELECT CP_NM FROM TB_MD WHERE MD_NM = #{mdNm})
 		)
 	</insert>
 

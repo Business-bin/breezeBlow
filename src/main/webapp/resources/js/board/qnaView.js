@@ -150,7 +150,8 @@ function delQna(){
 			success : function(jsonData) {
 				console.log("success");
 				alert("삭제가 완료되었습니다.");
-				goView();
+//				goView();
+				location.href="/board/qnaList"
 			},
 			error : function(e) {
 				console.error('ajax 에러: ' + e.status);

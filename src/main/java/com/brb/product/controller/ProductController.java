@@ -830,7 +830,7 @@ public class ProductController {
 			productService.insertProduct2(pvo);
 		}
 		br.close();
-		view.setViewName("product/csvUpload");
+		view.setViewName("product/productNew");
 		commonService.addAdminActLog(request);
 		return view;
 	}

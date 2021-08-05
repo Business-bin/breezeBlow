@@ -38,7 +38,12 @@
 				AND  POP_NM LIKE CONCAT('%',#{R_KEYWORD},'%')
 			</if>
 			<if test=" R_SEARCH_TYPE == '002' ">
-				AND STAT_NM LIKE CONCAT('%',#{R_KEYWORD},'%')
+				AND CASE STAT 
+						WHEN '001' THEN '노출중' 
+						WHEN '002' THEN '노출중지' 
+						WHEN '003' THEN '대기중' 
+						WHEN '004' THEN '삭제' 
+					END LIKE CONCAT('%',#{R_KEYWORD},'%')
 			</if>
 		</if>
 		<if test='R_FROMDT != null and R_FROMDT != "" and R_TODT != null and R_TODT != ""'>

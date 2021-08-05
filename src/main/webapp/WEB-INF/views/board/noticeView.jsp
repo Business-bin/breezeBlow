@@ -35,7 +35,7 @@
 					<tr>
 						<th class="mw110">작성자 ID</th>
 						<td>
-							<input type="text" name="adminMail" id="adminMail" value="<%=adminMail %>" style="width:300px;" disabled/>
+							<input type="text" name="adminMail" id="adminMail" value="${rMap.notice.BD_USER_EMAIL}" style="width:300px;" disabled/>
 						</td>
 						<th class="mw110">등록일</th>
 						<td>
@@ -110,7 +110,7 @@ for(int i=0; i<5-size; i++){
 					<tbody>
 						<tr>
 							<th>아이디</th>
-							<td><input type="text" id="admEmail" name="admEmail" value="${rMap.notice.BD_USER_EMAIL}" style="width:300px;" disabled/></td>
+							<td><input type="text" id="admEmail" name="admEmail" value="<%=adminMail %>" style="width:300px;" disabled/></td>
 						</tr>
 						<tr>
 							<th>삭제사유</th>

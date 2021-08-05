@@ -64,7 +64,7 @@
 			,REG_USER_SQ
 			,BTBS_SQ
 	    ) VALUES (
-	        NEXTVAL('TB_BD_SQ'),
+	        NEXTVAL('BD_SQ'),
 	    	#{bd_tp_1},
 	    	#{bd_nm},
 	    	#{bd_cont},
@@ -124,7 +124,7 @@
         <if test='reply_yn != null and reply_yn != ""'>
 			<choose>
 				<when test='reply_yn == "Y"'>AND BD_ANS_YN = 'Y'</when>
-				<when test='reply_yn == "N"'>AND BD_ANS_YN IS NULL</when>
+				<when test='reply_yn == "N"'>AND ( BD_ANS_YN IS NULL OR BD_ANS_YN = 'N' )</when>
 				<otherwise></otherwise>
 			</choose>
 		</if>
@@ -290,10 +290,8 @@
 		FROM   TB_BD WHERE BD_SQ = #{bd_sq}
 	</select>
 
-	<insert id="addFaq" parameterType="brbMap">
-	    INSERT INTO TB_BD (
-			 BD_SQ
-			,BD_TP_1
+	<insert id="addFaq" parameterType="brbMap" useGeneratedKeys="true" keyProperty="BD_SQ">
+	    INSERT INTO TB_BD (BD_TP_1
 			,BD_TP_2
 			,BD_NM
 			,BD_CONT
@@ -308,7 +306,6 @@
 			,REG_USER_SQ
 			,BTBS_SQ
 	    ) VALUES (
-	        NEXTVAL('TB_BD_SQ'),
 	    	#{bd_tp_1},
 	    	#{bd_tp_2},
 	    	#{bd_nm},
@@ -584,26 +581,37 @@
 	</update>
 
 	<!-- AS -->
-	<insert id="insertBdLog01" parameterType="brbMap">
+	<insert id="insertBdLog01" parameterType="brbMap" useGeneratedKeys="true" keyProperty="LOG_BD_SQ">
 		INSERT INTO TB_BD_LOG(
-			LOG_BD_SQ, LOG_BD_TP, BD_SQ,
+			LOG_BD_TP, BD_SQ,
 			BD_STAT, BD_USER_SQ,
 			BD_ADM_SQ, DTTM
 		) VALUES (
-			NEXTVAL('LOG_BD_SQ'), '01', #{as_req_sq},
+			'01', #{as_req_sq},
 			#{stat}, (SELECT AS_REQ_MEM_SQ FROM TB_AS_REQ WHERE AS_REQ_SQ=#{as_req_sq}),
 			#{upt_adm_sq}, now()
 		)
 	</insert>
 
 	<!-- NOTICE -->
-	<insert id="insertBdLog02" parameterType="brbMap">
+	<insert id="insertBdLog02" parameterType="brbMap" useGeneratedKeys="true" keyProperty="LOG_BD_SQ">
 		INSERT INTO TB_BD_LOG(
-			LOG_BD_SQ, LOG_BD_TP, BD_SQ,
-			BD_STAT, BD_ADM_SQ, DTTM
+			 LOG_BD_TP
+			 , BD_SQ
+			 , BD_STAT
+			 , BD_ADM_SQ
+			<if test=" del_rsn != null and del_rsn != '' ">
+				,RSN
+			</if>
+			 , DTTM
 		) VALUES (
-			NEXTVAL('LOG_BD_SQ'), '02',
-			#{bd_sq},
+			'02',
+			(SELECT AUTO_INCREMENT - 1
+			FROM
+			  information_schema.tables
+			WHERE
+			  table_schema = DATABASE()
+			  AND table_name = 'TB_BD'),
 			<if test=" bd_stat != null and bd_stat != '' ">
 				#{bd_stat},
 			</if>
@@ -619,18 +627,29 @@
 			<if test=" del_user_sq != null and del_user_sq != '' ">
 			#{del_user_sq},
 			</if>
+			<if test=" del_rsn != null and del_rsn != '' ">
+				#{del_rsn},
+			</if>
 			now()
 		)
 	</insert>
 
 	<!-- FAQ -->
-	<insert id="insertBdLog03" parameterType="brbMap">
+	<insert id="insertBdLog03" parameterType="brbMap" useGeneratedKeys="true" keyProperty="LOG_BD_SQ">
 		INSERT INTO TB_BD_LOG(
-			LOG_BD_SQ, LOG_BD_TP, BD_SQ,
-			BD_STAT, BD_ADM_SQ, DTTM
+			LOG_BD_TP
+			, BD_SQ
+			, BD_STAT
+			, BD_ADM_SQ
+			, DTTM
 		) VALUES (
-			NEXTVAL('LOG_BD_SQ'), '03',
-			#{bd_sq},
+			'03',
+			(SELECT AUTO_INCREMENT - 1
+			FROM
+			  information_schema.tables
+			WHERE
+			  table_schema = DATABASE()
+			  AND table_name = 'TB_BD'),
 			#{bd_stat},
 			<if test=" upt_adm_sq != null and upt_adm_sq != '' ">
 			#{upt_adm_sq},
@@ -646,12 +665,21 @@
 	</insert>
 
 	<!-- Q&A -->
-	<insert id="insertBdLog04" parameterType="brbMap">
+	<insert id="insertBdLog04" parameterType="brbMap" useGeneratedKeys="true" keyProperty="LOG_BD_SQ">
 		INSERT INTO TB_BD_LOG(
-			LOG_BD_SQ, LOG_BD_TP, BD_SQ,
-			BD_STAT, BD_ADM_SQ, DTTM
+			LOG_BD_TP
+			, BD_SQ
+			, BD_STAT
+			, BD_ADM_SQ
+			, DTTM
 		) VALUES (
-			NEXTVAL('LOG_BD_SQ'), '04',#{bd_sq},
+			'04'
+			,(SELECT AUTO_INCREMENT - 1
+			FROM
+			  information_schema.tables
+			WHERE
+			  table_schema = DATABASE()
+			  AND table_name = 'TB_BD'),
 			<if test=" stat != null and stat != '' ">
 				#{stat},
 			</if>

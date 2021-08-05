@@ -423,7 +423,6 @@ function ajaxForm(formId, url, msg){
 function ajaxForm2(formId, url, msg){
 	var form = $('#'+formId)[0];
     var data = new FormData(form);
-
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -434,7 +433,7 @@ function ajaxForm2(formId, url, msg){
         cache: false,
         timeout: 600000,
         success: function (data) {
-        	alert(msg);
+        	successMsg(msg);
         },
         error: function (e) {
             $("#result").text(e.responseText);
@@ -442,7 +441,10 @@ function ajaxForm2(formId, url, msg){
         }
     });
 }
-
+function successMsg(msg){
+	alert(msg);
+	return;
+}
 /* csv로드 */
 function csvLoad(formId, url){
     var formdata = new FormData($('#'+formId)[0]);
@@ -476,7 +478,7 @@ function csvLoad(formId, url){
 				alert("잘못된 데이터 항목이 있습니다.");
 				return;
 			}
-			alert("중복된 MAC ADDRESS나 잘못된 데이터 항목이 없습니다.");
+//			alert("중복된 MAC ADDRESS나 잘못된 데이터 항목이 없습니다.");
 			$("#csvBody").html(html);
 		},
 		error : function(e){
