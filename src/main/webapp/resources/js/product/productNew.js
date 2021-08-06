@@ -413,6 +413,7 @@ function ajaxForm(formId, url, msg){
 		data : form,
 		success : function(result){
 			alert(msg);
+        	location.href="/product/productList";
 		},
 		error : function(e){
 			alert("error : "+e);
@@ -434,6 +435,7 @@ function ajaxForm2(formId, url, msg){
         timeout: 600000,
         success: function (data) {
         	successMsg(msg);
+        	location.href="/product/productList";
         },
         error: function (e) {
             $("#result").text(e.responseText);

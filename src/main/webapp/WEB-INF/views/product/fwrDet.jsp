@@ -22,6 +22,7 @@
 				<input type="hidden" id="gubun" value="${gubun}" />
 				<input type="hidden" id="fwrMdSq" name="fwrMdSq" value="${fwrDet.FWR_MD_SQ}" />
 				<input type="hidden" id="delFwrFile" name="delFwrFile" value="${fwrDet.FWR_FILE_NM}" />
+				<input type="hidden" id="FWR_FILE_NM_1" name="FWR_FILE_NM_1" value="${fwrDet.FWR_FILE_NM_1}" />
 				<div class="tbar">
 					<c:if test="${gubun eq 'new'}">
 						<div class="w100 fl"><i class="axi axi-play-arrow"></i>펌웨어 등록</div>
@@ -70,10 +71,10 @@
 									</select> 시
 									<select id="min" name="min">
 										<c:forEach begin="01" end="60" step="1" var="m">
-											<c:if test="${fwrDet.REG_DTTM3 eq m}">
+											<c:if test="${fwrDet.APL_DTTM3 eq m}">
 												<option value="${m}" selected="selected">${m}</option>
 											</c:if>
-											<c:if test="${fwrDet.REG_DTTM3 ne m}">
+											<c:if test="${fwrDet.APL_DTTM3 ne m}">
 												<option value="${m}">${m}</option>
 											</c:if>
 										</c:forEach>
@@ -121,8 +122,8 @@
 							<tr>
 								<th>펌웨어 파일</th>
 								<td colspan="3">
-									<input type="text" id="fwrFileNm" class="w50" name="fwrFileNm" value=""/>
-									<input type="file" id="fwrFile" class="" name="fwrFile"  />
+									<input type="text" id="fwrFileNm" class="w50" name="fwrFileNm"/>
+									<input type="file" id="fwrFile" class="" name="fwrFile" value="" />
 									<label for="fwrFile" id="fileBox" class="mgt10">찾아보기</label>
 									<span class="mgl10">현재 파일 : <a href="${fwrDet.FWR_FILE_NM}">${fwrDet.FWR_FILE_NM_1}</a></span>
 								</td>

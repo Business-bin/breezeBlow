@@ -64,6 +64,7 @@ $(function() {
 				ajaxForm("deleteMemForm", "/mem/deleteMem","삭제되었습니다.");
 				$("#dim-layer").hide();
 				$("#layerPopup").hide();
+				location.href="/mem/memList";
 			}
 		});
 	}else{
@@ -483,7 +484,8 @@ function delProd(){
 		},
 		success : function(result){
 			alert("삭제되었습니다.");
-			location.reload();
+//			location.reload();
+			location.href="/mem/memList";
 		},
 		error : function(e){
 			alert("error : "+e);

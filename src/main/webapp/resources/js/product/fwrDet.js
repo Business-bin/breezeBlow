@@ -16,15 +16,15 @@ $(function() {
 	}
 
 	/* 검색 시작일 */
-	$("#startDate").datepicker({
-		changeMonth : true,
-		onSelect : function(dateText, inst) {
-			var dateArr = dateText.split("/");
-			year = dateArr[2];
-			month = dateArr[0];
-			day = dateArr[1];
-		}
-	});
+		$("#startDate").datepicker({
+			changeMonth : true,
+			onSelect : function(dateText, inst) {
+				var dateArr = dateText.split("/");
+				year = dateArr[2];
+				month = dateArr[0];
+				day = dateArr[1];
+			}
+		});
 
 	/* 당월 1일부터 당일 계산 */
 	var date = new Date();
@@ -37,7 +37,9 @@ $(function() {
 	if (day < 10) {
 		day = "0" + day.toString();
 	}
-	$("#startDate").val(year + "-" + month + "-" + day);
+	if($("#startDate").val() == "" || $("#startDate").val() == null){
+		$("#startDate").val(year + "-" + month + "-" + day);
+	}
 
 	/* 레이어팝업(모델검색) */
 	$("#modSearch").click(function(){
@@ -84,21 +86,26 @@ $(function() {
 
 	/* 펌웨어 삭제 */
 	$("#del").click(function(){
-		$.ajax({
-			type : "post",
-			url : "/product/deleteFwr",
-			data : {
-				delRsn : $("#delRsn").val(),
-				fwrSq : $("#fwrSq").val()
-			}, success : function(result){
-				alert("삭제되었습니다.");
-				$("#dim-layer").hide();
-				$("#layerPopup6").hide();
-				location.href="/product/fwrList";
-			}, error : function(result){
+		if($("#delRsn").val() == "" || $("#delRsn").val() ){
+			alert("삭제 사유를 입력하세요.");
+			$("#delRsn").focus();
+		}else{
+			$.ajax({
+				type : "post",
+				url : "/product/deleteFwr",
+				data : {
+					delRsn : $("#delRsn").val(),
+					fwrSq : $("#fwrSq").val()
+				}, success : function(result){
+					alert("삭제되었습니다.");
+					$("#dim-layer").hide();
+					$("#layerPopup6").hide();
+					location.href="/product/fwrList";
+				}, error : function(result){
 
-			}
-		})
+				}
+			})
+		}
 	});
 
 	/* 펌웨어 등록 */

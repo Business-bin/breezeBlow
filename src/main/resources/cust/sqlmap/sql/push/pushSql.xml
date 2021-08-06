@@ -178,7 +178,6 @@
 			,A.MEM_EMAIL
 			,A.USER_HP
 			,B.BTBS_SITE_NM
-			,A.PUSH_ID
 		FROM TB_MEM A , TB_BTBS B
 		<if test="R_MD_SQ != null and R_MD_SQ != ''">
 		, TB_PPRT C ,TB_MD D

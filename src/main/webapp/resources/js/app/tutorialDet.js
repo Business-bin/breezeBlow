@@ -138,6 +138,7 @@ function ajaxForm(formId, url, msg){
 		data : form,
 		success : function(result){
 			alert(msg);
+			location.href="/app/tutorialList";
 		},
 		error : function(e){
 			alert("error : "+e);

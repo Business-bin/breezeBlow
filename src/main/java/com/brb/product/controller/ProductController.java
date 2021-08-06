@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.brb.brbcom.common.collections.BrbMap;
@@ -677,42 +678,47 @@ public class ProductController {
 	@RequestMapping(value="/product/updateFwr")
 	public ModelAndView updateFwr(@ModelAttribute FwrVo fvo, HttpSession session, HttpServletRequest request){
 		ModelAndView view = new ModelAndView();
-		if(fvo.getFwrFile() != null){
-			if(fvo.getDelFwrFile() != null && fvo.getDelFwrFile() != ""){
-				File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + fvo.getDelFwrFile());
-				if(file.exists()){
-					if(file.delete()){
-						logger.debug("File Delete Success!!");
-						System.out.println("File Delete Success!!");
+		if(!fvo.getFwrFile().getOriginalFilename().equals("")) {
+			
+			if(fvo.getFwrFile() != null){
+				if(fvo.getDelFwrFile() != null && fvo.getDelFwrFile() != ""){
+					File file = new File(propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + fvo.getDelFwrFile());
+					if(file.exists()){
+						if(file.delete()){
+							logger.debug("File Delete Success!!");
+							System.out.println("File Delete Success!!");
+						}else{
+							logger.debug("File Delete Fail!!");
+							System.out.println("File Delete Fail!!");
+						}
 					}else{
-						logger.debug("File Delete Fail!!");
-						System.out.println("File Delete Fail!!");
+						logger.debug("No File!!");
+						System.out.println("No File!!");
 					}
-				}else{
-					logger.debug("No File!!");
-					System.out.println("No File!!");
 				}
+				Calendar calendar = Calendar.getInstance();
+		        Date date = calendar.getTime();
+		        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+				try{
+					BufferedOutputStream bos = null;
+			    	String fileName = fvo.getFwrFile().getOriginalFilename();
+			    	byte[] bytes = fvo.getFwrFile().getBytes();
+			    	String saveFileName = getExtension(fileName, today);
+			    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
+			    	fvo.setFwrFileNm("/upload/product/" + saveFileName);
+			    	fvo.setFwrFileNm1(fileName);
+			    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
+		    		bos.write(bytes);
+		    		bos.flush();
+			    	bos.close();
+			    } catch (Exception e){
+			    	logger.debug("imgUpload Fail, error : "+e);
+			    } finally{
+			    	logger.debug("File Upload Success!!");
+			    }
 			}
-			Calendar calendar = Calendar.getInstance();
-	        Date date = calendar.getTime();
-	        String today = (new SimpleDateFormat("yyyyMMddHHmmss").format(date));
-			try{
-				BufferedOutputStream bos = null;
-		    	String fileName = fvo.getFwrFile().getOriginalFilename();
-		    	byte[] bytes = fvo.getFwrFile().getBytes();
-		    	String saveFileName = getExtension(fileName, today);
-		    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
-		    	fvo.setFwrFileNm("/upload/product/" + saveFileName);
-		    	fvo.setFwrFileNm1(fileName);
-		    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
-	    		bos.write(bytes);
-	    		bos.flush();
-		    	bos.close();
-		    } catch (Exception e){
-		    	logger.debug("imgUpload Fail, error : "+e);
-		    } finally{
-		    	logger.debug("File Upload Success!!");
-		    }
+		}else {
+			fvo.setFwrFileNm("");
 		}
 		fvo.setUptAdmSq((Integer.parseInt((String)session.getAttribute("ADM_SQ"))));
 		productService.updateFwr(fvo);

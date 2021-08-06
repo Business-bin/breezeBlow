@@ -287,30 +287,21 @@ public class PushController {
 
 		    		   String pushId = "";
 		    		   String strJsonBody = "";
-		    		   if(dMap.getString("R_ADDR_1").equals("")
-		    				   &&dMap.getString("R_BTBS_SQ").equals("")
-		    				   &&dMap.getString("R_MOBILE_TYPE").equals("")
-		    				   &&dMap.getString("R_MD_SQ").equals("")){
-		    			   strJsonBody = "{"
-			                       + "\"app_id\": \""+appId+"\","
-			                       + "\"included_segments\": [\"All\"],"
-			                       + "\"headings\": {\"en\":\""+title+"\"},"
-			                       +   "\"contents\": {\"en\":\""+cont+"\"}"
-			                       + "}";
-		    		   }else{
-			    		   for(int p=0;p<sendInfoList.size();p++){
-			    			   pushId += "\""+sendInfoList.get(p).getString("PUSH_ID")+"\"";
-			    			   if(p < sendInfoList.size()-1){
-			    				   pushId += ",";
-			    			   }
-			    		   }
-		    			   strJsonBody = "{"
-		    					   + "\"app_id\": \""+appId+"\","
-			                       + "\"include_player_ids\": ["+pushId+"],"
-			                       + "\"headings\": {\"en\":\""+title+"\"},"
-			                       +   "\"contents\": {\"en\":\""+cont+"\"}"
-			                       + "}";
-		    		   }
+						/*
+						 * if(dMap.getString("R_ADDR_1").equals("")
+						 * &&dMap.getString("R_BTBS_SQ").equals("")
+						 * &&dMap.getString("R_MOBILE_TYPE").equals("")
+						 * &&dMap.getString("R_MD_SQ").equals("")){ strJsonBody = "{" +
+						 * "\"app_id\": \""+appId+"\"," + "\"included_segments\": [\"All\"]," +
+						 * "\"headings\": {\"en\":\""+title+"\"}," +
+						 * "\"contents\": {\"en\":\""+cont+"\"}" + "}"; }else{ for(int
+						 * p=0;p<sendInfoList.size();p++){ pushId +=
+						 * "\""+sendInfoList.get(p).getString("PUSH_ID")+"\""; if(p <
+						 * sendInfoList.size()-1){ pushId += ","; } } strJsonBody = "{" +
+						 * "\"app_id\": \""+appId+"\"," + "\"include_player_ids\": ["+pushId+"]," +
+						 * "\"headings\": {\"en\":\""+title+"\"}," +
+						 * "\"contents\": {\"en\":\""+cont+"\"}" + "}"; }
+						 */
 
 
 

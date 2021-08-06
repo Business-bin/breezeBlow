@@ -462,9 +462,11 @@
 			UPT_DTTM = NOW(),
 			UPT_ADM_SQ = #{uptAdmSq},
 			APL_DTTM = #{aplDttm},
-			FWR_VRS_NM_1 = #{fwrVrsNm1},
-			FWR_FILE_NM = #{fwrFileNm},
-			FWR_FILE_NM_1 = #{fwrFileNm1},
+			<if test=" fwrFileNm != null and fwrFileNm != '' ">
+				FWR_VRS_NM_1 = #{fwrVrsNm1},
+				FWR_FILE_NM = #{fwrFileNm},
+				FWR_FILE_NM_1 = #{fwrFileNm1},
+			</if>
 			FWR_MD_SQ = #{fwrMdSq}
 		WHERE FWR_SQ = #{fwrSq}
 	</update>
