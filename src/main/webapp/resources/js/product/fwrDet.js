@@ -86,7 +86,7 @@ $(function() {
 
 	/* 펌웨어 삭제 */
 	$("#del").click(function(){
-		if($("#delRsn").val() == "" || $("#delRsn").val() ){
+		if($("#delRsn").val() == "" || $("#delRsn").val() == null){
 			alert("삭제 사유를 입력하세요.");
 			$("#delRsn").focus();
 		}else{

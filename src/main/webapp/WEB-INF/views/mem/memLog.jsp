@@ -35,6 +35,7 @@
 						<th>검색일</th>
 						<td class="mw350"><input type="text" id="startDate" class="" name="startDate" readonly="readonly"/>-
 						<input type="text" id="endDate" class="" name="endDate" readonly="readonly"/>
+						날짜제외 <input type="checkbox" id="nCal" />
 						<div class="sbtn mgl10" id="logSearch"><i class="axi axi-search3"></i></div>
 						</td>
 					</tr>

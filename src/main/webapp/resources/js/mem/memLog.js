@@ -109,6 +109,12 @@ var grid = {
 				}).trigger('reloadGrid');
 	},
 	fn_SearchGrid : function() {
+		var sDate = $('#startDate').val();
+		var eDate = $('#endDate').val();
+		if($("#nCal").prop("checked") == true){
+			sDate = "";
+			eDate = "";
+		}
 		$("#log_list").jqGrid('GridUnload');
 		$("#log_list").jqGrid({
 					url : "/mem/searchLog",
@@ -118,8 +124,8 @@ var grid = {
 					postData : {
 						memSq : $("#memSq").val(),
 						memEmail : $("#memEmail").val(),
-						startDate : $('#startDate').val(),
-						endDate : $('#endDate').val()
+						startDate : sDate,
+						endDate : eDate
 					},
 					height : 500,
 					width : 500,

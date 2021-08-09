@@ -604,7 +604,7 @@ public class ProductController {
 		totalcnt = (int)productService.getFwrList(bMap).get("totalPage");
 
 		double dSize = Util.attrParseInt(bMap, "rows");
-		double liTotalPage = (double)Math.ceil(totalcnt/dSize) ;
+		double liTotalPage = (double)Math.ceil(totalcnt/dSize);
 
 		view.addObject("rows", infoList);
 		view.addObject("total", liTotalPage);

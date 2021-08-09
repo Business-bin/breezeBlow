@@ -475,22 +475,27 @@ function dpop(pprtSq){
 }
 
 function delProd(){
-	$.ajax({
-		type : "POST",
-		url : "/mem/delProduct",
-		data : {
-			pprtSq : $("#delSq").val(),
-			initRsn : $("#initRsn").val()
-		},
-		success : function(result){
-			alert("삭제되었습니다.");
-//			location.reload();
-			location.href="/mem/memList";
-		},
-		error : function(e){
-			alert("error : "+e);
-		}
-	});
+	if($("#initRsn").val() == ""){
+		alert("삭제사유를 입력해주세요.");
+		return;
+	}else{
+		$.ajax({
+			type : "POST",
+			url : "/mem/delProduct",
+			data : {
+				pprtSq : $("#delSq").val(),
+				initRsn : $("#initRsn").val()
+			},
+			success : function(result){
+				alert("삭제되었습니다.");
+//				location.reload();
+				location.href="/mem/memList";
+			},
+			error : function(e){
+				alert("error : "+e);
+			}
+		});
+	}
 }
 
 function rpop(){

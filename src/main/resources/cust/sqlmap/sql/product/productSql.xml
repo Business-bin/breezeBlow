@@ -417,8 +417,6 @@
 		<if test=" search == 'fwrmd' and keyword != null and keyword != '' ">
 			AND FWR_MD_SQ IN (SELECT MD_SQ FROM TB_MD WHERE MD_NM LIKE CONCAT('%',#{keyword},'%'))
 		</if>
-		ORDER BY ${orderBy}
-		LIMIT ${R_PAGE} , ${R_ROW}
 	</select>
 
 	<select id="getFwrDet" resultType="BrbMap" parameterType="java.lang.Integer">
@@ -462,8 +460,8 @@
 			UPT_DTTM = NOW(),
 			UPT_ADM_SQ = #{uptAdmSq},
 			APL_DTTM = #{aplDttm},
+			FWR_VRS_NM_1 = #{fwrVrsNm1},
 			<if test=" fwrFileNm != null and fwrFileNm != '' ">
-				FWR_VRS_NM_1 = #{fwrVrsNm1},
 				FWR_FILE_NM = #{fwrFileNm},
 				FWR_FILE_NM_1 = #{fwrFileNm1},
 			</if>
