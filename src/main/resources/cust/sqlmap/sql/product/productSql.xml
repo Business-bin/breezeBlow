@@ -373,6 +373,10 @@
 		SELECT COUNT(*) FROM TB_PPRT WHERE PPRT_MAC = #{pprtMac}
 	</select>
 
+	<select id="modelValidation" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT COUNT(*) FROM TB_MD WHERE MD_NM = #{mdNm}
+	</select>
+
 
 	<select id="getFwrList" resultType="BrbMap" parameterType="BrbMap">
 		SELECT

@@ -800,10 +800,12 @@ public class ProductController {
 			}
 		}
 		boolean mac2 = productService.validation(ar);
+		boolean mac3 = productService.modelValidation(ar);
 
 		view.addObject("csvList", ar);
 		view.addObject("mac1", mac1);
 		view.addObject("mac2", mac2);
+		view.addObject("mac3", mac3);
 		view.addObject("wrong", wrong);
 		br.close();
 		return view;

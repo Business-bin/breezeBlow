@@ -145,6 +145,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public boolean modelValidation(ArrayList<PprtVo> pvo) {
+		return productDao.modelValidation(pvo);
+	}
+
+	@Override
 	public void updateProduct(MdVo mvo) throws DataAccessException {
 		productDao.updateProduct(mvo);
 	}

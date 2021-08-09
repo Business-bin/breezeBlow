@@ -316,6 +316,24 @@ public class ProductDao{
 	}
 
 	/**
+	 * 모델 유효성검사
+	 * @param ArrayList<PprtVo>
+	 * @return boolean
+	 * @throws
+	 */
+	public boolean modelValidation(ArrayList<PprtVo> pvo) throws DataAccessException{
+		int count=0;
+		for(int i=0; i<pvo.size(); i++){
+			count += (Integer)queryS.selectOne("product.modelValidation", pvo.get(i).getMdNm());
+		}
+		if(count == 0){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	/**
 	 * 제품 수정
 	 * @param MdVo
 	 * @return

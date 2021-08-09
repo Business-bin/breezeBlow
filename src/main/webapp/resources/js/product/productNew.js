@@ -449,6 +449,10 @@ function successMsg(msg){
 }
 /* csv로드 */
 function csvLoad(formId, url){
+	if($("#csvFile").val() == null || $("#csvFile").val() == ""){
+		alert("선택된 파일이 없습니다.");
+		return;
+	}
     var formdata = new FormData($('#'+formId)[0]);
 	$.ajax({
 		type: "post",
@@ -474,6 +478,10 @@ function csvLoad(formId, url){
 			}
 			if(result.model.mac2 == false){
 				alert("CSV의 MAC ADDRESS와 DB의 MAC ADDRESS가 중복되었습니다.");
+				return;
+			}
+			if(result.model.mac3 == false){
+				alert("CSV의 모델명은 존재하지 않는 모델명 입니다.");
 				return;
 			}
 			if(result.model.wrong == false){

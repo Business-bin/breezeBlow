@@ -185,6 +185,14 @@ public interface ProductService {
 	public boolean validation(ArrayList<PprtVo> pvo);
 
 	/**
+	 * md 유효성검사
+	 * @param ArrayList<PprtVo>
+	 * @return boolean
+	 * @throws
+	 */
+	public boolean modelValidation(ArrayList<PprtVo> pvo);
+
+	/**
 	 * 제품 수정
 	 * @param PprtVo
 	 * @return
