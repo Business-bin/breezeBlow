@@ -329,6 +329,7 @@ public class BtbController {
 		int cnt = 0;
 		try{
 			cnt = btbService.goUse(dMap);
+			btbService.adminActivityGo(dMap);	// 사이트 운영 중지 해제되면 관련 관리자 활동중으로
 			//action log
 	        commonService.addAdminActLog(request);
 		} catch(Exception e){

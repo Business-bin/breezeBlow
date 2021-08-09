@@ -87,6 +87,12 @@ public class BtbServiceImpl implements BtbService{
 	}
 	
 	@Override
+	public int adminActivityGo(BrbMap<Object, Object> fMap) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return btbDao.adminActivityGo(fMap);
+	}
+	
+	@Override
 	public List<BrbMap> getAdminList(BrbMap<Object, Object> fMap) throws DataAccessException {
 		
 		return btbDao.getAdminList(fMap);

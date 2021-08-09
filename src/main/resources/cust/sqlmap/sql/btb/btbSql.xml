@@ -179,6 +179,17 @@
 	     WHERE BTBS_SQ           = #{btbs_sq} 
 	</update>	
 	
+	
+	<update id="adminActivityGo" parameterType="brbMap">
+	    UPDATE TB_BTB_ADM
+	       SET 
+	       	   STAT         = '01',
+	       	   UPT_DTTM		= now(),
+	           UPT_ADM_SQ   = #{adm_sq}
+	     WHERE BTBS_SQ      = #{btbs_sq} 
+	     AND   STAT			!= '03'
+	</update>
+	
 	<select id="getAdminList"  parameterType="brbMap" resultType="brbMap">
 		SELECT    A.*,
 				  (SELECT CODENAME FROM TB_CODE WHERE CODE=A.STAT AND GROUPID='ADMSTAT') AS CODENAME,

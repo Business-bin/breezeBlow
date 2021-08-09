@@ -151,6 +151,17 @@ public class BtbDao{
 	 * @return
 	 * @throws DataAccessException
 	 */
+	public int adminActivityGo(BrbMap<Object, Object> pdMap) 
+			throws DataAccessException {
+		return queryM.update("btb.adminActivityGo", pdMap);
+	}
+	
+	/**
+	 * 
+	 * @param pdMap
+	 * @return
+	 * @throws DataAccessException
+	 */
 	@SuppressWarnings("rawtypes")
 	public List getAdminList(BrbMap<Object, Object> pdMap) 
 			throws DataAccessException {
