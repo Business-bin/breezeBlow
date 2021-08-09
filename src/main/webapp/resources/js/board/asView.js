@@ -256,6 +256,7 @@ Desc   : 상세보기 리로드
 Param  :
 ********************************************************************/
 function goView(){
+	$("#stat").val("");
 	$('#frm').attr('action', '/board/asView');
 	$("#frm").submit();
 }
