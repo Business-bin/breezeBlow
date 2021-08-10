@@ -220,7 +220,36 @@
 	      USER_CP_REG_DTTM = now()
       WHERE PPRT_MAC = #{pprtMac}
   </update>
+  
 
+	<update id="regProductUpdate" parameterType="com.brb.product.model.MdVo">
+		UPDATE TB_PPRT SET
+			ADDR_1 = #{addr1},
+			ADDR_2 = #{addr2},
+			ADDR_3 = #{addr3},
+			ADDR_4 = #{addr4},
+			<if test=" addr5 != null and addr5 != '' ">
+				ADDR_5 = #{addr5},
+			</if>
+			<if test=" pprtAli != null and pprtAli != '' ">
+				PPRT_ALI = #{pprtAli},
+			</if>
+			<if test=" pprtAli == null or pprtAli == '' ">
+				PPRT_ALI = #{aliText},
+			</if>
+			REG_USER_SQ = #{memSq},
+			MEM_SQ = #{memSq},
+			USER_CP_REG_DTTM = now()
+		WHERE PPRT_SQ = #{pprtSq}
+	</update>
+
+  <select id="getMac" parameterType="brbMap" resultType="string">
+  	SELECT
+  		PPRT_MAC
+  	FROM TB_PPRT
+  	WHERE PPRT_SQ = #{pprtSq}
+  </select>
+  
   <select id="getHpList" resultType="brbMap">
   	SELECT
   		*

@@ -308,6 +308,26 @@ public class MemController {
 		dMap.put("admSq", (String)session.getAttribute("ADM_SQ"));
 		memService.regProduct(dMap);
 	}
+	
+
+	/**
+	 * 사용자 기기 등록
+	 * @param HttpServletRequest, HttpSession
+	 * @return
+	 * @throws
+	 */
+	@ResponseBody
+	@RequestMapping(value = "mem/regProductUpdate")
+	public ModelAndView regProductUpdate(HttpServletRequest request, HttpSession session){
+		ModelAndView view = new ModelAndView();
+		BrbMap<Object, Object> dMap = RequestParameterUtil.getParameterMap(request);
+		String pprtMac = "";
+		dMap.put("admSq", (String)session.getAttribute("ADM_SQ"));
+		memService.regProductUpdate(dMap);
+		pprtMac = memService.getMac(dMap);
+		view.addObject("pprtMac", pprtMac);
+		return view;
+	}
 
 	/**
 	 * 시/군/구 리스트 조회

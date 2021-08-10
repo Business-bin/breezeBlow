@@ -87,6 +87,22 @@ public interface MemService {
 	public void regProduct(BrbMap<Object, Object> bMap);
 
 	/**
+	 * 사용자 기기 등록
+	 * @param BrbMap<Object, Object>
+	 * @return
+	 * @throws
+	 */
+	public void regProductUpdate(BrbMap<Object, Object> bMap);
+
+	/**
+	 * MAC Address 검색
+	 * @param BrbMap<Object, Object>
+	 * @return
+	 * @throws
+	 */
+	public String getMac(BrbMap<Object, Object> bMap);
+
+	/**
 	 * 핸드폰 앞자리
 	 * @param
 	 * @return BrbMap<Object, Object>

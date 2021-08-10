@@ -160,6 +160,28 @@ public class MemDao{
 	}
 
 	/**
+	 * 사용자 기기 등록
+	 * @param BrbMap<Object, Object>
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void regProductUpdate(BrbMap<Object, Object> bMap)
+			throws DataAccessException {
+		queryM.update("mem.regProductUpdate", bMap);
+	}
+
+	/**
+	 * MAC Address 등록
+	 * @param BrbMap<Object, Object>
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public String getMac(BrbMap<Object, Object> bMap)
+			throws DataAccessException {
+		return (String) queryM.selectOne("mem.getMac", bMap);
+	}
+
+	/**
 	 * 핸드폰 앞자리 리스트
 	 * @param
 	 * @return  List<BrbMap<Object, Object>>

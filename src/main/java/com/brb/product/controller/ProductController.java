@@ -194,7 +194,6 @@ public class ProductController {
 	    	String saveFileName = getExtension(fileName, today);
 	    	mvo.setCpImgNm("/upload/product/"+saveFileName);
 	    	String savePath = propertyService.getString("IMAGE_UPLOAD_PATH") + "/product/" + saveFileName;
-	    	System.out.println("111111111111111 savePath = "+savePath);
 	    	bos = new BufferedOutputStream(new FileOutputStream(savePath));
     		bos.write(bytes);
     		bos.flush();
@@ -888,12 +887,12 @@ public class ProductController {
 	 * @return
 	 * @throws
 	 */
-	@RequestMapping(value="/product/regMemTest")
+	@RequestMapping(value="/product/regMem")
 	public ModelAndView modelList(@RequestParam int pprtSq){
 		ModelAndView view = new ModelAndView();
 		view.addObject("memList", productService.getMem());
 		view.addObject("pprtSq", pprtSq);
-		view.setViewName("product/regMemTest");
+		view.setViewName("product/regMem");
 		return view;
 	}
 

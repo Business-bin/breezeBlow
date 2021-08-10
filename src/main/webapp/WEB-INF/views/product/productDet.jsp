@@ -47,7 +47,7 @@
 								<th>제품분류</th>
 								<td><input type="text" id="miniYn" class="w100" name="" value="${prodDet.MORM}" disabled="disabled"/></td>
 								<th class="mw90">Serial Number</th>
-								<td><input type="text" id="" class="w100" name="pprtMac" value="${prodDet.PPRT_MAC}" disabled="disabled"/></td>
+								<td><input type="text" id="" class="w100" name="pprtMac1" id="pprtMac1" value="${prodDet.PPRT_MAC}" disabled="disabled"/></td>
 							</tr>
 							<tr>
 								<th>등록회원 ID</th>
@@ -102,7 +102,7 @@
 				<button type="button" class="button" id="stopProduct">기기사용 중지</button>
 				<button type="button" class="button" id="regMac">매칭기기 등록</button>
 				<button type="button" class="button" id="backProdList">목록</button>
-				<button type="button" class="button" id="regMem">사용자 기기 등록</button>
+				<button type="button" class="button" id="regMem" onclick="goRegMem()">사용자 기기 등록</button>
 			</div>
 		</div>
 	</div>

@@ -6,10 +6,11 @@ Param  :
 $(document).ready(function(){
 	/* 사용자 기기등록 (테스트용) */
 	$("#regMem").click(function(){
-		location.href="/product/regMemTest?pprtSq="+$("#pprtSq").val();
+		location.href="/product/regMem?pprtSq="+$("#pprtSq").val();
 	});
-	/**/
-
+	if($("#memId").val() == ""){
+		$("#memDet").hide();
+	}
 	if($("#s_adm_class").val() == 3 || $("#s_adm_class").val() == 4){
 		$(".tabmenu li").eq(0).hide();
 		$(".tabmenu li").eq(3).hide();
@@ -90,6 +91,7 @@ $(document).ready(function(){
 				alert("초기화 되었습니다.");
 				$("#dim-layer").hide();
 				$("#layerPopup3").hide();
+				location.reload();
 			},
 			error : function(result){
 
@@ -118,6 +120,7 @@ $(document).ready(function(){
 				alert("사용중지 되었습니다.");
 				$("#dim-layer").hide();
 				$("#layerPopup7").hide();
+				location.reload();
 			},
 			error : function(result){
 

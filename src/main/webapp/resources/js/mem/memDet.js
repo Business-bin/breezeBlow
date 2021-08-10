@@ -435,7 +435,9 @@ function mpop(pprtMac){ // 00:0B:57:D8:18:10 test0
 				$('#pprtAli').val("").prop("selected",true);
 				$('#aliText').val(r.PPRT_ALI);
 			}
-			
+			if($("#pprtAli option:selected").val() == ""){
+				$("#aliText").prop("readonly","");
+			}
 		},
 		error : function(e){
 			alert("error : "+e);
@@ -525,6 +527,7 @@ function regProd(){
 			memSq : $("#memSq2").val()
 		},
 		success : function(result){
+			alert("사용자 기기가 등록되었습니다.");
 			location.reload();
 		},
 		error : function(e){

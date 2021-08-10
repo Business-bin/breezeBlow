@@ -83,6 +83,17 @@ public class MemServiceImpl implements MemService{
 	}
 
 	@Override
+	public void regProductUpdate(BrbMap<Object, Object> bMap) {
+		memDao.regProductUpdate(bMap);
+	}
+	
+
+	@Override
+	public String getMac(BrbMap<Object, Object> bMap) {
+		return memDao.getMac(bMap);
+	}
+
+	@Override
 	public BrbMap<Object, Object> getHpList(){
 		BrbMap<Object, Object> brbMap = new BrbMap<Object, Object>();
 		brbMap.put("hpList", memDao.getHpList());
