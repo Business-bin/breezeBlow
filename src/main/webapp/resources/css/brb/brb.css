@@ -599,15 +599,19 @@
 	min-width: 650px !important;
 }
 
-.wp80 {
-	width: 80px !important;
-}
-
 .w100 {
 	width: 100% !important;
 }
 
+.tableW700 {
+	width: 700px !important;
+}
+
 .w50 {
+	width: 50% !important;
+}
+
+.divw80 {
 	width: 50% !important;
 }
 

@@ -24,21 +24,24 @@
 				<div class="tbar">
 					<div class="w100 fl"><i class="axi axi-play-arrow"></i>등록 정보</div>
 				</div>
-				<div class="w100" style="height: 400px;">
-					<!-- <table class="basictables mgt4 w100"> -->
-					<table class="basictables">
-						<colgroup>
+				<div class="divw80" style="height: 400px;">
+					<table class="basictables mgt4 tableW700">
+					<!-- <table class="basictables"> -->
+						<%-- <colgroup>
 							<col width="14%" />
 							<col width="13%" />
 							<col width="30%" />
 							<col width="13%" />
 							<col width="30%" />
-						</colgroup>
+						</colgroup> --%>
 						<tbody>
+							<tr>
+								<td colspan="4" align="right"><button type="button" id="addrBtn" class="button mgl10">주소 검색</button></td>
+							</tr>
 							<tr>
 								<th>시/도</th>
 								<td><input type="text" id="regAddr1" name="regAddr1" class="w100" readonly="readonly"/></td>
-								<th class="wp80" >시/군/구</th>
+								<th>시/군/구</th>
 								<td><input type="text" id="regAddr2" name="regAddr2" class="w100" readonly="readonly"/></td>
 							</tr>
 							<tr>
@@ -49,12 +52,11 @@
 							</tr>
 							<tr>
 								<th>상세주소</th>
-								<td><input type="text" id="regAddr5" name="regAddr5" class="w100" readonly="readonly"/></td>
-								<td><button type="button" id="addrBtn" class="button mgl10">주소 검색</button></td>
+								<td colspan="3"><input type="text" id="regAddr5" name="regAddr5" class="w100" readonly="readonly"/></td>
 							</tr>
 							<tr>
 								<th>설치장소</th>
-								<td>
+								<td colspan="3">
 									<select id="pprtAli" name="pprtAli">
 										<option value="거실">거실</option>
 										<option value="침실">침실</option>
@@ -68,7 +70,7 @@
 							</tr>
 							<tr>
 								<th>회원</th>
-								<td>
+								<td colspan="3">
 									<select name="memSq" id="memSq">
 										<option value="">-선택-</option>
 										<c:forEach items="${memList}" var="m">

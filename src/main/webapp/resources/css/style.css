@@ -81,6 +81,8 @@ select:readonly{background-color: #e3e3e3;}
 .basictables {width:100%;}
 .basictables th { padding:5px; border:1px solid #d1d1d1; background:#757a88; color:#FFF;}
 .basictables td { padding:5px; border:1px solid #d1d1d1; }
+.basictables td:nth-child(1) { width:120px;}
+.basictables td:nth-child(3) { width:120px;}
 .basictables td.tleft {text-align:left;}
 .basictables td.tcenter {text-align:center;}
 .basictables td.tright {text-align:right;}

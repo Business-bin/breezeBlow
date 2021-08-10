@@ -87,7 +87,8 @@
 				<form action="/board/faqList" method="post" id="backForm">
 					<input type="hidden" name="start_dt" value="${dMap.start_dt}"/>
 					<input type="hidden" name="end_dt" value="${dMap.end_dt}"/>
-					<input type="hidden" name="bd_tp_2" value="${dMap.bd_tp_2}"/>
+					<%-- <input type="hidden" name="bd_tp_2" value="${dMap.bd_tp_2}"/> --%>
+					<input type="hidden" name="bd_tp_2" value=""/>
 					<input type="hidden" name="category" value="${dMap.category}"/>
 					<input type="hidden" name="keyword" value="${dMap.keyword}"/>
 				</form>
