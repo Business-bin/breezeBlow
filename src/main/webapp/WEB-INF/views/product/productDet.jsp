@@ -59,13 +59,13 @@
 							</tr>
 							<tr>
 								<th>설정이름</th>
-								<td><input type="text" id="" class="w100" name="pprtAli" value="${prodDet.PPRT_ALI}" disabled="disabled"/></td>
+								<td><input type="text" id="" class="w100" name="pprtAli" value="${prodDet.PPRT_LOC}" disabled="disabled"/></td>
 								<th>제품상태</th>
 								<td><input type="text" id="" class="w100" name="" value="${prodDet.PRODSTAT}" disabled="disabled"/></td>
 							</tr>
 							<tr>
 								<th>설치장소</th>
-								<td><input type="text" id="" class="w100 mw400" name="pprtLoc" value="${prodDet.PPRT_LOC}" disabled="disabled"/></td>
+								<td><input type="text" id="" class="w100 mw400" name="pprtLoc" value="${prodDet.PPRT_ALI}" disabled="disabled"/></td>
 								<th>출고 일시</th>
 								<td><input type="text" id="" class="w100" name="retDttm" value="${prodDet.REL_DTTM}" disabled="disabled"/></td>
 							</tr>

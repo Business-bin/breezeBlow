@@ -226,7 +226,6 @@
 			A.ADDR_3 as addr3,
 			A.ADDR_4 as addr4,
 			A.ADDR_5 as addr5
-			
 		FROM TB_PPRT A JOIN TB_MD B
 			ON A.MD_SQ = B.MD_SQ
 		WHERE A.PPRT_MAC = #{pprtMac}
