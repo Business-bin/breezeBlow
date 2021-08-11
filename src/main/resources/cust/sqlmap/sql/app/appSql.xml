@@ -168,7 +168,7 @@
 	     SELECT
 	   		COUNT(*)
 			FROM TB_TUT
-		WHERE 1=1
+		WHERE STAT != '03'
 		<if test=" startDate != null and startDate != '' and endDate != null and endDate != '' ">
 			AND REG_DTTM BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59')
 		</if>
