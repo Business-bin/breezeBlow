@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.brb.brbcom.common.collections.BrbMap;
+import com.brb.product.model.MdVo;
 
 @Repository("BoardDao")
 public class BoardDao{
@@ -450,5 +451,14 @@ public class BoardDao{
 		int cnt = queryM.insert("board.modAs", pdMap);
 		queryM.insert("board.insertBdLog01", pdMap);
 		return cnt;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BrbMap<Object, Object>> getModel(BrbMap<Object, Object> dMap){
+		return queryS.selectList("board.getModel", dMap);
+	}
+	
+	public void addAs(BrbMap<Object, Object> bMap) throws DataAccessException {
+		queryM.insert("board.addAs", bMap);
 	}
 }

@@ -78,6 +78,9 @@
  				<table id="as_list"></table>
 				<div id="pager"></div>
 				<div class="button_area tright">
+					<a href="#" class="button" id="addAs">AS 등록</a>
+				</div>
+				<div class="button_area tright">
 				<!-- 	<a href="/board/noticeAdd" class="button" style="" >신규생성</a>   -->
 				</div>
 			</div>

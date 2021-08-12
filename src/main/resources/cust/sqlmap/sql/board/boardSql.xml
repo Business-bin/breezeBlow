@@ -695,4 +695,48 @@
 			now()
 		)
 	</insert>
+	
+	
+	<select id="getModel"  parameterType="brbMap" resultType="brbMap">
+		SELECT
+			A.MD_SQ AS MD_SQ,
+			A.CP_NM AS CP_NM,
+			A.MD_NM AS MD_NM,
+			(SELECT IF(A.MINI_YN = 'Y','미니','마스터')) AS MORM,
+			B.PPRT_MAC AS PPRT_MAC
+		FROM TB_MD A JOIN TB_PPRT B
+			ON A.MD_SQ = B.MD_SQ
+			WHERE 1=1
+			<if test=" memSq != null and memSq != '' ">
+			AND B.MEM_SQ = #{memSq}
+			</if>
+	</select>
+	
+	<insert id="addAs" parameterType="BrbMap">
+		INSERT INTO TB_AS_REQ(
+			AS_REQ_SQ 
+			, AS_REQ_MEM_SQ 
+			, AS_REQ_NM 
+			, AS_REP_CP_NM 
+			, AS_REQ_CP_SN 
+			, AS_REQ_CONT 
+			, STAT 
+			, REG_DTTM 
+			, REG_ADM_SQ 
+		) VALUES(
+			(SELECT AUTO_INCREMENT
+			FROM information_schema.tables
+			WHERE table_schema = DATABASE()
+			AND table_name = 'tb_as_req')
+			, #{memSq}
+			, (SELECT MEM_NM FROM TB_MEM WHERE MEM_SQ = #{memSq})
+			, #{mdNM}
+			, #{mdSq}
+			, #{content}
+			, '01'
+			, now()
+			, #{reg_adm_sq}
+		)
+	</insert>
+	
 </mapper>

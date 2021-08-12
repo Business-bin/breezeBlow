@@ -22,6 +22,7 @@ import com.brb.brbcom.common.collections.BrbMap;
 import com.brb.brbcom.common.util.RequestParameterUtil;
 import com.brb.brbcom.common.util.Util;
 import com.brb.common.service.CommonService;
+import com.brb.product.service.ProductService;
 /**
  *
  * @author back
@@ -39,6 +40,9 @@ public class BoardController {
 
 	@Autowired
 	CommonService commonService;
+
+	@Autowired
+	ProductService productService;
 
 
 	/**
@@ -1385,6 +1389,69 @@ public class BoardController {
 		}
 
 		view.addObject("cnt", cnt);
+
+		return view;
+	}
+	
+	/**
+	 * AS 등록 화면
+	 * @param
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/board/addAsNew")
+	public ModelAndView productNew(){
+		ModelAndView view = new ModelAndView();
+		BrbMap<Object, Object> dMap = null;
+		view.addObject("memList", productService.getMem());
+		view.addObject("modelList",boardService.getModel(dMap));
+		view.setViewName("board/addAsNew");
+		return view;
+	}
+	
+	/**
+	 * 제품검색
+	 * @param
+	 * @return ModelAndView
+	 * @throws
+	 */
+	@RequestMapping(value="/board/getModel")
+	public ModelAndView getModel(HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception{
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+		
+		view.addObject("modelList", boardService.getModel(dMap));
+//		view.setViewName("board/addAsNew");
+		return view;
+	}
+	
+	/**
+	 * AS 등록
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "board/addAs" , method = RequestMethod.POST)
+	public ModelAndView addAs(HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
+
+		ModelAndView view = new ModelAndView("jsonView");
+		BrbMap<Object, Object> dMap	= RequestParameterUtil.getParameterMap(request);
+
+		HttpSession session = request.getSession(false);
+		String reg_adm_sq = session.getAttribute("ADM_SQ").toString();
+		dMap.put("reg_adm_sq", reg_adm_sq); //등록 관리자고유번호
+		try{
+			boardService.addAs(dMap);
+			//action log
+//	        commonService.addAdminActLog(request);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
 		return view;
 	}

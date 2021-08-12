@@ -78,6 +78,10 @@ $(document).ready(function(){
     	grid.fn_SearchGrid('05');
     });
 
+    //AS 등록
+    $("#addAs").click(function(){
+    	location.href="/board/addAsNew";
+    })
 });
 
 function getStartDate(days) {

@@ -197,4 +197,14 @@ public class BoardServiceImpl implements BoardService{
 	public int modAs(BrbMap<Object, Object> fMap) throws DataAccessException {
 		return boardDao.modAs(fMap);
 	}
+	
+	@Override
+	public List<BrbMap<Object, Object>> getModel(BrbMap<Object, Object> dMap){
+		return boardDao.getModel(dMap);
+	}
+
+	@Override
+	public void addAs(BrbMap<Object, Object> bMap) {
+		boardDao.addAs(bMap);
+	}
 }

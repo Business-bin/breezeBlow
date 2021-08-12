@@ -84,8 +84,18 @@
 						</select> -->
 					</td>
 					<th style="width:150px" >송신 대상 건수</th>
-					<td colspan="3">
+					<!-- <td colspan="3"> -->
+					<td>
 						<input style="width:100%; font-weight: bold; color:red;" type="text" value="" id="sendCnt" name="sendCnt" readonly="readonly" >
+					</td>
+					<th style="width:150px">회원</th>
+					<td>
+						<select name="memSq" id="memSq" onchange="setSendCnt()">
+							<option value="">-선택-</option>
+							<c:forEach items="${memList}" var="m">
+								<option value="${m.MEM_SQ}">${m.MEM_EMAIL}</option>
+							</c:forEach>
+						</select>
 					</td>
 				</tr>
 			

@@ -267,6 +267,10 @@ public interface BoardService {
 	 * @throws DataAccessException
 	 */
 	public int modAs(BrbMap<Object, Object> fMap) throws DataAccessException;
+	
+	public List<BrbMap<Object, Object>> getModel(BrbMap<Object, Object> dMap);
+	
+	public void addAs(BrbMap<Object, Object> bMap);
 
 }
 

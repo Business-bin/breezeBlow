@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.brb.brbcom.common.collections.BrbMap;
 import com.brb.brbcom.common.util.RequestParameterUtil;
 import com.brb.brbcom.common.util.Util;
+import com.brb.product.service.ProductService;
 import com.brb.push.service.PushService;
 
 /**
@@ -42,6 +43,8 @@ public class PushController {
 
 	@Autowired
 	PushService pushService;
+	@Autowired
+	ProductService productService;
 
 
 	public PushController(){
@@ -75,6 +78,7 @@ public class PushController {
 	@RequestMapping(value = "push/pushNew" )
 	public ModelAndView pushNew(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap)throws Exception{
 		ModelAndView view = new ModelAndView();
+		view.addObject("memList", productService.getMem());
 		view.setViewName("push/pushNew") ;
 		return view;
 	}
@@ -264,7 +268,9 @@ public class PushController {
 		List<BrbMap<Object, Object>> sendInfoList = null;
 		try {
 			sendInfoList = pushService.getSendListInfo(dMap);
-
+			System.out.println("11111111111111 sendInfoList = "+sendInfoList.size());
+			System.out.println(dMap.getString("R_BTBS_NM_YN"));
+			System.out.println(dMap.getString("R_BTBS_NM"));
 			if(sendInfoList.size() > 0){
 				BrbMap<Object, Object> bMap = pushService.getApp();
 

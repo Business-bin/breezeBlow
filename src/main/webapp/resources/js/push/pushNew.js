@@ -4,6 +4,9 @@ Desc   :
 Param  :
 ********************************************************************/
 var checkLength=1000;
+
+// 송신 대상 건수 
+var reSendCnt = 0;
 $(document).ready(function(){
 	$("#pushLength").text(checkLength);
 	$("#pushLength2").text(checkLength);
@@ -254,6 +257,7 @@ function getSendCnt(){
 			console.log("success");
 			console.log(data.MEMCNT.SENDCNT);
 			$("#sendCnt").val(data.MEMCNT.SENDCNT);
+			reSendCnt = data.MEMCNT.SENDCNT;
 		}
 		,complete : function(data) {
 			console.log("com");
@@ -268,7 +272,19 @@ function getSendCnt(){
 
 }
 
-
+/********************************************************************
+Name   : setSendCnt
+Desc   : 개별전송 유무에따른 송신 대상 건수 동적 데이터
+Param  :
+********************************************************************/
+function setSendCnt(){
+	var memSq = $("#memSq").val();
+	if(memSq == ""){
+		$("#sendCnt").val(reSendCnt);
+	}else{
+		$("#sendCnt").val("1");
+	}
+}
 
 /********************************************************************
 Name   : sendPush
@@ -283,7 +299,12 @@ function sendPush(){
 		alert('내용을 입력하세요.');
 		return false;
 	}
-
+	var btbsNm = "";
+	if($("#memSq").val() != ""){
+		btbsNm = $('#memSq').val();
+	}else{
+		btbsNm = $("#btbsnm option:selected").text() == "" ? "전체" : $("#btbsnm option:selected").text();
+	}
 	$.ajax({async : false
 		, url: '/push/sendpush'
 		, dataType: 'JSON'
@@ -298,7 +319,9 @@ function sendPush(){
     		R_PUSH_SUBJECT :  $('#subject').val(),
 			R_PUSH_CONT :  $('#msg').val(),
 			R_PUSH_CNT :  $('#sendCnt').val(),
-			R_BTBS_NM : $("#btbsnm option:selected").text() == "" ? "전체" : $("#btbsnm option:selected").text()
+			R_MEM_SQ :  $('#memSq').val(),
+			R_BTBS_NM : btbsNm
+			/*R_BTBS_NM : $("#btbsnm option:selected").text() == "" ? "전체" : $("#btbsnm option:selected").text()*/
 		}
 		, success: function(data) {
 			location.href = "/push/pushList";
