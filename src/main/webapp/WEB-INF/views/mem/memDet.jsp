@@ -308,7 +308,7 @@
 						<th colspan="3">보유제품 수정</th>
 					</tr>
 					<tr>
-						<td rowspan="7" class="mw100"><img src="" id="prodImg2"/></td>
+						<td rowspan="7" class="mw100"><img src="" id="prodImg2" style="width:200px;" /></td>
 						<th>제품명</th><th id="cpNm2"></th>
 					</tr>
 					<tr>
