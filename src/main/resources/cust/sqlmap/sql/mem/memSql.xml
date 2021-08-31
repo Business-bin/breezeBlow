@@ -237,6 +237,7 @@
 			<if test=" pprtAli == null or pprtAli == '' ">
 				PPRT_ALI = #{aliText},
 			</if>
+			STAT = '01',
 			REG_USER_SQ = #{memSq},
 			MEM_SQ = #{memSq},
 			USER_CP_REG_DTTM = now()
